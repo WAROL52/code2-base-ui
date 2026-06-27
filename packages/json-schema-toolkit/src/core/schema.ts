@@ -44,7 +44,7 @@ function createStandardSchema<T extends TSchema>(schema: T): T & StandardSchemaV
 		},
 	};
 
-	return Object.assign(schema, standard);
+	return { ...schema, ...standard } as T & StandardSchemaV1;
 }
 
 export function stringSchema(): StandardSchema {
