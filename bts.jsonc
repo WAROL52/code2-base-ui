@@ -1,0 +1,31 @@
+// Better-T-Stack
+//
+// Website: https://www.better-t-stack.dev/
+// Stack Builder: https://www.better-t-stack.dev/new
+// Analytics: https://www.better-t-stack.dev/analytics
+// Showcase: https://www.better-t-stack.dev/showcase
+// Sponsor: https://github.com/sponsors/AmanVarshney01
+//
+// Add new addons with: pnpm dlx create-better-t-stack add
+// This file is safe to delete
+
+{
+  "$schema": "https://r2.better-t-stack.dev/schema.json",
+  "version": "3.34.0",
+  "createdAt": "2026-06-27T17:22:36.500Z",
+  "reproducibleCommand": "pnpm create better-t-stack@latest code2-base-ui --frontend next --backend self --runtime none --database none --orm none --api orpc --auth none --payments none --addons nx biome ultracite husky fumadocs opentui skills mcp pwa --examples ai --db-setup none --web-deploy docker --server-deploy none --git --package-manager pnpm --install",
+  "database": "none",
+  "orm": "none",
+  "backend": "self",
+  "runtime": "none",
+  "frontend": ["next"],
+  "addons": ["nx", "biome", "ultracite", "husky", "fumadocs", "opentui", "skills", "mcp", "pwa"],
+  "examples": ["ai"],
+  "auth": "none",
+  "payments": "none",
+  "packageManager": "pnpm",
+  "dbSetup": "none",
+  "api": "orpc",
+  "webDeploy": "docker",
+  "serverDeploy": "none",
+}
