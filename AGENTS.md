@@ -66,7 +66,6 @@ Le Dockerfile utilise une build multi-stage avec Next.js standalone output. `SKI
 ## Vercel
 
 - Projet : `code2-base-ui` → https://code2-base-ui.vercel.app
-- `rootDirectory` configuré sur `apps/web` (via l'API — pas dans `vercel.json`)
-- Build : `cd ../.. && npx nx build web`
-- `next.config.ts` : `output: "standalone"` est désactivé sur Vercel via `process.env.VERCEL`
-- Variables d'env à définir dans le dashboard Vercel : `GOOGLE_GENERATIVE_AI_API_KEY`, `CORS_ORIGIN`
+- Déploie actuellement **Fumadocs** (`apps/fumadocs`)
+- `rootDirectory` configuré sur `apps/fumadocs` (via l'API — pas dans `vercel.json`)
+- Build : `cd ../.. && npx nx build fumadocs`
