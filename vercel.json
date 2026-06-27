@@ -1,0 +1,6 @@
+{
+  "framework": "nextjs",
+  "buildCommand": "cd ../.. && npx nx build web",
+  "installCommand": "pnpm install",
+  "rootDirectory": "apps/web"
+}
