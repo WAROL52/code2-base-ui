@@ -3,10 +3,45 @@ title: Installation
 description: Installer et configurer json-schema-toolkit
 ---
 
-## Installation
+Deux méthodes d'installation sont disponibles.
+
+## Via npm (package monorepo)
+
+Dans un projet qui a déjà accès au workspace :
 
 ```bash
 pnpm add @code2-base-ui/json-schema-toolkit
+```
+
+## Via GitHub Registry (shadcn)
+
+Depuis n'importe quel projet, sans dépendre du monorepo :
+
+```bash
+npx shadcn@latest add WAROL52/code2-base-ui/json-schema-toolkit
+```
+
+Cette méthode copie les fichiers source directement dans votre projet
+(sous `src/lib/json-schema-toolkit/`) et installe les dépendances npm
+nécessaires (`@sinclair/typebox`, `@standard-schema/spec`).
+
+### Items disponibles
+
+```bash
+npx shadcn@latest list WAROL52/code2-base-ui
+```
+
+| Item | Description |
+|---|---|
+| `json-schema-toolkit` | Package complet (10 fichiers, Standard Schema + utils + adapter) |
+| `json-schema-toolkit-registry` | FieldRegistry React uniquement |
+| `ui-button`, `ui-card`, ... | Composants shadcn/ui style base-lyra |
+
+### Aperçu avant installation
+
+```bash
+npx shadcn@latest view WAROL52/code2-base-ui/json-schema-toolkit
+npx shadcn@latest add WAROL52/code2-base-ui/json-schema-toolkit --dry-run
 ```
 
 Le package fonctionne en environnement **Node.js** et **navigateur**.
