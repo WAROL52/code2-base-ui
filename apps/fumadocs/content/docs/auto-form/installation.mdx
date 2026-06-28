@@ -1,0 +1,78 @@
+---
+title: Installation
+description: Installer auto-form dans votre projet
+---
+
+Deux méthodes d'installation sont disponibles.
+
+## Via GitHub Registry (shadcn) — recommandé
+
+Depuis n'importe quel projet, sans dépendre du monorepo :
+
+```bash
+npx shadcn@latest add WAROL52/code2-base-ui/auto-form-tanstack-shadcn
+```
+
+Cette méthode copie les fichiers source directement dans votre projet
+et installe les dépendances nécessaires.
+
+### Items disponibles
+
+```bash
+npx shadcn@latest list WAROL52/code2-base-ui
+```
+
+| Item | Description |
+|---|---|
+| `auto-form-tanstack-shadcn` | Preset complet (core + zod + tanstack + shadcn) |
+| `auto-form-core` | Package cœur uniquement |
+| `auto-form-provider-zod` | Provider Zod uniquement |
+
+### Aperçu avant installation
+
+```bash
+npx shadcn@latest view WAROL52/code2-base-ui/auto-form-tanstack-shadcn
+npx shadcn@latest add WAROL52/code2-base-ui/auto-form-tanstack-shadcn --dry-run
+```
+
+## Via npm (monorepo)
+
+Dans un projet qui a déjà accès au workspace :
+
+```bash
+pnpm add @code2-base-ui/auto-form
+pnpm add @code2-base-ui/auto-form-provider-zod
+pnpm add @code2-base-ui/auto-form-adapter-tanstack
+pnpm add @code2-base-ui/auto-form-render-shadcn
+```
+
+## Dépendances
+
+- `react` / `react-dom` ^19 — Requis par le package cœur et le renderer
+- `zod` ^4 — Requis par `@code2-base-ui/auto-form-provider-zod`
+- `@tanstack/react-form` ^1 — Requis par `@code2-base-ui/auto-form-adapter-tanstack`
+- `@code2-base-ui/json-schema-toolkit` — Requis par tous les packages auto-form
+
+## Configuration TypeScript
+
+Le package utilise `verbatimModuleSyntax`. Assurez-vous que votre
+`tsconfig.json` inclut :
+
+```json
+{
+	"compilerOptions": {
+		"verbatimModuleSyntax": true,
+		"moduleResolution": "bundler",
+		"module": "preserve"
+	}
+}
+```
+
+## Import
+
+```ts
+import { createAutoForm } from "@code2-base-ui/auto-form";
+import { zodProvider } from "@code2-base-ui/auto-form-provider-zod";
+import { tanstackFormAdapter } from "@code2-base-ui/auto-form-adapter-tanstack";
+import { createShadcnRegistry } from "@code2-base-ui/auto-form-render-shadcn";
+```

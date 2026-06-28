@@ -1,0 +1,51 @@
+---
+title: auto-form
+description: Framework de génération automatique de formulaires à partir de schémas
+---
+
+**auto-form** est un framework modulaire de génération automatique de
+formulaires à partir de schémas de données (Zod, JSON Schema).
+
+Il suit la même philosophie copy-paste que json-schema-toolkit, organisé en
+5 packages indépendants et composables :
+
+| Package | Rôle |
+|---|---|
+| `@code2-base-ui/auto-form` | Cœur : factory, types, contextes React |
+| `@code2-base-ui/auto-form-provider-zod` | SchemaProvider pour Zod |
+| `@code2-base-ui/auto-form-adapter-tanstack` | FormStateAdapter pour TanStack Form |
+| `@code2-base-ui/auto-form-render-shadcn` | FieldRegistry prêt-à-l'emploi pour shadcn/ui |
+| *(preset)* `auto-form-tanstack-shadcn` | Combinaison prête à l'emploi des 4 packages |
+
+## Architecture
+
+Le framework repose sur trois abstractions fondamentales :
+
+1. **SchemaProvider** — Traduit un schéma (Zod, JSON Schema) en métadonnées de champs
+2. **FormStateAdapter** — Gère l'état du formulaire (valeurs, erreurs, soumission)
+3. **FieldRegistry** — Résout chaque champ en composant React (`InputField`, `SelectField`, etc.)
+
+Le point d'entrée est `createAutoForm(config)` qui assemble les trois
+couches et retourne un système complet (`AutoForm`, `AutoField`, `useForm`,
+`useField`).
+
+## Fonctionnalités
+
+- **Génération automatique** — Les champs sont déduits du schéma
+- **Contextes React** — `AutoFormProvider`, `useFormContext`, `useFieldContext`
+- **Layouts personnalisables** — Stratégie de rendu injectable via `LayoutStrategy`
+- **Validation intégrée** — Délégue au SchemaProvider
+- **Composants shadcn/ui** — 11 composants de champ prêts à l'emploi
+- **GitHub Registry** — Distribution via `npx shadcn@latest add`
+
+## Exports du package cœur
+
+```ts
+import { createAutoForm } from "@code2-base-ui/auto-form";
+import { AutoFormProvider, useFormContext, useFieldContext } from "@code2-base-ui/auto-form";
+
+// Types
+import type { SchemaProvider, SchemaProviderFactory } from "@code2-base-ui/auto-form";
+import type { FormStateAdapter, FormAPI, FieldController } from "@code2-base-ui/auto-form";
+import type { AutoFormProps, LayoutStrategy } from "@code2-base-ui/auto-form";
+```

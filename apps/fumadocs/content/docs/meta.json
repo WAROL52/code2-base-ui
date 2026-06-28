@@ -2,6 +2,7 @@
 	"pages": [
 		"index",
 		"json-schema-toolkit",
+		"auto-form",
 		"test"
 	]
 }

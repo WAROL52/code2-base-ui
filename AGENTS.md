@@ -79,6 +79,53 @@ pnpm --filter @code2-base-ui/json-schema-toolkit check-types # tsc --noEmit
 Pages dans `apps/fumadocs/content/docs/json-schema-toolkit/` :
 index, installation, core, utils, registry, adapter, api-reference.
 
+## auto-form
+
+Framework de génération automatique de formulaires à partir de schémas de données.
+
+### Architecture
+
+5 packages composables :
+
+| Package | Rôle |
+|---|---|
+| `@code2-base-ui/auto-form` | Cœur : factory, types, contextes React |
+| `@code2-base-ui/auto-form-provider-zod` | SchemaProvider pour Zod |
+| `@code2-base-ui/auto-form-adapter-tanstack` | FormStateAdapter pour TanStack Form |
+| `@code2-base-ui/auto-form-render-shadcn` | FieldRegistry prêt-à-l'emploi pour shadcn/ui |
+| *(preset)* `auto-form-tanstack-shadcn` | Combinaison prête à l'emploi |
+
+### Sous-chemins d'import
+
+```ts
+import { createAutoForm, AutoFormProvider } from "@code2-base-ui/auto-form"
+import { zodProvider } from "@code2-base-ui/auto-form-provider-zod"
+import { tanstackFormAdapter } from "@code2-base-ui/auto-form-adapter-tanstack"
+import { createShadcnRegistry } from "@code2-base-ui/auto-form-render-shadcn"
+
+// Types
+import type { SchemaProvider, FormStateAdapter } from "@code2-base-ui/auto-form"
+import type { FormAPI, FieldController, AutoFormProps } from "@code2-base-ui/auto-form"
+```
+
+### Tests
+
+```bash
+pnpm --filter @code2-base-ui/auto-form test                  # vitest run
+pnpm --filter @code2-base-ui/auto-form-provider-zod test
+pnpm --filter @code2-base-ui/auto-form-adapter-tanstack test
+pnpm --filter @code2-base-ui/auto-form-render-shadcn test
+pnpm --filter @code2-base-ui/auto-form check-types           # tsc --noEmit
+pnpm --filter @code2-base-ui/auto-form-provider-zod check-types
+pnpm --filter @code2-base-ui/auto-form-adapter-tanstack check-types
+pnpm --filter @code2-base-ui/auto-form-render-shadcn check-types
+```
+
+### Documentation Fumadocs
+
+Pages dans `apps/fumadocs/content/docs/auto-form/` :
+index, installation, api-reference.
+
 ## Particularités techniques
 
 - **oRPC** : le routeur central est dans `packages/api/src/routers/index.ts`. Les procédures utilisent `publicProcedure` (défini dans `packages/api/src/index.ts`). Contexte défini dans `context.ts`.
