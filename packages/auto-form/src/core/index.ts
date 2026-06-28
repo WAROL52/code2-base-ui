@@ -6,12 +6,11 @@ export type {
   FieldController,
   AutoFormProps,
   LayoutStrategy,
-} from "./core/types";
+} from "./types";
 
 export {
   AutoFormProvider,
   useFormContext,
   useFieldContext,
   FieldProvider,
-  type FormContextValue,
-} from "./core/context";
+} from "./context";

@@ -20,9 +20,11 @@
   },
   "devDependencies": {
     "@code2-base-ui/config": "workspace:*",
-    "typescript": "catalog:",
-    "vitest": "^3.1.0",
+    "@testing-library/react": "^16.3.2",
     "@types/react": "catalog:",
-    "@types/react-dom": "catalog:"
+    "@types/react-dom": "catalog:",
+    "jsdom": "^29.1.1",
+    "typescript": "catalog:",
+    "vitest": "^3.1.0"
   }
 }
