@@ -10,3 +10,5 @@ export { validateSchema } from "./utils/validate-schema";
 export { FieldRegistry } from "./registry/index";
 
 export { type SchemaAdapter } from "./adapter/types";
+
+export type { JsonSchema, FieldMeta, ValidationResult } from "./types";
