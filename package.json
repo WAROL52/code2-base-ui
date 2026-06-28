@@ -3,7 +3,8 @@
   "private": false,
   "workspaces": [
     "apps/*",
-    "packages/*"
+    "packages/*",
+    "preset/*"
   ],
   "type": "module",
   "scripts": {
