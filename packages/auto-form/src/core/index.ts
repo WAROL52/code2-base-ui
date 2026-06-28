@@ -10,7 +10,9 @@ export type {
 
 export {
   AutoFormProvider,
+  AutoFormContextProvider,
   useFormContext,
+  useAutoFormContext,
   useFieldContext,
   FieldProvider,
 } from "./context";

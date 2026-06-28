@@ -1,14 +1,23 @@
 import { createContext, useContext } from "react";
 import type { ReactNode } from "react";
-import type { FormAPI, FieldController } from "./types";
+import type { FormAPI, FieldController, SchemaProvider } from "./types";
+import type { FieldRegistry } from "@code2-base-ui/json-schema-toolkit";
 
 interface FormContextValue {
   form: FormAPI;
   fields: Record<string, FieldController>;
 }
 
+interface AutoFormContextValue {
+  form: FormAPI;
+  schema: SchemaProvider;
+  registry: FieldRegistry;
+  fields: Record<string, FieldController>;
+}
+
 const FormContext = createContext<FormContextValue | null>(null);
 const FieldContext = createContext<FieldController | null>(null);
+const AutoFormContext = createContext<AutoFormContextValue | null>(null);
 
 export function AutoFormProvider({
   children,
@@ -26,9 +35,33 @@ export function AutoFormProvider({
   );
 }
 
+export function AutoFormContextProvider({
+  children,
+  form,
+  schema,
+  registry,
+  fields = {},
+}: {
+  children: ReactNode;
+  form: FormAPI;
+  schema: SchemaProvider;
+  registry: FieldRegistry;
+  fields?: Record<string, FieldController>;
+}) {
+  return (
+    <AutoFormContext.Provider value={{ form, schema, registry, fields }}>
+      {children}
+    </AutoFormContext.Provider>
+  );
+}
+
 export function useFormContext(): FormAPI | null {
   const ctx = useContext(FormContext);
   return ctx?.form ?? null;
+}
+
+export function useAutoFormContext(): AutoFormContextValue | null {
+  return useContext(AutoFormContext);
 }
 
 export function useFieldContext(): FieldController | null {
@@ -49,5 +82,5 @@ export function FieldProvider({
   );
 }
 
-export { FormContext, FieldContext };
-export type { FormContextValue };
+export { FormContext, FieldContext, AutoFormContext };
+export type { FormContextValue, AutoFormContextValue };
