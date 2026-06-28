@@ -12,6 +12,9 @@
     "format": "biome format --write"
   },
   "dependencies": {
+    "@code2-base-ui/auto-form-render-shadcn": "workspace:*",
+    "@code2-base-ui/ui": "workspace:*",
+    "@fumadocs/story": "^1.1.2",
     "cnfast": "^0.0.8",
     "fumadocs-core": "16.10.6",
     "fumadocs-mdx": "15.0.13",
