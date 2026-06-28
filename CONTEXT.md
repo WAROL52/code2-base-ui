@@ -70,3 +70,5 @@ Processus standard pour créer un nouveau package : design (brainstorming → sp
 → implémentation TDD (tests d'abord) → documentation Fumadocs en parallèle
 → vérification (tests + type check + build) → intégration (registry.json + CONTEXT.md + AGENTS.md).
 Documenté dans `PACKAGE-WORKFLOW.md`.
+Skill dédiée : `/new_package` dans `.agents/skills/new-package/SKILL.md`.
+Utilise les MCP servers nx, shadcn, better-t-stack pour automatiser les étapes.
