@@ -18,6 +18,7 @@
   "devDependencies": {
     "@code2-base-ui/config": "workspace:*",
     "@code2-base-ui/auto-form": "workspace:*",
+    "@code2-base-ui/json-schema-toolkit": "workspace:*",
     "typescript": "catalog:",
     "vitest": "^3.1.0",
     "@types/react": "catalog:",

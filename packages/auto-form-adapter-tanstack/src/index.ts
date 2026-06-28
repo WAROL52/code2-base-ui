@@ -1,1 +1,1 @@
-export {};
+export { tanstackFormAdapter } from "./tanstack-adapter";
