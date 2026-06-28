@@ -25,43 +25,53 @@
 			"files": [
 				{
 					"path": "packages/json-schema-toolkit/src/index.ts",
-					"type": "registry:lib"
+					"type": "registry:lib",
+					"target": "~/src/json-schema-toolkit/index.ts"
 				},
 				{
 					"path": "packages/json-schema-toolkit/src/types.ts",
-					"type": "registry:lib"
+					"type": "registry:lib",
+					"target": "~/src/json-schema-toolkit/types.ts"
 				},
 				{
 					"path": "packages/json-schema-toolkit/src/core/schema.ts",
-					"type": "registry:lib"
+					"type": "registry:lib",
+					"target": "~/src/json-schema-toolkit/schema.ts"
 				},
 				{
 					"path": "packages/json-schema-toolkit/src/utils/flatfields.ts",
-					"type": "registry:lib"
+					"type": "registry:lib",
+					"target": "~/src/json-schema-toolkit/flatfields.ts"
 				},
 				{
 					"path": "packages/json-schema-toolkit/src/utils/entries.ts",
-					"type": "registry:lib"
+					"type": "registry:lib",
+					"target": "~/src/json-schema-toolkit/entries.ts"
 				},
 				{
 					"path": "packages/json-schema-toolkit/src/utils/from-entries.ts",
-					"type": "registry:lib"
+					"type": "registry:lib",
+					"target": "~/src/json-schema-toolkit/from-entries.ts"
 				},
 				{
 					"path": "packages/json-schema-toolkit/src/utils/group-by.ts",
-					"type": "registry:lib"
+					"type": "registry:lib",
+					"target": "~/src/json-schema-toolkit/group-by.ts"
 				},
 				{
 					"path": "packages/json-schema-toolkit/src/utils/keys.ts",
-					"type": "registry:lib"
+					"type": "registry:lib",
+					"target": "~/src/json-schema-toolkit/keys.ts"
 				},
 				{
 					"path": "packages/json-schema-toolkit/src/utils/validate-schema.ts",
-					"type": "registry:lib"
+					"type": "registry:lib",
+					"target": "~/src/json-schema-toolkit/validate-schema.ts"
 				},
 				{
 					"path": "packages/json-schema-toolkit/src/adapter/types.ts",
-					"type": "registry:lib"
+					"type": "registry:lib",
+					"target": "~/src/json-schema-toolkit/adapter-types.ts"
 				}
 			]
 		},
