@@ -1,0 +1,9 @@
+{
+  "extends": "@code2-base-ui/config/tsconfig.base.json",
+  "compilerOptions": {
+    "lib": ["ESNext", "DOM"],
+    "jsx": "react-jsx",
+    "types": ["vitest/globals"]
+  },
+  "include": ["src", "tests"]
+}
