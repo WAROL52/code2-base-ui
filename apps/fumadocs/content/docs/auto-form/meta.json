@@ -1,7 +1,8 @@
 {
-	"pages": [
-		"index",
-		"installation",
-		"api-reference"
-	]
+  "pages": [
+    "index",
+    "installation",
+    "getting-started",
+    "api-reference"
+  ]
 }
