@@ -1,4 +1,4 @@
-import * as React from "react"
+import type * as React from "react"
 
 import { cn } from "@code2-base-ui/ui/lib/utils"
 

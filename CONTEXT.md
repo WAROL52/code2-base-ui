@@ -19,9 +19,49 @@ Package d'outils copy-paste basé sur JSON Schema.
 Contient les briques pour générer des UI dynamiques (formulaires, tableaux) à
 partir de schémas. Indépendant de packages/ui.
 
-### auto-form (futur)
-Package prévu qui fera le pont entre json-schema-toolkit et packages/ui.
-Consommera les schémas via json-schema-toolkit et rendra des composants shadcn.
+### auto-form
+Package unique `@code2-base-ui/auto-form` avec sous-chemins d'export.
+Framework de génération automatique de formulaires. Architecture en couches :
+
+**API publique (façade simple)** : `useForm()`, `useField()`, `<AutoForm>`, `<AutoField>`
+**API interne (flexible, extensible)** : `createAutoForm(config)` — factory qui assemble :
+- un SchemaProvider (extraction champs + validation)
+- un FormStateAdapter (gestion état formulaire)
+- un FieldRegistry (résolution composants de rendu)
+- une LayoutStrategy (disposition des champs)
+
+`createAutoForm` retourne un système complet prêt à l'emploi.
+Le preset exporté par défaut utilise Zod + TanStack Form + shadcn.
+
+### useForm()
+Hook primitif d'état de formulaire. Expose valeurs, erreurs, soumission, dirty, touched.
+Implémentation déléguée au FormStateAdapter (TanStack Form | RHF).
+
+### useField(name)
+Hook primitif pour un champ. Expose value, onChange, error, meta du champ.
+Utilisé par AutoField en interne, disponible pour usage personnalisé.
+
+### SchemaProvider
+Abstraction d'un moteur de schéma. Interface : `fields → FieldMeta[]`,
+`validate(data) → ValidationResult`, `toJson() → JsonSchema`.
+Implémentations : ZodProvider, TypeBoxProvider.
+
+### FormStateAdapter
+Abstraction d'un moteur d'état de formulaire. Interface : useForm, useField, submit.
+Implémentations : TanStackFormAdapter, RHFAdapter.
+Permet d'interchanger le moteur sans changer le code utilisateur.
+
+### LayoutStrategy
+Stratégie de disposition des champs dans le mode auto-généré.
+Par défaut : colonne unique dans l'ordre du schéma. Extensible.
+
+### AutoForm
+Composant final qui encapsule tout (Context Provider + layout + soumission).
+Un des outputs de `createAutoForm()`. L'utilisateur final utilise AutoForm/AutoField.
+
+### AutoForm (preset)
+Export par défaut du package : `createAutoForm({ zod, tanstack, shadcn, column })`.
+Prêt à l'emploi. L'utilisateur avancé peut créer son propre auto-form via createAutoForm.
 
 ### FieldRegistry
 Registre React **agnostique** de résolution de composants par sélecteur
