@@ -1,5 +1,7 @@
 # code2-base-ui — Guide pour OpenCode (🇫🇷)
 
+> **Workflow création de package :** voir [PACKAGE-WORKFLOW.md](./PACKAGE-WORKFLOW.md)
+
 Monorepo **Better-T-Stack** orchestré par **Nx** + **pnpm workspaces**.
 
 ## Architecture

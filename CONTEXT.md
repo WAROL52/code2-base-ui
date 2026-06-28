@@ -24,13 +24,9 @@ Package prévu qui fera le pont entre json-schema-toolkit et packages/ui.
 Consommera les schémas via json-schema-toolkit et rendra des composants shadcn.
 
 ### FieldRegistry
-Registre React **agnostique** — ne dépend pas de shadcn.
-Résout n'importe quel composant React par sélecteur (type, format, widget).
-Utilisable avec ou sans packages/ui.
-
-### FieldRegistry
-Registre React de résolution de composants par sélecteur (type, format, widget).
-Partie de json-schema-toolkit, mais nécessite React (peerDep optionnelle).
+Registre React **agnostique** de résolution de composants par sélecteur
+(type, format, widget). Partie de json-schema-toolkit.
+Ne dépend pas de shadcn — utilisable avec ou sans packages/ui.
 
 ### SchemaAdapter
 Interface d'intégration de validateurs externes dans l'écosystème.
@@ -61,11 +57,6 @@ Produit ET démonstration.
 Site de documentation. Déployé sur Vercel.
 Documente tous les packages du toolkit.
 
-### auto-form (futur)
-Package prévu pour orchestrer le cycle complet :
-schéma JSON → validation (json-schema-toolkit) → rendu de champs (FieldRegistry + composants UI) → soumission API.
-Fera le pont entre json-schema-toolkit et packages/ui.
-
 ### GitHub Registry (shadcn)
 Mécanisme de distribution de code via `npx shadcn@latest add WAROL52/code2-base-ui/<item>`.
 Défini dans `registry.json` à la racine. **Ne pas confondre avec FieldRegistry**.
@@ -73,3 +64,9 @@ Défini dans `registry.json` à la racine. **Ne pas confondre avec FieldRegistry
 > **⚠️ Distinction importante :** `FieldRegistry` (dans json-schema-toolkit) est un registre
 > React de *composants* résolus par sélecteur. Le `GitHub Registry` est un mécanisme
 > de *distribution* de fichiers. Même mot, concepts différents.
+
+### Package Creation Workflow
+Processus standard pour créer un nouveau package : design (brainstorming → spec → plan)
+→ implémentation TDD (tests d'abord) → documentation Fumadocs en parallèle
+→ vérification (tests + type check + build) → intégration (registry.json + CONTEXT.md + AGENTS.md).
+Documenté dans `PACKAGE-WORKFLOW.md`.
