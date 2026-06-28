@@ -9,6 +9,7 @@ function zodTypeToJsonType(schema: z.ZodType): string {
   if (schema instanceof z.ZodNumber) return "number";
   if (schema instanceof z.ZodBoolean) return "boolean";
   if (schema instanceof z.ZodArray) return "array";
+  if (schema instanceof z.ZodEnum) return "string";
   return "unknown";
 }
 
@@ -35,9 +36,19 @@ function zodToJsonSchema(schema: z.ZodType): JsonSchema {
       }
 
       const inner = unwrap(fieldSchema);
-      properties[key] = {
-        type: zodTypeToJsonType(inner),
-      };
+      const prop: JsonSchema = { type: zodTypeToJsonType(inner) };
+
+      if (inner instanceof z.ZodEnum) {
+        prop.widget = "select";
+        const def = inner._def as unknown as { entries?: Record<string, string>; values?: Record<string, string> | string[] };
+        if (def.entries) {
+          prop.enum = Object.values(def.entries);
+        } else if (def.values) {
+          prop.enum = Array.isArray(def.values) ? def.values : Object.values(def.values);
+        }
+      }
+
+      properties[key] = prop;
     }
 
     return { type: "object", properties, required };

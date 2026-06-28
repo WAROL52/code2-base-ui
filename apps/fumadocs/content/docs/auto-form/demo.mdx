@@ -1,0 +1,96 @@
+---
+title: Demo
+description: Démonstrations interactives de auto-form en action
+---
+
+## Démo en direct
+
+Les formulaires ci-dessous sont de **véritables instances** de auto-form,
+générées automatiquement à partir de schémas Zod.
+
+---
+
+### Formulaire simple
+
+import { SimpleForm } from "@/components/auto-form/auto-form-demo";
+
+<SimpleForm />
+
+---
+
+### Profil utilisateur
+
+import { UserForm } from "@/components/auto-form/auto-form-demo";
+
+<UserForm />
+
+---
+
+### Validation personnalisée (refine)
+
+import { SignupForm } from "@/components/auto-form/auto-form-demo";
+
+<SignupForm />
+
+---
+
+### Mode composé avec champs conditionnels
+
+import { CustomLayoutForm } from "@/components/auto-form/auto-form-demo";
+
+<CustomLayoutForm />
+
+---
+
+### Extraits de code correspondants
+
+#### Schéma simple (article)
+
+```ts
+const articleSchema = z.object({
+  title: z.string().min(1, "Requis"),
+  category: z.enum(["tech", "design", "business"]),
+  content: z.string().optional(),
+  published: z.boolean().default(false),
+});
+
+function ArticleForm() {
+  return <AutoForm schema={articleSchema} onSubmit={handleSubmit} />;
+}
+```
+
+#### Validation avec refine (signup)
+
+```ts
+const signupSchema = z.object({
+  username: z.string().min(3),
+  password: z.string().min(8),
+  confirm: z.string(),
+}).refine((data) => data.password === data.confirm, {
+  message: "Les mots de passe ne correspondent pas",
+  path: ["confirm"],
+});
+```
+
+#### Mode composé avec champs conditionnels
+
+```tsx
+function DynamicForm() {
+  const [showExtra, setShowExtra] = useState(false);
+
+  return (
+    <AutoForm schema={schema} onSubmit={handleSubmit}>
+      <div className="grid grid-cols-2 gap-3">
+        <AutoField name="title" />
+        <AutoField name="category" />
+      </div>
+      <AutoField name="content" />
+      <button type="button" onClick={() => setShowExtra(!showExtra)}>
+        {showExtra ? "Masquer" : "Afficher"} les options avancées
+      </button>
+      {showExtra && <AutoField name="published" />}
+      <button type="submit">Publier</button>
+    </AutoForm>
+  );
+}
+```

@@ -16,6 +16,7 @@ export function flatfields(schema: JsonSchema, prefix = ""): FieldMeta[] {
 			description: value.description,
 			defaultValue: value.default,
 			enum: value.enum,
+			uiWidget: (value as Record<string, unknown>).widget as string | undefined,
 		};
 
 		if (value.type === "object" && value.properties) {

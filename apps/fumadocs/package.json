@@ -12,7 +12,11 @@
     "format": "biome format --write"
   },
   "dependencies": {
+    "@code2-base-ui/auto-form": "workspace:*",
+    "@code2-base-ui/auto-form-adapter-tanstack": "workspace:*",
+    "@code2-base-ui/auto-form-provider-zod": "workspace:*",
     "@code2-base-ui/auto-form-render-shadcn": "workspace:*",
+    "@code2-base-ui/json-schema-toolkit": "workspace:*",
     "@code2-base-ui/ui": "workspace:*",
     "@fumadocs/story": "^1.1.2",
     "cnfast": "^0.0.8",
@@ -33,6 +37,7 @@
     "@types/react-dom": "^19.2.3",
     "postcss": "^8.5.15",
     "tailwindcss": "^4.3.1",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "zod": "^4.0.0"
   }
 }
