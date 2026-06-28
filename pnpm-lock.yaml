@@ -544,12 +544,24 @@ importers:
       '@code2-base-ui/config':
         specifier: workspace:*
         version: link:../../packages/config
+      '@code2-base-ui/json-schema-toolkit':
+        specifier: workspace:*
+        version: link:../../packages/json-schema-toolkit
+      '@types/react':
+        specifier: 'catalog:'
+        version: 19.2.17
+      '@types/react-dom':
+        specifier: 'catalog:'
+        version: 19.2.3(@types/react@19.2.17)
       typescript:
         specifier: 'catalog:'
         version: 6.0.3
       vitest:
         specifier: ^3.1.0
         version: 3.2.6(@types/debug@4.1.13)(@types/node@26.0.1)(jiti@2.7.0)(jsdom@29.1.1)(lightningcss@1.32.0)(msw@2.14.6(@types/node@26.0.1)(typescript@6.0.3))(yaml@2.9.0)
+      zod:
+        specifier: ^3.24.0
+        version: 3.25.76
 
 packages:
 
