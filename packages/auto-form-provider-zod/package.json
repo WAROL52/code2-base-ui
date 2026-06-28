@@ -15,6 +15,9 @@
     "@code2-base-ui/auto-form": "workspace:*",
     "zod": "^4.1.13"
   },
+  "dependencies": {
+    "@code2-base-ui/json-schema-toolkit": "workspace:*"
+  },
   "devDependencies": {
     "@code2-base-ui/config": "workspace:*",
     "@code2-base-ui/auto-form": "workspace:*",
