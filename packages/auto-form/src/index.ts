@@ -1,3 +1,5 @@
+export { createAutoForm } from "./core/factory";
+
 export type {
   SchemaProvider,
   SchemaProviderFactory,
