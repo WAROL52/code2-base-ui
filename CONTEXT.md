@@ -44,7 +44,17 @@ Utilisé par AutoField en interne, disponible pour usage personnalisé.
 ### SchemaProvider
 Abstraction d'un moteur de schéma. Interface : `fields → FieldMeta[]`,
 `validate(data) → ValidationResult`, `toJson() → JsonSchema`.
-Implémentations : ZodProvider, TypeBoxProvider.
+Implémentations : ZodProvider (utilise `z.toJSONSchema()` de Zod v4),
+TypeBoxProvider.
+
+### z.toJSONSchema()
+API native Zod v4+ qui convertit un schéma Zod en JSON Schema Draft 2020-12.
+Génère `title`, `description`, `format`, `enum`, `required`, `minLength`,
+etc. à partir des contraintes Zod + `.meta({ title, description })`.
+
+Le ZodProvider l'utilise pour produire le `jsonSchema` brut, puis `flatfields()`
+extrait les `FieldMeta` et enrichit avec `label` (depuis `title`) et
+`uiWidget: "select"` (auto-détecté si `enum` présent).
 
 ### FormStateAdapter
 Abstraction d'un moteur d'état de formulaire. Interface : useForm, useField, submit.
@@ -62,6 +72,18 @@ Un des outputs de `createAutoForm()`. L'utilisateur final utilise AutoForm/AutoF
 ### AutoForm (preset)
 Export par défaut du package : `createAutoForm({ zod, tanstack, shadcn, column })`.
 Prêt à l'emploi. L'utilisateur avancé peut créer son propre auto-form via createAutoForm.
+
+### FieldMeta
+Métadonnées d'un champ de formulaire. Inclut `path`, `type`, `format`,
+`label` (toujours présent, dérivé du `title` JSON Schema ou humanisé du path),
+`description` (helper text), `required`, `enum`, `uiWidget`, `defaultValue`.
+
+### humanizePath
+Fonction utilitaire dans json-schema-toolkit qui transforme un `path` machine
+en label lisible : camelCase ET snake_case → Title Case.
+Exemple : `"shippingAddressStreet"` → `"Shipping Address Street"`.
+
+Utilisée comme fallback par tous les providers quand le schéma n'a pas de `title`.
 
 ### FieldRegistry
 Registre React **agnostique** de résolution de composants par sélecteur

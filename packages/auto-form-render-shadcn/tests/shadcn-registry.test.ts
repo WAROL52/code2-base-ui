@@ -11,36 +11,36 @@ describe("createShadcnRegistry", () => {
 
   it("resolves a component for string type", () => {
     const registry = createShadcnRegistry();
-    const field: FieldMeta = { path: "name", type: "string" };
+    const field: FieldMeta = { path: "name", type: "string", label: "Name" };
     const component = registry.resolve(field);
     expect(component).toBeDefined();
   });
 
   it("resolves a component for boolean type", () => {
     const registry = createShadcnRegistry();
-    const field: FieldMeta = { path: "active", type: "boolean" };
+    const field: FieldMeta = { path: "active", type: "boolean", label: "Active" };
     const component = registry.resolve(field);
     expect(component).toBeDefined();
   });
 
   it("resolves a component for email format", () => {
     const registry = createShadcnRegistry();
-    const field: FieldMeta = { path: "email", type: "string", format: "email" };
+    const field: FieldMeta = { path: "email", type: "string", format: "email", label: "Email" };
     const component = registry.resolve(field);
     expect(component).toBeDefined();
   });
 
   it("resolves a component for number type", () => {
     const registry = createShadcnRegistry();
-    const field: FieldMeta = { path: "age", type: "number" };
+    const field: FieldMeta = { path: "age", type: "number", label: "Age" };
     const component = registry.resolve(field);
     expect(component).toBeDefined();
   });
 
   it("resolves different components for different field types", () => {
     const registry = createShadcnRegistry();
-    const stringField: FieldMeta = { path: "name", type: "string" };
-    const boolField: FieldMeta = { path: "active", type: "boolean" };
+    const stringField: FieldMeta = { path: "name", type: "string", label: "Name" };
+    const boolField: FieldMeta = { path: "active", type: "boolean", label: "Active" };
     const stringComp = registry.resolve(stringField);
     const boolComp = registry.resolve(boolField);
     expect(stringComp).not.toBe(boolComp);

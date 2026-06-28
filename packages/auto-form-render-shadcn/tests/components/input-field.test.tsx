@@ -10,14 +10,14 @@ describe("InputField", () => {
 
   it("is resolved by the registry for string type", () => {
     const registry = createShadcnRegistry();
-    const field: FieldMeta = { path: "name", type: "string" };
+    const field: FieldMeta = { path: "name", type: "string", label: "Name" };
     const component = registry.resolve(field);
     expect(component).toBe(InputField);
   });
 
   it("is resolved by the registry for email format", () => {
     const registry = createShadcnRegistry();
-    const field: FieldMeta = { path: "email", type: "string", format: "email" };
+    const field: FieldMeta = { path: "email", type: "string", format: "email", label: "Email" };
     const component = registry.resolve(field);
     expect(component).toBe(InputField);
   });

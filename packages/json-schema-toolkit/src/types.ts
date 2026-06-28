@@ -1,6 +1,7 @@
 export interface JsonSchema {
 	type?: string | string[];
 	format?: string;
+	title?: string;
 	properties?: Record<string, JsonSchema>;
 	items?: JsonSchema;
 	required?: string[];
@@ -24,6 +25,7 @@ export interface ValidationError {
 export interface FieldMeta {
 	path: string;
 	type: string;
+	label: string;
 	format?: string;
 	uiWidget?: string;
 	required?: boolean;

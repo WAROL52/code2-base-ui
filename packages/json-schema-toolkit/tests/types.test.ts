@@ -22,6 +22,14 @@ describe("core types", () => {
 		expectTypeOf(schema).toMatchTypeOf<JsonSchema>();
 	});
 
+	it("JsonSchema allows title property", () => {
+		const schema: JsonSchema = {
+			type: "string",
+			title: "Full Name",
+		};
+		expectTypeOf(schema.title).toEqualTypeOf<string | undefined>();
+	});
+
 	it("JsonSchema allows additional properties", () => {
 		const schema: JsonSchema = {
 			type: "string",
@@ -47,12 +55,14 @@ describe("core types", () => {
 		const meta: FieldMeta = {
 			path: "user.name",
 			type: "string",
+			label: "User Name",
 			format: "email",
 			required: true,
 			description: "User's full name",
 		};
 		expectTypeOf(meta.path).toBeString();
 		expectTypeOf(meta.type).toBeString();
+		expectTypeOf(meta.label).toBeString();
 		expectTypeOf(meta.format).toEqualTypeOf<string | undefined>();
 	});
 

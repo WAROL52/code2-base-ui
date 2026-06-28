@@ -1,4 +1,5 @@
 import type { FieldMeta, JsonSchema } from "../types";
+import { humanizePath } from "./humanize-path";
 
 export function flatfields(schema: JsonSchema, prefix = ""): FieldMeta[] {
 	const fields: FieldMeta[] = [];
@@ -11,12 +12,13 @@ export function flatfields(schema: JsonSchema, prefix = ""): FieldMeta[] {
 		const meta: FieldMeta = {
 			path,
 			type: (Array.isArray(value.type) ? value.type[0] : value.type) ?? "unknown",
+			label: value.title ?? humanizePath(key),
 			format: value.format,
 			required: Array.isArray(schema.required) && schema.required.includes(key),
 			description: value.description,
 			defaultValue: value.default,
 			enum: value.enum,
-			uiWidget: (value as Record<string, unknown>).widget as string | undefined,
+			uiWidget: ((value as Record<string, unknown>).widget as string | undefined) ?? (value.enum ? "select" : undefined),
 		};
 
 		if (value.type === "object" && value.properties) {

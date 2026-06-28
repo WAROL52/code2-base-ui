@@ -5,8 +5,8 @@ import type { FieldMeta } from "../../src/types";
 describe("fromEntries", () => {
   it("reconstructs a simple schema", () => {
     const input: [string, FieldMeta][] = [
-      ["name", { path: "name", type: "string" }],
-      ["age", { path: "age", type: "number" }],
+      ["name", { path: "name", type: "string", label: "Name" }],
+      ["age", { path: "age", type: "number", label: "Age" }],
     ];
     const result = fromEntries(input);
     expect(result.type).toBe("object");

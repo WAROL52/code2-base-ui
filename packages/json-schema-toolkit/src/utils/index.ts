@@ -1,4 +1,5 @@
 export { flatfields } from "./flatfields";
+export { humanizePath } from "./humanize-path";
 export { entries } from "./entries";
 export { fromEntries } from "./from-entries";
 export { groupBy } from "./group-by";

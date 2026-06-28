@@ -60,6 +60,77 @@ describe("flatfields", () => {
 		]);
 	});
 
+	it("derives label from title when present", () => {
+		const schema: JsonSchema = {
+			type: "object",
+			properties: {
+				email: {
+					type: "string",
+					title: "Email Address",
+				},
+			},
+		};
+		const result = flatfields(schema);
+		expect(result[0]?.label).toBe("Email Address");
+	});
+
+	it("falls back to humanized path when no title", () => {
+		const schema: JsonSchema = {
+			type: "object",
+			properties: {
+				email_address: { type: "string" },
+			},
+		};
+		const result = flatfields(schema);
+		expect(result[0]?.label).toBe("Email Address");
+	});
+
+	it("sets uiWidget to select for enum fields", () => {
+		const schema: JsonSchema = {
+			type: "object",
+			properties: {
+				role: {
+					type: "string",
+					enum: ["admin", "user"],
+				},
+			},
+		};
+		const result = flatfields(schema);
+		expect(result[0]?.uiWidget).toBe("select");
+		expect(result[0]?.enum).toEqual(["admin", "user"]);
+	});
+
+	it("does not override explicit widget with enum auto-detect", () => {
+		const schema: JsonSchema = {
+			type: "object",
+			properties: {
+				tags: {
+					type: "string",
+					enum: ["a", "b", "c"],
+					widget: "radio",
+				},
+			},
+		};
+		const result = flatfields(schema);
+		expect(result[0]?.uiWidget).toBe("radio");
+	});
+
+	it("keeps description separate from label", () => {
+		const schema: JsonSchema = {
+			type: "object",
+			properties: {
+				name: {
+					type: "string",
+					title: "Full Name",
+					description: "Enter your legal full name",
+				},
+			},
+		};
+		const result = flatfields(schema);
+		expect(result[0]?.label).toBe("Full Name");
+		expect(result[0]?.description).toBe("Enter your legal full name");
+	});
+
 	it("includes format, description, default, enum", () => {
 		const schema: JsonSchema = {
 			type: "object",
