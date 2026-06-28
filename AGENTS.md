@@ -11,6 +11,7 @@ Monorepo **Better-T-Stack** orchestré par **Nx** + **pnpm workspaces**.
 - `packages/api` — Procédures oRPC (routage type-safe)
 - `packages/config` — `tsconfig.base.json` partagé
 - `packages/env` — Validation d'environnement avec `@t3-oss/env` (split `server.ts` / `web.ts`)
+- `packages/json-schema-toolkit` — Outils copy-paste basés sur JSON Schema (Standard Schema, TypeBox, FieldRegistry, SchemaAdapter)
 
 ## Commandes essentielles
 
@@ -32,6 +33,49 @@ pnpm fix                  # ultracite fix (auto-correct)
 - Indentation : tabulations (config Biome)
 - Quotes : doubles en JS/TS
 
+## json-schema-toolkit
+
+Package `@code2-base-ui/json-schema-toolkit` — écosystème d'outils copy-paste JSON Schema.
+
+### Structure
+
+```
+packages/json-schema-toolkit/src/
+├── index.ts          # Exports principaux (.)
+├── types.ts          # JsonSchema, FieldMeta, ValidationResult
+├── core/schema.ts    # Standard Schema + TypeBox bridge
+├── utils/            # flatfields, entries, fromEntries, groupBy, keys, validateSchema
+├── registry/         # FieldRegistry (React)
+└── adapter/types.ts  # SchemaAdapter interface
+```
+
+### Sous-chemins d'import
+
+```ts
+import { ... } from "@code2-base-ui/json-schema-toolkit"         // principal
+import { ... } from "@code2-base-ui/json-schema-toolkit/core"    // core/schema.ts
+import { ... } from "@code2-base-ui/json-schema-toolkit/utils"   // utilitaires
+import { ... } from "@code2-base-ui/json-schema-toolkit/registry" // FieldRegistry
+import type { ... } from "@code2-base-ui/json-schema-toolkit/adapter" // SchemaAdapter
+```
+
+### Tests
+
+```bash
+pnpm --filter @code2-base-ui/json-schema-toolkit test       # vitest run
+pnpm --filter @code2-base-ui/json-schema-toolkit check-types # tsc --noEmit
+```
+
+- Tests de types avec `expectTypeOf` (vitest)
+- TDD types-first : `expectTypeOf` avant implémentation
+- TypeBox v0.34 comme backend Standard Schema (wrapper `createStandardSchema`)
+- `FieldRegistry` dépend de React (peerDependency optionnelle)
+
+### Documentation Fumadocs
+
+Pages dans `apps/fumadocs/content/docs/json-schema-toolkit/` :
+index, installation, core, utils, registry, adapter, api-reference.
+
 ## Particularités techniques
 
 - **oRPC** : le routeur central est dans `packages/api/src/routers/index.ts`. Les procédures utilisent `publicProcedure` (défini dans `packages/api/src/index.ts`). Contexte défini dans `context.ts`.
@@ -43,7 +87,8 @@ pnpm fix                  # ultracite fix (auto-correct)
 
 ## Tests
 
-Aucun framework de test configuré. Le hook pre-commit Husky lance `pnpm test` (actuellement sans effet — pas de commande test définie).
+- `@code2-base-ui/json-schema-toolkit` — vitest (44 tests, types-first avec `expectTypeOf`)
+- `pnpm test` — pas de commande racine définie (le hook Husky lance `pnpm test` sans effet)
 
 ## Docker
 
@@ -59,7 +104,8 @@ Le Dockerfile utilise une build multi-stage avec Next.js standalone output. `SKI
 ## Conventions repo
 
 - `verbatimModuleSyntax` — penser à `import type`
-- Pas de barrel files (`index.ts` réexporteurs) — importer directement depuis les fichiers sources
+- Pas de barrel files `index.ts` réexporteurs dans les apps — importer directement depuis les fichiers sources
+- Les packages avec sous-chemins d'export (`json-schema-toolkit`) utilisent des `index.ts` pour les exports de sous-chemins
 - L'IA SDK Vercel est disponible dans `apps/web` avec `@ai-sdk/google` et `@ai-sdk/react`
 - Les routes Next.js utilisent `typedRoutes: true`
 

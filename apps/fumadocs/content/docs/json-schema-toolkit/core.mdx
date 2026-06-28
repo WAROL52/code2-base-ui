@@ -1,0 +1,60 @@
+---
+title: Core — Standard Schema
+description: Schémas conformes Standard Schema via TypeBox
+---
+
+Le module `core` fournit les primitives pour créer des schémas conformes
+au standard **Standard Schema V1** en utilisant **TypeBox** comme moteur.
+
+## createStandardSchema
+
+Enrichit un schéma TypeBox avec les propriétés `~standard` requises par
+`StandardSchemaV1` :
+
+```ts
+import { createStandardSchema, stringSchema } from "@code2-base-ui/json-schema-toolkit";
+
+const myString = createStandardSchema(Type.String());
+// myString["~standard"].version // 1
+```
+
+## stringSchema / numberSchema / objectSchema
+
+Raccourcis pour créer rapidement des schémas courants :
+
+```ts
+const str = stringSchema();
+const num = numberSchema();
+const obj = objectSchema({
+	name: stringSchema(),
+	age: numberSchema(),
+});
+```
+
+## toJsonSchema
+
+Convertit un schéma Standard Schema en JSON Schema brut :
+
+```ts
+const json = toJsonSchema(stringSchema());
+json.type; // "string"
+```
+
+## validateSchema
+
+Valide des données contre un schéma Standard Schema :
+
+```ts
+const schema = stringSchema();
+const result = validateSchema(schema, "hello");
+result.success; // true
+
+const bad = validateSchema(schema, 42);
+bad.success; // false
+bad.errors; // [{ path: "", message: "Expected string" }]
+```
+
+## Compatibilité
+
+Tout schéma créé via ces fonctions est compatible `StandardSchemaV1`,
+permettant l'interopérabilité avec d'autres outils de l'écosystème.

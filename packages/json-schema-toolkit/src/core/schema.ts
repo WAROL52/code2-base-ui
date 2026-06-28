@@ -3,88 +3,104 @@ import { Type, type TSchema } from "@sinclair/typebox";
 import { Value } from "@sinclair/typebox/value";
 import type { JsonSchema, ValidationResult } from "../types";
 
-type StandardIssue = {
-	message?: string;
-	path?: ReadonlyArray<{ key: string } | string>;
+function toStandardPath(tbPath: string): Array<{ key: string } | string> {
+  if (!tbPath || tbPath === "") return [];
+  return tbPath
+    .split("/")
+    .filter(Boolean)
+    .map((segment) => ({ key: segment }));
+}
+
+type TStandardSchema = TSchema & StandardSchemaV1;
+
+function createStandardSchema<T extends TSchema>(schema: T): TStandardSchema {
+  return {
+    ...schema,
+    "~standard": {
+      version: 1,
+      vendor: "code2-base-ui",
+      validate(value: unknown) {
+        if (Value.Check(schema as TSchema, value)) {
+          return { value };
+        }
+
+        const issues: Array<{ message: string; path: Array<{ key: string } | string> }> = [];
+        for (const error of Value.Errors(schema as TSchema, value)) {
+          issues.push({
+            message: error.message,
+            path: toStandardPath(error.path),
+          });
+        }
+        return { issues };
+      },
+    },
+  } as unknown as TStandardSchema;
+}
+
+function stringSchema(): TStandardSchema {
+  return createStandardSchema(Type.String());
+}
+
+function numberSchema(): TStandardSchema {
+  return createStandardSchema(Type.Number());
+}
+
+function objectSchema(properties: Record<string, TStandardSchema>): TStandardSchema {
+  return createStandardSchema(Type.Object(properties));
+}
+
+function toJsonSchema(schema: TStandardSchema): JsonSchema {
+  const rawJson = schema as unknown;
+  return rawJson as JsonSchema;
+}
+
+type ValidateResult = {
+  value?: unknown;
+  issues?: Array<{ message: string; path: Array<{ key: string } | string> }>;
 };
 
-type StandardValidateResult<T> =
-	| { value: T }
-	| { issues: ReadonlyArray<StandardIssue> };
-
-export type StandardSchema = TSchema & StandardSchemaV1;
-
-function toStandardPath(tbPath: string): Array<{ key: string } | string> {
-	if (!tbPath || tbPath === "") return [];
-	return tbPath
-		.split("/")
-		.filter(Boolean)
-		.map((segment) => ({ key: segment }));
-}
-
-function createStandardSchema<T extends TSchema>(schema: T): T & StandardSchemaV1 {
-	const standard: StandardSchemaV1 = {
-		"~standard": {
-			version: 1,
-			vendor: "code2-base-ui",
-			validate(value: unknown): StandardValidateResult<unknown> {
-				if (Value.Check(schema, value)) {
-					return { value };
-				}
-
-				const issues: Array<StandardIssue> = [];
-				for (const error of Value.Errors(schema, value)) {
-					issues.push({
-						message: error.message,
-						path: toStandardPath(error.path),
-					});
-				}
-				return { issues };
-			},
-		},
-	};
-
-	return { ...schema, ...standard } as T & StandardSchemaV1;
-}
-
-export function stringSchema(): StandardSchema {
-	return createStandardSchema(Type.String()) as StandardSchema;
-}
-
-export function numberSchema(): StandardSchema {
-	return createStandardSchema(Type.Number()) as StandardSchema;
-}
-
-export function objectSchema(properties: Record<string, TSchema>): StandardSchema {
-	return createStandardSchema(Type.Object(properties)) as StandardSchema;
-}
-
-export function toJsonSchema(schema: TSchema): JsonSchema {
-	return JSON.parse(JSON.stringify(schema));
-}
-
-export function validateSchema(
-	schema: StandardSchema,
-	data: unknown,
+function validateSchema(
+  schema: TStandardSchema,
+  data: unknown,
 ): ValidationResult {
-	const result = schema["~standard"].validate(data);
+  const result = schema["~standard"].validate(data) as ValidateResult;
 
-	if (result instanceof Promise) {
-		return {
-			success: false,
-			errors: [{ path: "", message: "Async validation not supported yet" }],
-		};
-	}
+  if (!result.issues || result.issues.length === 0) {
+    return { success: true, errors: [] };
+  }
 
-	if ("value" in result) {
-		return { success: true, errors: [] };
-	}
-
-	return {
-		success: false,
-		errors: (result.issues ?? []).map((issue) => ({
-			path: issue.path?.map((p) => (typeof p === "string" ? p : p.key)).join(".") ?? "",
-			message: issue.message ?? "Validation error",
-		})),
-	};
+  return {
+    success: false,
+    errors: result.issues.map(
+      (issue) => ({
+        path: issue.path?.map((p) => (typeof p === "string" ? p : p.key)).join(".") ?? "",
+        message: issue.message ?? "Validation error",
+      }),
+    ),
+  };
 }
+
+export {
+  createStandardSchema,
+  type TStandardSchema as StandardSchema,
+  stringSchema,
+  numberSchema,
+  objectSchema,
+  toJsonSchema,
+  validateSchema,
+};
+
+/**
+ * @deprecated Use stringSchema() instead
+ */
+export { stringSchema as string };
+
+/**
+ * @deprecated Use numberSchema() instead
+ */
+export { numberSchema as number };
+
+/**
+ * @deprecated Use objectSchema() instead
+ */
+export { objectSchema as object };

@@ -1,0 +1,46 @@
+---
+title: json-schema-toolkit
+description: Écosystème d'outils copy-paste basé sur JSON Schema
+---
+
+**json-schema-toolkit** est un package d'outils modulaires pour manipuler,
+valider et générer des interfaces utilisateur à partir de JSON Schema.
+
+Conçu comme un « registre » à la shadcn/ui, il fournit les briques
+fondamentales pour construire des générateurs de formulaires, de tableaux,
+et d'autres composants dynamiques.
+
+## Fonctionnalités
+
+- **Standard Schema** — Conformité au standard interopérable via TypeBox
+- **Utilitaires** — Aplatissement, regroupement, extraction de champs
+- **FieldRegistry** — Résolution de composants par sélecteur (type/format/widget)
+- **SchemaAdapter** — Interface unifiée pour intégrer des validateurs externes
+- **Tests** — Couverture type-safe avec `expectTypeOf`
+
+## Structure du package
+
+```
+@code2-base-ui/json-schema-toolkit
+├── .                     # Exports principaux
+├── /core                 # Schémas Standard Schema + TypeBox
+├── /utils                # Utilitaires de manipulation
+├── /registry             # FieldRegistry React
+└── /adapter              # Interface SchemaAdapter
+```
+
+## Exports
+
+Le package expose plusieurs sous-chemins via `package.json`:
+
+```json
+{
+	"exports": {
+		".": "./src/index.ts",
+		"./core": "./src/core/index.ts",
+		"./utils": "./src/utils/index.ts",
+		"./registry": "./src/registry/index.ts",
+		"./adapter": "./src/adapter/index.ts"
+	}
+}
+```

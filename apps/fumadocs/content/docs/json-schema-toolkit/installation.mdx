@@ -1,0 +1,43 @@
+---
+title: Installation
+description: Installer et configurer json-schema-toolkit
+---
+
+## Installation
+
+```bash
+pnpm add @code2-base-ui/json-schema-toolkit
+```
+
+Le package fonctionne en environnement **Node.js** et **navigateur**.
+
+## Dépendances
+
+- `@sinclair/typebox` — Définition typée de schémas et validation runtime
+- `@standard-schema/spec` — Types pour la conformité Standard Schema
+- `react` (optionnel) — Requis uniquement pour `FieldRegistry`
+
+## Configuration TypeScript
+
+Le package utilise `verbatimModuleSyntax`. Assurez-vous que votre
+`tsconfig.json` inclut :
+
+```json
+{
+	"compilerOptions": {
+		"verbatimModuleSyntax": true,
+		"moduleResolution": "bundler",
+		"module": "preserve"
+	}
+}
+```
+
+## Import
+
+```ts
+import { createStandardSchema, stringSchema, flatfields } from "@code2-base-ui/json-schema-toolkit";
+
+// Sous-chemins
+import type { SchemaAdapter } from "@code2-base-ui/json-schema-toolkit/adapter";
+import { FieldRegistry } from "@code2-base-ui/json-schema-toolkit/registry";
+```

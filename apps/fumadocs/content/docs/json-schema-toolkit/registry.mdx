@@ -1,0 +1,67 @@
+---
+title: FieldRegistry
+description: Registre de composants pour la génération d'UI dynamique
+---
+
+`FieldRegistry` est un registre centralisé qui associe des composants React
+à des sélecteurs de champ (type, format, widget).
+
+Conçu pour les environnements React (client et RSC).
+
+## Création
+
+```ts
+import { FieldRegistry } from "@code2-base-ui/json-schema-toolkit/registry";
+
+const registry = new FieldRegistry();
+```
+
+## Enregistrement
+
+```ts
+registry.register({ type: "string" }, StringField);
+registry.register({ type: "string", format: "email" }, EmailField, 10);
+registry.register({ widget: "textarea" }, TextareaField);
+```
+
+Le troisième paramètre est la priorité (défaut : 0). Les entrées sont
+résolues par priorité décroissante.
+
+## Résolution
+
+```ts
+const component = registry.resolve({
+	path: "email",
+	type: "string",
+	format: "email",
+});
+// Retourne EmailField (priorité 10 > 0)
+```
+
+## Fallback
+
+```ts
+registry.setFallback(DefaultField);
+```
+
+Levée d'exception si aucun match et aucun fallback :
+
+```ts
+registry.resolve({ path: "x", type: "unknown" });
+// Throw: Aucun composant enregistré pour le champ "x"
+```
+
+## Sélecteurs
+
+Les clés de sélection sont générées selon le pattern `[type, format, widget]`.
+Si un critère est omis, toutes les variantes sont considérées :
+
+- `{ type: "string" }` → match pour `string` tous formats/widgets
+- `{ format: "email" }` → match pour tous types ayant format email
+- `{ widget: "textarea" }` → match pour tous types/widgets
+
+## Nettoyage
+
+```ts
+registry.clear(); // Réinitialise toutes les entrées et le fallback
+```

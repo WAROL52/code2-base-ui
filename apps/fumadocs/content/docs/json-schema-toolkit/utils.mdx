@@ -1,0 +1,90 @@
+---
+title: Utilitaires
+description: Fonctions de manipulation de schémas
+---
+
+Les utilitaires travaillent sur des objets `JsonSchema` et retournent des
+résultats typés pour faciliter la génération d'UI.
+
+## flatfields
+
+Aplatit un schéma imbriqué en une liste plate de `FieldMeta` :
+
+```ts
+import { flatfields } from "@code2-base-ui/json-schema-toolkit";
+
+const schema = {
+	type: "object",
+	properties: {
+		name: { type: "string" },
+		address: {
+			type: "object",
+			properties: {
+				street: { type: "string" },
+			},
+		},
+	},
+};
+
+const fields = flatfields(schema);
+// [
+//   { path: "name", type: "string" },
+//   { path: "address", type: "object" },
+//   { path: "address.street", type: "string" },
+// ]
+```
+
+## entries
+
+Extrait les entrées `[clé, FieldMeta]` d'un schéma :
+
+```ts
+const entries = entries(schema);
+// [["name", { path: "name", type: "string" }], ...]
+```
+
+## fromEntries
+
+Reconstruit un schéma depuis un tableau d'entrées :
+
+```ts
+const schema = fromEntries([
+	["name", { path: "name", type: "string" }],
+	["age", { path: "age", type: "number" }],
+]);
+schema.properties?.name?.type; // "string"
+```
+
+## groupBy
+
+Regroupe les champs selon un critère (type, format, required, ou fonction) :
+
+```ts
+const grouped = groupBy(schema, { by: "type" });
+// { string: [...], number: [...], object: [...] }
+
+const custom = groupBy(schema, {
+	by: (field) => (field.required ? "required" : "optional"),
+});
+```
+
+## keys
+
+Extrait les clés (chemins) des propriétés d'un schéma :
+
+```ts
+const keys = keys(schema);
+// ["name", "address", "address.street"]
+```
+
+## validateSchema
+
+Valide des données contre un schema JSON Schema simple :
+
+```ts
+const result = validateSchema(
+	{ type: "object", required: ["name"], properties: { name: { type: "string" } } },
+	{ name: "Alice" },
+);
+result.success; // true
+```

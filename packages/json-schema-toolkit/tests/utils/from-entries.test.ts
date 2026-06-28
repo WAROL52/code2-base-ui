@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { fromEntries } from "../../src/utils/from-entries";
-import type { JsonSchema, FieldMeta } from "../../src/types";
+import type { FieldMeta } from "../../src/types";
 
 describe("fromEntries", () => {
   it("reconstructs a simple schema", () => {

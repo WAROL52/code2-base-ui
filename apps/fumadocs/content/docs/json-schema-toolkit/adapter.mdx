@@ -1,0 +1,41 @@
+---
+title: SchemaAdapter
+description: Interface d'intégration de validateurs externes
+---
+
+`SchemaAdapter` est une interface pour intégrer des validateurs externes
+dans l'écosystème json-schema-toolkit.
+
+## Interface
+
+```ts
+interface SchemaAdapter<N = unknown> {
+	readonly name: string;
+	fromJsonSchema: (schema: JsonSchema) => N;
+	toJsonSchema: (nativeSchema: N) => JsonSchema;
+	validate: (nativeSchema: N, data: unknown) => ValidationResult;
+}
+```
+
+- `N` — Type du schéma natif de l'adaptateur
+- `fromJsonSchema` — Convertisseur JSON Schema → format natif
+- `toJsonSchema` — Convertisseur format natif → JSON Schema
+- `validate` — Validation via le moteur natif
+
+## Utilisation
+
+```ts
+import type { SchemaAdapter } from "@code2-base-ui/json-schema-toolkit/adapter";
+
+const myAdapter: SchemaAdapter<MySchema> = {
+	name: "my-validator",
+	fromJsonSchema(schema) { /* ... */ },
+	toJsonSchema(native) { /* ... */ },
+	validate(native, data) { /* ... */ },
+};
+```
+
+## Interopérabilité
+
+Chaque adaptateur peut exposer un schéma conforme `StandardSchemaV1`
+pour garantir l'interopérabilité entre outils de l'écosystème.

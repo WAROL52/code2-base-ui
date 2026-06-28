@@ -1,0 +1,162 @@
+---
+title: API Reference
+description: Référence complète des types et fonctions
+---
+
+## Types
+
+### JsonSchema
+
+```ts
+interface JsonSchema {
+	type?: string | string[];
+	format?: string;
+	properties?: Record<string, JsonSchema>;
+	items?: JsonSchema;
+	required?: string[];
+	enum?: unknown[];
+	const?: unknown;
+	description?: string;
+	default?: unknown;
+	[key: string]: unknown;
+}
+```
+
+### FieldMeta
+
+```ts
+interface FieldMeta {
+	path: string;
+	type: string;
+	format?: string;
+	uiWidget?: string;
+	required?: boolean;
+	description?: string;
+	defaultValue?: unknown;
+	enum?: unknown[];
+	properties?: Record<string, FieldMeta>;
+}
+```
+
+### ValidationResult / ValidationError
+
+```ts
+interface ValidationResult {
+	success: boolean;
+	errors: ValidationError[];
+}
+
+interface ValidationError {
+	path: string;
+	message: string;
+}
+```
+
+### RegistrySelector / RegistryEntry
+
+```ts
+interface RegistrySelector {
+	type?: string;
+	format?: string;
+	widget?: string;
+}
+
+interface RegistryEntry {
+	selector: RegistrySelector;
+	component: FieldComponent;
+	priority: number;
+}
+```
+
+### SchemaAdapter
+
+```ts
+interface SchemaAdapter<N = unknown> {
+	readonly name: string;
+	fromJsonSchema: (schema: JsonSchema) => N;
+	toJsonSchema: (nativeSchema: N) => JsonSchema;
+	validate: (nativeSchema: N, data: unknown) => ValidationResult;
+}
+```
+
+## Fonctions
+
+### createStandardSchema
+
+```ts
+function createStandardSchema<T extends TSchema>(schema: T): TStandardSchema
+```
+
+Enrichit un schéma TypeBox avec la conformité Standard Schema V1.
+
+### stringSchema / numberSchema / objectSchema
+
+```ts
+function stringSchema(): TStandardSchema
+function numberSchema(): TStandardSchema
+function objectSchema(properties: Record<string, TStandardSchema>): TStandardSchema
+```
+
+Raccourcis pour créer des schémas typés.
+
+### toJsonSchema
+
+```ts
+function toJsonSchema(schema: TStandardSchema): JsonSchema
+```
+
+### validateSchema (Standard Schema)
+
+```ts
+function validateSchema(schema: TStandardSchema, data: unknown): ValidationResult
+```
+
+### flatfields
+
+```ts
+function flatfields(schema: JsonSchema, prefix?: string): FieldMeta[]
+```
+
+### entries
+
+```ts
+function entries(schema: JsonSchema): [string, FieldMeta][]
+```
+
+### fromEntries
+
+```ts
+function fromEntries(entries: [string, FieldMeta][]): JsonSchema
+```
+
+### groupBy
+
+```ts
+function groupBy(schema: JsonSchema, criteria: GroupCriteria): Record<string, FieldMeta[]>
+```
+
+### keys
+
+```ts
+function keys(schema: JsonSchema): string[]
+```
+
+### validateSchema (JSON Schema)
+
+```ts
+function validateSchema(schema: JsonSchema, data: unknown): ValidationResult
+```
+
+## Classes
+
+### FieldRegistry
+
+```ts
+class FieldRegistry {
+	register<T extends FieldComponent>(selector: RegistrySelector, component: T, priority?: number): void
+	resolve(field: FieldMeta): FieldComponent
+	setFallback(component: FieldComponent): void
+	clear(): void
+	static selectorKeys(selector: RegistrySelector): string[]
+}
+```

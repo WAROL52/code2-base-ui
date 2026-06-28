@@ -15,7 +15,7 @@ describe("core/schema types", () => {
 	});
 
 	it("StandardSchema is assignable from TSchema", () => {
-		expectTypeOf<stringSchema>().toMatchTypeOf<() => StandardSchema>();
+		expectTypeOf<typeof stringSchema>().toMatchTypeOf<() => StandardSchema>();
 	});
 });
 

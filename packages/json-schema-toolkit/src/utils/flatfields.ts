@@ -19,7 +19,7 @@ export function flatfields(schema: JsonSchema, prefix = ""): FieldMeta[] {
 		};
 
 		if (value.type === "object" && value.properties) {
-			meta.properties = value.properties as Record<string, FieldMeta>;
+			meta.properties = value.properties as unknown as Record<string, FieldMeta>;
 		}
 
 		fields.push(meta);
