@@ -4,7 +4,7 @@
 
 import type { SchemaProvider } from "@code2-base-ui/auto-form";
 import type { FieldRegistry } from "@code2-base-ui/json-schema-toolkit";
-import type * as Type from "@sinclair/typebox";
+import type * as Type from "@code2-base-ui/json-schema-toolkit/typebox";
 import type {
 	FormApi,
 	FormAsyncValidateOrFn,

@@ -12,7 +12,6 @@
   "dependencies": {
     "@code2-base-ui/json-schema-toolkit": "workspace:*",
     "@code2-base-ui/auto-form": "workspace:*",
-    "@sinclair/typebox": "^0.34.49",
     "@code2-base-ui/ui": "workspace:*",
     "@tanstack/react-form": "catalog:"
   },

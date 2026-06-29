@@ -9,13 +9,13 @@ import {
 	FieldGroup,
 	FieldLegend,
 	FieldSet,
-} from "@code2-base-ui/ui";
-import type * as Type from "@sinclair/typebox";
+} from "@code2-base-ui/ui/components/field";
+import type * as Type from "@code2-base-ui/json-schema-toolkit/typebox";
 import type {
 	FormAsyncValidateOrFn,
 	FormValidateOrFn,
 } from "@tanstack/react-form";
-import type { FieldMeta } from "./core/types";
+import type { FieldMeta } from "@code2-base-ui/json-schema-toolkit";
 // import { defaultRegistry, type FieldRegistry } from "./registry";
 import type { TObject, UseFormHookReturn } from "./types";
 
@@ -116,7 +116,7 @@ export function AutoFormField<
 	TOnServer,
 	TSubmitMeta
 >) {
-	const { path, label, description, uiHidden, resolvedSchema, placeholder } =
+	const { path, label, description, uiHidden, placeholder } =
 		fieldMeta;
 
 	if (uiHidden) {
@@ -147,22 +147,13 @@ export function AutoFormField<
 	// Pour les types primitifs, on utilise le registre
 	const Component = registry.resolve(fieldMeta);
 
-	return (
-		<form.Field
-			name={path}
-			validators={{
-				onChange: ({ value }: { value: unknown }) => {
-					const nativeSchema = adapter.fromJsonSchema(resolvedSchema);
-					const result = adapter.validate(nativeSchema, value);
-					return result.success ? undefined : result.errors?.[0]?.message;
-				},
-			}}
-		>
+		return (
+		<form.Field name={path}>
 			{(field) => (
 				<Component
 					className={fieldMeta.uiReadonly ? "opacity-50" : ""}
 					disabled={fieldMeta.uiReadonly}
-					error={field.state.meta.errors?.[0]?.toString()}
+					error={field.state.meta.errors?.[0] as string | undefined}
 					field={fieldMeta}
 					id={path}
 					key={path}

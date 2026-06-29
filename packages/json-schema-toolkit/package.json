@@ -8,7 +8,14 @@
     "./core": "./src/core/index.ts",
     "./utils": "./src/utils/index.ts",
     "./registry": "./src/registry/index.ts",
-    "./adapter": "./src/adapter/index.ts"
+    "./adapter": "./src/adapter/index.ts",
+    "./guards": "./src/guards.ts",
+    "./i18n": "./src/i18n.ts",
+    "./normalizer": "./src/normalizer.ts",
+    "./resolver": "./src/resolver.ts",
+    "./schema-utils": "./src/schema-utils.ts",
+    "./traverser": "./src/traverser.ts",
+    "./typebox": "./src/typebox.ts"
   },
   "scripts": {
     "check-types": "tsc --noEmit",

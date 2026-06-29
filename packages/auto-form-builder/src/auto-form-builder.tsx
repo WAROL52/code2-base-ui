@@ -1,6 +1,6 @@
 "use client";
 
-import type * as Type from "@sinclair/typebox";
+import type * as Type from "@code2-base-ui/json-schema-toolkit/typebox";
 import {
 	type FormAsyncValidateOrFn,
 	type FormValidateOrFn,
@@ -12,7 +12,7 @@ import {
 	type ResolvedSchema,
 	resolveSchema,
 	traverseSchema,
-} from "./core";
+} from "@code2-base-ui/json-schema-toolkit";
 import type { TObject, UseFormHookOption, UseFormHookReturn } from "./types";
 
 export interface AutoFormBuilderChildrenProps<

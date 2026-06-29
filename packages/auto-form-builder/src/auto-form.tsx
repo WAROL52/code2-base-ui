@@ -7,8 +7,8 @@ import {
 	FieldGroup,
 	FieldLegend,
 	FieldSet,
-} from "@code-base-ui/ui";
-import type * as Type from "@sinclair/typebox";
+} from "@code2-base-ui/ui/components/field";
+import type * as Type from "@code2-base-ui/json-schema-toolkit/typebox";
 import type {
 	FormAsyncValidateOrFn,
 	FormValidateOrFn,
