@@ -1,5 +1,6 @@
-import { describe, it, expect, expectTypeOf } from "vitest";
-import type { FieldAPI, FormAPI, FormAdapter } from "../../src/adapters/types";
+import type React from "react";
+import { describe, expect, expectTypeOf, it } from "vitest";
+import type { FieldAPI, FormAdapter, FormAPI } from "../../src/adapters/types";
 
 describe("FormAdapter types", () => {
 	it("module can be loaded at runtime", async () => {
@@ -35,7 +36,7 @@ describe("FieldAPI runtime behavior", () => {
 		const field: FieldAPI = {
 			value: "test",
 			onChange: handler,
-			onBlur: () => {},
+			onBlur: vi.fn(),
 			error: undefined,
 			isTouched: false,
 		};
@@ -47,7 +48,7 @@ describe("FieldAPI runtime behavior", () => {
 		let blurred = false;
 		const field: FieldAPI = {
 			value: null,
-			onChange: () => {},
+			onChange: vi.fn(),
 			onBlur: () => {
 				blurred = true;
 			},
@@ -61,16 +62,16 @@ describe("FieldAPI runtime behavior", () => {
 	it("error is optional", () => {
 		const field1: FieldAPI = {
 			value: null,
-			onChange: () => {},
-			onBlur: () => {},
+			onChange: vi.fn(),
+			onBlur: vi.fn(),
 			isTouched: false,
 		};
 		expect(field1.error).toBeUndefined();
 
 		const field2: FieldAPI = {
 			value: null,
-			onChange: () => {},
-			onBlur: () => {},
+			onChange: vi.fn(),
+			onBlur: vi.fn(),
 			error: "Required",
 			isTouched: true,
 		};
@@ -80,8 +81,8 @@ describe("FieldAPI runtime behavior", () => {
 	it("isTouched is boolean", () => {
 		const field: FieldAPI = {
 			value: null,
-			onChange: () => {},
-			onBlur: () => {},
+			onChange: vi.fn(),
+			onBlur: vi.fn(),
 			error: undefined,
 			isTouched: true,
 		};
@@ -95,8 +96,8 @@ describe("FormAPI runtime behavior", () => {
 			values: {},
 			errors: {},
 			isSubmitting: false,
-			handleSubmit: () => {},
-			reset: () => {},
+			handleSubmit: vi.fn(),
+			reset: vi.fn(),
 		};
 		expect(typeof form.handleSubmit).toBe("function");
 		expect(typeof form.reset).toBe("function");
@@ -106,13 +107,21 @@ describe("FormAPI runtime behavior", () => {
 
 describe("FormAdapter runtime behavior", () => {
 	it("has name, FormProvider and Field", () => {
-		const adapter: FormAdapter = {
+		const adapter = {
 			name: "test",
-			FormProvider: (({ children }: any) =>
-				children({} as FormAPI)) as FormAdapter["FormProvider"],
-			Field: (({ children }: any) =>
-				children({} as FieldAPI)) as FormAdapter["Field"],
-		};
+			FormProvider(
+				this: void,
+				_props: { children: (form: FormAPI) => React.ReactNode }
+			) {
+				return null;
+			},
+			Field(
+				this: void,
+				_props: { children: (field: FieldAPI) => React.ReactNode }
+			) {
+				return null;
+			},
+		} satisfies FormAdapter;
 		expect(adapter.name).toBe("test");
 		expect(typeof adapter.FormProvider).toBe("function");
 		expect(typeof adapter.Field).toBe("function");

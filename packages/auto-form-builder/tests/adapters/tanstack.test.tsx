@@ -1,6 +1,7 @@
-import { describe, it, expect } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
+import { describe, expect, it } from "vitest";
 import { tanstackAdapter } from "../../src/adapters/tanstack";
+import type { FormAPI } from "../../src/adapters/types";
 
 describe("tanstackAdapter", () => {
 	it("has name 'tanstack'", () => {
@@ -8,7 +9,7 @@ describe("tanstackAdapter", () => {
 	});
 
 	it("FormProvider provides formAPI to children", () => {
-		let capturedForm: any = null;
+		let capturedForm: FormAPI | null = null;
 		render(
 			<tanstackAdapter.FormProvider defaultValues={{ name: "" }}>
 				{(formAPI) => {
@@ -18,11 +19,11 @@ describe("tanstackAdapter", () => {
 			</tanstackAdapter.FormProvider>
 		);
 		expect(capturedForm).not.toBeNull();
-		expect(typeof capturedForm.handleSubmit).toBe("function");
-		expect(typeof capturedForm.reset).toBe("function");
-		expect(capturedForm.isSubmitting).toBe(false);
+		const form = capturedForm as unknown as FormAPI;
+		expect(typeof form.handleSubmit).toBe("function");
+		expect(typeof form.reset).toBe("function");
+		expect(form.isSubmitting).toBe(false);
 	});
-
 	it("Field reads value from form state", () => {
 		render(
 			<tanstackAdapter.FormProvider defaultValues={{ name: "John" }}>
@@ -31,8 +32,8 @@ describe("tanstackAdapter", () => {
 						{(field) => (
 							<input
 								data-testid="input"
+								onChange={vi.fn()}
 								value={field.value as string}
-								onChange={() => {}}
 							/>
 						)}
 					</tanstackAdapter.Field>
@@ -51,8 +52,8 @@ describe("tanstackAdapter", () => {
 						{(field) => (
 							<input
 								data-testid="input"
-								value={field.value as string}
 								onChange={(e) => field.onChange(e.target.value)}
+								value={field.value as string}
 							/>
 						)}
 					</tanstackAdapter.Field>

@@ -1,34 +1,34 @@
 import type React from "react";
 
 export interface FieldAPI {
-	value: unknown;
-	onChange: (value: unknown) => void;
-	onBlur: () => void;
 	error?: string;
 	isTouched: boolean;
+	onBlur: () => void;
+	onChange: (value: unknown) => void;
+	value: unknown;
 }
 
 export interface FormAPI {
-	values: Record<string, unknown>;
 	errors: Record<string, string | undefined>;
-	isSubmitting: boolean;
 	handleSubmit: () => void;
+	isSubmitting: boolean;
 	reset: () => void;
+	values: Record<string, unknown>;
 }
 
 export interface FormProviderProps {
+	children: (form: FormAPI) => React.ReactNode;
 	defaultValues?: Record<string, unknown>;
 	onSubmit?: (data: unknown) => void | Promise<void>;
-	children: (form: FormAPI) => React.ReactNode;
 }
 
 export interface FieldProps {
-	name: string;
 	children: (field: FieldAPI) => React.ReactNode;
+	name: string;
 }
 
 export interface FormAdapter {
-	readonly name: string;
-	readonly FormProvider: React.ComponentType<FormProviderProps>;
 	readonly Field: React.ComponentType<FieldProps>;
+	readonly FormProvider: React.ComponentType<FormProviderProps>;
+	readonly name: string;
 }

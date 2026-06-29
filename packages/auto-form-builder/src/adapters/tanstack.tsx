@@ -1,10 +1,40 @@
 "use client";
 
-import { createContext, useContext } from "react";
 import { useForm } from "@tanstack/react-form";
-import type { FormProviderProps, FieldProps, FormAdapter, FormAPI } from "./types";
+import { createContext, useContext } from "react";
+import type {
+	FieldProps,
+	FormAdapter,
+	FormAPI,
+	FormProviderProps,
+} from "./types";
 
-const TanStackCtx = createContext<any>(null);
+interface TanStackField {
+	handleBlur: () => void;
+	handleChange: (val: unknown) => void;
+	state: {
+		value: unknown;
+		meta: {
+			errors?: string[];
+			isTouched: boolean;
+		};
+	};
+}
+
+interface TanStackFormValue {
+	Field: React.ComponentType<{
+		name: string;
+		children: (field: TanStackField) => React.ReactNode;
+	}>;
+	handleSubmit: () => void;
+	reset: () => void;
+	state: {
+		values: Record<string, unknown>;
+		isSubmitting: boolean;
+	};
+}
+
+const TanStackCtx = createContext<TanStackFormValue | null>(null);
 
 export const tanstackAdapter: FormAdapter = {
 	name: "tanstack",
@@ -27,7 +57,7 @@ export const tanstackAdapter: FormAdapter = {
 		};
 
 		return (
-			<TanStackCtx.Provider value={form}>
+			<TanStackCtx.Provider value={form as TanStackFormValue}>
 				{children(formAPI)}
 			</TanStackCtx.Provider>
 		);
@@ -35,11 +65,13 @@ export const tanstackAdapter: FormAdapter = {
 
 	Field({ name, children }: FieldProps) {
 		const form = useContext(TanStackCtx);
-		if (!form) throw new Error("tanstackAdapter: missing FormProvider");
+		if (!form) {
+			throw new Error("tanstackAdapter: missing FormProvider");
+		}
 
 		return (
 			<form.Field name={name}>
-				{(field: any) =>
+				{(field) =>
 					children({
 						value: field.state.value,
 						onChange: (val: unknown) => field.handleChange(val),
