@@ -2,13 +2,13 @@
 // AutoForm — Composant Principal
 // =============================================================================
 
+import type * as Type from "@code2-base-ui/json-schema-toolkit/typebox";
 import {
 	FieldDescription,
 	FieldGroup,
 	FieldLegend,
 	FieldSet,
 } from "@code2-base-ui/ui/components/field";
-import type * as Type from "@code2-base-ui/json-schema-toolkit/typebox";
 import type {
 	FormAsyncValidateOrFn,
 	FormValidateOrFn,

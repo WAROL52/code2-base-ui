@@ -1,5 +1,11 @@
 "use client";
 
+import {
+	type FieldMeta,
+	type ResolvedSchema,
+	resolveSchema,
+	traverseSchema,
+} from "@code2-base-ui/json-schema-toolkit";
 import type * as Type from "@code2-base-ui/json-schema-toolkit/typebox";
 import {
 	type FormAsyncValidateOrFn,
@@ -7,12 +13,6 @@ import {
 	useForm,
 } from "@tanstack/react-form";
 import { useMemo } from "react";
-import {
-	type FieldMeta,
-	type ResolvedSchema,
-	resolveSchema,
-	traverseSchema,
-} from "@code2-base-ui/json-schema-toolkit";
 import type { TObject, UseFormHookOption, UseFormHookReturn } from "./types";
 
 export interface AutoFormBuilderChildrenProps<

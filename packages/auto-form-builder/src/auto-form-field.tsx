@@ -2,19 +2,21 @@
 // AutoFormField — Rendu récursif des champs
 // =============================================================================
 
-import type { FieldRegistry } from "@code2-base-ui/json-schema-toolkit";
+import type {
+	FieldMeta,
+	FieldRegistry,
+} from "@code2-base-ui/json-schema-toolkit";
+import type * as Type from "@code2-base-ui/json-schema-toolkit/typebox";
 import {
 	FieldDescription,
 	FieldGroup,
 	FieldLegend,
 	FieldSet,
 } from "@code2-base-ui/ui/components/field";
-import type * as Type from "@code2-base-ui/json-schema-toolkit/typebox";
 import type {
 	FormAsyncValidateOrFn,
 	FormValidateOrFn,
 } from "@tanstack/react-form";
-import type { FieldMeta } from "@code2-base-ui/json-schema-toolkit";
 // import { defaultRegistry, type FieldRegistry } from "./registry";
 import type { TObject, UseFormHookReturn } from "./types";
 
@@ -113,8 +115,7 @@ export function AutoFormField<
 	TOnServer,
 	TSubmitMeta
 >) {
-	const { path, label, description, uiHidden, placeholder } =
-		fieldMeta;
+	const { path, label, description, uiHidden, placeholder } = fieldMeta;
 
 	if (uiHidden) {
 		return null;
@@ -143,7 +144,7 @@ export function AutoFormField<
 	// Pour les types primitifs, on utilise le registre
 	const Component = registry.resolve(fieldMeta);
 
-		return (
+	return (
 		<form.Field name={path}>
 			{(field) => (
 				<Component
