@@ -79,6 +79,63 @@ pnpm --filter @code2-base-ui/json-schema-toolkit check-types # tsc --noEmit
 Pages dans `apps/fumadocs/content/docs/json-schema-toolkit/` :
 index, installation, core, utils, registry, adapter, api-reference.
 
+## auto-form-builder
+
+Package `@code2-base-ui/auto-form-builder` — génération de formulaires par render-prop, compatible avec n'importe quel form manager via le pattern **FormAdapter**.
+
+### Architecture
+
+```
+packages/auto-form-builder/src/
+├── adapters/
+│   ├── types.ts          # FieldAPI, FormAPI, FormAdapter
+│   └── tanstack.tsx      # tanstackAdapter (TanStack Form)
+├── auto-form-builder.tsx # Render-prop builder (wrapper adapter.FormProvider)
+├── auto-form-field.tsx   # Rendu récursif des champs (via adapter.Field)
+├── auto-form.tsx         # Composant AutoForm de haut niveau
+├── types.ts              # AutoFormProps simplifiés
+└── index.ts              # Exports
+```
+
+### FormAdapter pattern
+
+```ts
+import { AutoForm } from "@code2-base-ui/auto-form-builder"
+import { tanstackAdapter } from "@code2-base-ui/auto-form-builder"
+
+<AutoForm schema={mySchema} adapter={tanstackAdapter} registry={myRegistry} />
+```
+
+Interface `FormAdapter` (2 composants React) :
+- **FormProvider** — initialise le form manager, stocke l'instance dans un contexte interne privé
+- **Field** — render-prop standardisé avec `{ value, onChange, onBlur, error, isTouched }`
+
+Ajouter un nouveau form manager = créer 1 fichier `src/adapters/mon-adapter.tsx`.
+
+### Plan de refonte en cours
+
+Voir `docs/superpowers/plans/2026-06-29-auto-form-builder-adapter.md`
+
+Briques (TDD — une par une, validation du user entre chaque) :
+
+1. Interface `FormAdapter` (types) ✅
+2. Adapter TanStack
+3. Modifier `auto-form-builder.tsx`
+4. Modifier `auto-form-field.tsx`
+5. Modifier `auto-form.tsx` + `types.ts` (simplifier generics)
+6. Exports et nettoyage final
+
+### Tests
+
+```bash
+pnpm --filter @code2-base-ui/auto-form-builder test
+pnpm --filter @code2-base-ui/auto-form-builder check-types
+```
+
+- vitest + jsdom + @testing-library/react
+- TDD — chaque brique commence par un test qui échoue
+- Les tests utilisent l'interface publique (adapter.Field, FormProvider)
+
 ## auto-form
 
 Framework de génération automatique de formulaires à partir de schémas de données.
