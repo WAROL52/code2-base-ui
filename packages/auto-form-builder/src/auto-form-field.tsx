@@ -2,7 +2,6 @@
 // AutoFormField — Rendu récursif des champs
 // =============================================================================
 
-import type { SchemaProvider } from "@code2-base-ui/auto-form";
 import type { FieldRegistry } from "@code2-base-ui/json-schema-toolkit";
 import {
 	FieldDescription,
@@ -49,7 +48,6 @@ export interface AutoFormFieldProps<
 		| FormAsyncValidateOrFn<Type.Static<TData>> = undefined,
 	TSubmitMeta = undefined,
 > {
-	adapter: SchemaProvider;
 	fieldMeta: FieldMeta;
 	form: UseFormHookReturn<
 		TData,
@@ -100,7 +98,6 @@ export function AutoFormField<
 >({
 	fieldMeta,
 	form,
-	adapter,
 	registry,
 }: AutoFormFieldProps<
 	TData,
@@ -132,7 +129,6 @@ export function AutoFormField<
 				<FieldGroup>
 					{fieldMeta.children.map((child) => (
 						<AutoFormField
-							adapter={adapter}
 							fieldMeta={child}
 							form={form}
 							key={child.path}

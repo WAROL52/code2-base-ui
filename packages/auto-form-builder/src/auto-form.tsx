@@ -42,7 +42,6 @@ export function AutoForm<
 	TSubmitMeta = undefined,
 >({
 	schema,
-	adapter,
 	registry,
 	defaultValues,
 	onSubmit,
@@ -127,7 +126,6 @@ export function AutoForm<
 										TOnServer,
 										TSubmitMeta
 									>
-										adapter={adapter}
 										fieldMeta={field}
 										form={form}
 										key={field.path}

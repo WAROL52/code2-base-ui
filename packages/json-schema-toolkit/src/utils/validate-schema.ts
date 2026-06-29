@@ -1,4 +1,4 @@
-import type { JsonSchema, ValidationResult } from "../types";
+import type { JsonSchema, JsonSchemaType, ValidationResult } from "../types";
 
 /**
  * Validates data against a raw JSON Schema.
@@ -44,7 +44,7 @@ export function validateSchema(
           errors.push({ path: key, message: "Expected boolean, got " + typeof value });
         } else if (type === "object" && typeof value !== "object") {
           errors.push({ path: key, message: "Expected object, got " + typeof value });
-        } else if (Array.isArray(type) && !type.includes(typeof value)) {
+        } else if (Array.isArray(type) && !type.includes(typeof value as JsonSchemaType)) {
           errors.push({
             path: key,
             message: "Expected one of " + type.join(", ") + ", got " + typeof value,

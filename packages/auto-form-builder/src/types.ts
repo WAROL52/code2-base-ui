@@ -2,7 +2,6 @@
 // AutoForm — Types
 // =============================================================================
 
-import type { SchemaProvider } from "@code2-base-ui/auto-form";
 import type { FieldRegistry } from "@code2-base-ui/json-schema-toolkit";
 import type * as Type from "@code2-base-ui/json-schema-toolkit/typebox";
 import type {
@@ -104,8 +103,6 @@ export interface AutoFormProps<
 		>,
 		""
 	> {
-	/** Adaptateur pour la validation et conversion (Zod, Valibot...). */
-	adapter: SchemaProvider;
 	/** Enfants optionnels (ex: boutons custom). */
 	children?: ReactNode;
 	/** Classes CSS additionnelles pour le formulaire. */

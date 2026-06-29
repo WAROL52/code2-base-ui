@@ -1,4 +1,4 @@
-import type { FieldMeta, JsonSchema } from "../types";
+import type { FieldMeta, JsonSchema, JsonSchemaType } from "../types";
 
 /**
  * Reconstructs a JSON Schema from an array of [key, FieldMeta] entries.
@@ -12,7 +12,7 @@ export function fromEntries(entries: [string, FieldMeta][]): JsonSchema {
   const required: string[] = [];
 
   for (const [key, meta] of entries) {
-    const prop: JsonSchema = { type: meta.type };
+    const prop: JsonSchema = { type: meta.type as JsonSchemaType };
     if (meta.format) prop.format = meta.format;
     if (meta.description) prop.description = meta.description;
     if (meta.defaultValue !== undefined) prop.default = meta.defaultValue;

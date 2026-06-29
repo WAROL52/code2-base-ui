@@ -1,60 +1,60 @@
 import type {
-  ValidationResult,
-  FieldMeta,
+	FieldMeta,
+	ValidationResult,
 } from "@code2-base-ui/json-schema-toolkit";
 import type { ReactNode } from "react";
 
 export interface SchemaProvider<TSchema = unknown> {
-  readonly fields: FieldMeta[];
-  readonly jsonSchema: import("@code2-base-ui/json-schema-toolkit").JsonSchema;
-  validate: (data: unknown) => ValidationResult;
-  getFieldMeta: (path: string) => FieldMeta | undefined;
-  readonly _type?: TSchema;
+	readonly _type?: TSchema;
+	readonly fields: FieldMeta[];
+	getFieldMeta: (path: string) => FieldMeta | undefined;
+	readonly jsonSchema: import("@code2-base-ui/json-schema-toolkit").JsonSchema;
+	validate: (data: unknown) => ValidationResult;
 }
 
 export interface SchemaProviderFactory {
-  readonly name: string;
-  create: <T>(schema: T) => SchemaProvider<T>;
+	create: <T>(schema: T) => SchemaProvider<T>;
+	readonly name: string;
 }
 
 export interface FormAPI {
-  values: Record<string, unknown>;
-  errors: Record<string, string | undefined>;
-  submit: (e: { preventDefault: () => void }) => void;
-  reset: () => void;
-  dirty: boolean;
-  isSubmitting: boolean;
+	dirty: boolean;
+	errors: Record<string, string | undefined>;
+	isSubmitting: boolean;
+	reset: () => void;
+	submit: (e: { preventDefault: () => void }) => void;
+	values: Record<string, unknown>;
 }
 
 export interface FieldController {
-  value: unknown;
-  onChange: (value: unknown) => void;
-  onBlur: () => void;
-  error?: string;
-  touched: boolean;
+	error?: string;
+	onBlur: () => void;
+	onChange: (value: unknown) => void;
+	touched: boolean;
+	value: unknown;
 }
 
 export interface FormStateAdapter {
-  readonly name: string;
-  useForm: (config: {
-    defaultValues?: Record<string, unknown>;
-    validate: (data: unknown) => ValidationResult;
-  }) => FormAPI;
-  useField: (name: string) => FieldController;
+	readonly name: string;
+	useField: (name: string) => FieldController;
+	useForm: (config: {
+		defaultValues?: Record<string, unknown>;
+		validate: (data: unknown) => ValidationResult;
+	}) => FormAPI;
 }
 
 export interface AutoFormProps<TSchema = unknown> {
-  schema: TSchema;
-  onSubmit?: (data: unknown) => void | Promise<void>;
-  defaultValues?: Record<string, unknown>;
-  children?: ReactNode;
-  className?: string;
+	children?: ReactNode;
+	className?: string;
+	defaultValues?: Record<string, unknown>;
+	onSubmit?: (data: unknown) => void | Promise<void>;
+	schema: TSchema;
 }
 
 export interface LayoutStrategy {
-  readonly name: string;
-  render: (
-    fields: FieldMeta[],
-    renderField: (field: FieldMeta) => ReactNode,
-  ) => ReactNode;
+	readonly name: string;
+	render: (
+		fields: FieldMeta[],
+		renderField: (field: FieldMeta) => ReactNode
+	) => ReactNode;
 }

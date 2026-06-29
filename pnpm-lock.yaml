@@ -389,6 +389,9 @@ importers:
 
   packages/auto-form-builder:
     dependencies:
+      '@code2-base-ui/auto-form':
+        specifier: workspace:*
+        version: link:../auto-form
       '@code2-base-ui/json-schema-toolkit':
         specifier: workspace:*
         version: link:../json-schema-toolkit

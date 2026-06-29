@@ -1,13 +1,4 @@
-// =============================================================================
-// JSON Schema Toolkit — i18n
-// Messages d'erreur de validation localisés. Zéro dépendance externe.
-// =============================================================================
-
 import type { I18nMessages, Locale } from "./types";
-
-// ---------------------------------------------------------------------------
-// Dictionnaires de messages
-// ---------------------------------------------------------------------------
 
 const en: I18nMessages = {
 	required: "This field is required",
@@ -45,24 +36,12 @@ const fr: I18nMessages = {
 	invalidEnum: (values) => `Doit être l'une des valeurs : ${values.join(", ")}`,
 };
 
-// ---------------------------------------------------------------------------
-// Registre de locales
-// ---------------------------------------------------------------------------
-
 const localeRegistry: Record<Locale, I18nMessages> = { en, fr };
 
-/**
- * Enregistre un dictionnaire de messages pour une locale personnalisée.
- * Exemple : registerLocale("de", { required: "Dieses Feld ist erforderlich", ... })
- */
 export function registerLocale(locale: Locale, messages: I18nMessages): void {
 	localeRegistry[locale] = messages;
 }
 
-/**
- * Retourne le dictionnaire de messages pour une locale donnée.
- * Revient sur "en" si la locale n'est pas enregistrée.
- */
 export function getMessages(
 	locale: Locale = "en",
 	overrides?: Partial<I18nMessages>
