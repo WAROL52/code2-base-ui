@@ -16,13 +16,19 @@ export interface FormAPI {
 	reset: () => void;
 }
 
-export interface FormAdapter {
+export interface FormProviderProps {
+	defaultValues?: Record<string, unknown>;
+	onSubmit?: (data: unknown) => void | Promise<void>;
+	children: (form: FormAPI) => React.ReactNode;
+}
+
+export interface FieldProps {
 	name: string;
-	FormProvider: React.ComponentType<{
-		children: (form: FormAPI) => React.ReactNode;
-	}>;
-	Field: React.ComponentType<{
-		name: string;
-		children: (field: FieldAPI) => React.ReactNode;
-	}>;
+	children: (field: FieldAPI) => React.ReactNode;
+}
+
+export interface FormAdapter {
+	readonly name: string;
+	readonly FormProvider: React.ComponentType<FormProviderProps>;
+	readonly Field: React.ComponentType<FieldProps>;
 }
