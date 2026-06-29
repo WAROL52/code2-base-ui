@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.tsx"
   },
   "scripts": {
     "check-types": "tsc --noEmit",
@@ -21,7 +21,7 @@
     "@code2-base-ui/config": "workspace:*",
     "typescript": "catalog:",
     "vitest": "^3.1.0",
-    "zod": "^3.24.0",
+    "zod": "^4.1.13",
     "@code2-base-ui/json-schema-toolkit": "workspace:*",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:"
