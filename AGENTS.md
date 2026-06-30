@@ -2,6 +2,7 @@
 
 > **Workflow création de package :** voir [PACKAGE-WORKFLOW.md](./PACKAGE-WORKFLOW.md)
 > **Skill dédiée :** `/new_package <name> : <description>` — `.agents/skills/new-package/SKILL.md`
+> **auto-form-builder :** `.agents/skills/auto-form-builder/SKILL.md`
 
 Monorepo **Better-T-Stack** orchestré par **Nx** + **pnpm workspaces**.
 
@@ -15,6 +16,7 @@ Monorepo **Better-T-Stack** orchestré par **Nx** + **pnpm workspaces**.
 - `packages/config` — `tsconfig.base.json` partagé
 - `packages/env` — Validation d'environnement avec `@t3-oss/env` (split `server.ts` / `web.ts`)
 - `packages/json-schema-toolkit` — Outils copy-paste basés sur JSON Schema (Standard Schema, TypeBox, FieldRegistry, SchemaAdapter)
+- `packages/auto-form-builder` — Génération de formulaires par render-prop (FormAdapter pattern, TanStack Form)
 
 ## Commandes essentielles
 
@@ -101,7 +103,7 @@ packages/auto-form-builder/src/
 
 ```ts
 import { AutoForm } from "@code2-base-ui/auto-form-builder"
-import { tanstackAdapter } from "@code2-base-ui/auto-form-builder"
+import { tanstackAdapter } from "@code2-base-ui/auto-form-builder/adapters"
 
 <AutoForm schema={mySchema} adapter={tanstackAdapter} registry={myRegistry} />
 ```
@@ -112,76 +114,16 @@ Interface `FormAdapter` (2 composants React) :
 
 Ajouter un nouveau form manager = créer 1 fichier `src/adapters/mon-adapter.tsx`.
 
-### Plan de refonte en cours
-
-Voir `docs/superpowers/plans/2026-06-29-auto-form-builder-adapter.md`
-
-Briques (TDD — une par une, validation du user entre chaque) :
-
-1. Interface `FormAdapter` (types) ✅
-2. Adapter TanStack
-3. Modifier `auto-form-builder.tsx`
-4. Modifier `auto-form-field.tsx`
-5. Modifier `auto-form.tsx` + `types.ts` (simplifier generics)
-6. Exports et nettoyage final
-
 ### Tests
 
 ```bash
 pnpm --filter @code2-base-ui/auto-form-builder test
 pnpm --filter @code2-base-ui/auto-form-builder check-types
+pnpm --filter @code2-base-ui/auto-form-builder check
 ```
 
 - vitest + jsdom + @testing-library/react
-- TDD — chaque brique commence par un test qui échoue
-- Les tests utilisent l'interface publique (adapter.Field, FormProvider)
-
-## auto-form
-
-Framework de génération automatique de formulaires à partir de schémas de données.
-
-### Architecture
-
-5 packages composables :
-
-| Package | Rôle |
-|---|---|
-| `@code2-base-ui/auto-form` | Cœur : factory, types, contextes React |
-| `@code2-base-ui/auto-form-provider-zod` | SchemaProvider pour Zod |
-| `@code2-base-ui/auto-form-adapter-tanstack` | FormStateAdapter pour TanStack Form |
-| `@code2-base-ui/auto-form-render-shadcn` | FieldRegistry prêt-à-l'emploi pour shadcn/ui |
-| *(preset)* `auto-form-tanstack-shadcn` | Combinaison prête à l'emploi |
-
-### Sous-chemins d'import
-
-```ts
-import { createAutoForm, AutoFormProvider } from "@code2-base-ui/auto-form"
-import { zodProvider } from "@code2-base-ui/auto-form-provider-zod"
-import { tanstackFormAdapter } from "@code2-base-ui/auto-form-adapter-tanstack"
-import { createShadcnRegistry } from "@code2-base-ui/auto-form-render-shadcn"
-
-// Types
-import type { SchemaProvider, FormStateAdapter } from "@code2-base-ui/auto-form"
-import type { FormAPI, FieldController, AutoFormProps } from "@code2-base-ui/auto-form"
-```
-
-### Tests
-
-```bash
-pnpm --filter @code2-base-ui/auto-form test                  # vitest run
-pnpm --filter @code2-base-ui/auto-form-provider-zod test
-pnpm --filter @code2-base-ui/auto-form-adapter-tanstack test
-pnpm --filter @code2-base-ui/auto-form-render-shadcn test
-pnpm --filter @code2-base-ui/auto-form check-types           # tsc --noEmit
-pnpm --filter @code2-base-ui/auto-form-provider-zod check-types
-pnpm --filter @code2-base-ui/auto-form-adapter-tanstack check-types
-pnpm --filter @code2-base-ui/auto-form-render-shadcn check-types
-```
-
-### Documentation Fumadocs
-
-Pages dans `apps/fumadocs/content/docs/auto-form/` :
-index, installation, api-reference.
+- 18 tests
 
 ## Particularités techniques
 
@@ -195,6 +137,7 @@ index, installation, api-reference.
 ## Tests
 
 - `@code2-base-ui/json-schema-toolkit` — vitest (44 tests, types-first avec `expectTypeOf`)
+- `@code2-base-ui/auto-form-builder` — vitest (18 tests, TDD)
 - `pnpm test` — pas de commande racine définie (le hook Husky lance `pnpm test` sans effet)
 
 ## Docker
