@@ -9,7 +9,8 @@ import { AutoForm } from "../src/auto-form";
 import { AutoFormField } from "../src/auto-form-field";
 import { UnionFieldHandler } from "../src/auto-form-union-field";
 import type { FormLayout } from "../src/layout";
-import { FormLayoutCtx, shadcnLayout } from "../src/layout";
+import { FormLayoutCtx } from "../src/layout/context";
+import { shadcnLayout } from "../src/layout/shadcn";
 
 const mockResolve = vi
 	.fn<(fieldMeta: FieldMeta) => React.ComponentType<Record<string, unknown>>>()
