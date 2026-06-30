@@ -1,10 +1,11 @@
 "use client";
 
 import {
+	resolveSchema as defaultResolve,
+	traverseSchema as defaultTraverse,
 	type FieldMeta,
+	type JsonSchemaDraft,
 	type ResolvedSchema,
-	resolveSchema,
-	traverseSchema,
 } from "@code2-base-ui/json-schema-toolkit";
 import { useMemo } from "react";
 import type { FormAdapter, FormAPI } from "./adapters/types";
@@ -20,7 +21,12 @@ export interface AutoFormBuilderProps {
 	children: (props: AutoFormBuilderChildrenProps) => React.ReactNode;
 	defaultValues?: Record<string, unknown>;
 	onSubmit?: (data: unknown) => void | Promise<void>;
+	resolveSchema?: (
+		rawSchema: unknown,
+		draftHint?: JsonSchemaDraft
+	) => ResolvedSchema;
 	schema: Record<string, unknown>;
+	traverseSchema?: (resolved: ResolvedSchema) => FieldMeta[];
 }
 
 export function AutoFormBuilder({
@@ -29,11 +35,16 @@ export function AutoFormBuilder({
 	defaultValues,
 	onSubmit,
 	children,
+	resolveSchema: resolveSchemaProp,
+	traverseSchema: traverseSchemaProp,
 }: AutoFormBuilderProps) {
-	const resolvedSchema = useMemo(() => resolveSchema(schema), [schema]);
+	const fnResolve = resolveSchemaProp ?? defaultResolve;
+	const fnTraverse = traverseSchemaProp ?? defaultTraverse;
+
+	const resolvedSchema = useMemo(() => fnResolve(schema), [fnResolve, schema]);
 	const fields = useMemo(
-		() => traverseSchema(resolvedSchema),
-		[resolvedSchema]
+		() => fnTraverse(resolvedSchema),
+		[fnTraverse, resolvedSchema]
 	);
 
 	return (

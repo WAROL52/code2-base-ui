@@ -15,6 +15,8 @@ export function AutoForm({
 	className,
 	children,
 	layout = shadcnLayout,
+	resolveSchema,
+	traverseSchema,
 	unionFieldRenderer,
 }: AutoFormProps) {
 	return (
@@ -22,7 +24,9 @@ export function AutoForm({
 			adapter={adapter}
 			defaultValues={defaultValues}
 			onSubmit={onSubmit}
+			resolveSchema={resolveSchema}
 			schema={schema}
+			traverseSchema={traverseSchema}
 		>
 			{({ fields, form }) => (
 				<FormLayoutCtx.Provider value={layout}>

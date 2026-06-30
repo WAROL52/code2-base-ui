@@ -1,6 +1,7 @@
 import type {
 	FieldMeta,
 	FieldRegistry,
+	ResolvedSchema,
 } from "@code2-base-ui/json-schema-toolkit";
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
@@ -102,5 +103,31 @@ describe("AutoForm", () => {
 		expect(screen.getByTestId("custom-desc")).toBeDefined();
 		expect(screen.getByTestId("custom-group")).toBeDefined();
 		expect(screen.getByTestId("custom-submit")).toBeDefined();
+	});
+
+	it("passes resolveSchema and traverseSchema to AutoFormBuilder", () => {
+		const customResolve = vi.fn(
+			(_raw: unknown): ResolvedSchema => ({
+				definitions: {},
+				draft: "draft-7",
+				root: {
+					type: "object",
+					properties: {
+						mockField: { type: "string" },
+					},
+				},
+			})
+		);
+
+		render(
+			<AutoForm
+				adapter={tanstackAdapter}
+				registry={mockRegistry}
+				resolveSchema={customResolve}
+				schema={testSchema}
+			/>
+		);
+
+		expect(customResolve).toHaveBeenCalledTimes(1);
 	});
 });
