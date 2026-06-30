@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import type { AutoFormFieldProps } from "./auto-form-field";
 import { AutoFormField } from "./auto-form-field";
+import type { AutoFormFieldProps } from "./auto-form-field-types";
 import { useFormLayout } from "./layout/context";
 
 export function UnionFieldHandler({

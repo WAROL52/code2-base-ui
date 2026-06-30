@@ -6,7 +6,7 @@ import type {
 } from "@code2-base-ui/json-schema-toolkit";
 import type { ComponentType, ReactNode } from "react";
 import type { FormAdapter } from "./adapters/types";
-import type { AutoFormFieldProps } from "./auto-form-field";
+import type { AutoFormFieldProps } from "./auto-form-field-types";
 import type { FormLayout } from "./layout/types";
 
 export interface AutoFormProps {

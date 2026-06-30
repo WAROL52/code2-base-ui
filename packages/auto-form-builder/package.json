@@ -6,7 +6,8 @@
 	"exports": {
 		".": "./src/index.ts",
 		"./adapters": "./src/adapters/index.ts",
-		"./layout": "./src/layout/index.ts"
+		"./layout": "./src/layout/index.ts",
+		"./fields": "./src/fields/index.ts"
 	},
   "scripts": {
     "check-types": "tsc --noEmit",
@@ -15,17 +16,12 @@
   },
   "dependencies": {
     "@code2-base-ui/json-schema-toolkit": "workspace:*",
+    "@code2-base-ui/ui": "workspace:*",
     "@tanstack/react-form": "catalog:"
   },
   "peerDependencies": {
-    "@code2-base-ui/ui": "workspace:*",
     "react": "^19.2.6",
     "react-dom": "^19.2.6"
-  },
-  "peerDependenciesMeta": {
-    "@code2-base-ui/ui": {
-      "optional": true
-    }
   },
   "devDependencies": {
     "@code2-base-ui/config": "workspace:*",

@@ -1,0 +1,226 @@
+"use client";
+
+import type { FieldMeta } from "@code2-base-ui/json-schema-toolkit";
+
+import { Checkbox } from "@code2-base-ui/ui/components/checkbox";
+import {
+	Field,
+	FieldContent,
+	FieldError,
+	FieldLabel,
+} from "@code2-base-ui/ui/components/field";
+import { Input } from "@code2-base-ui/ui/components/input";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@code2-base-ui/ui/components/select";
+import { Switch } from "@code2-base-ui/ui/components/switch";
+import { Textarea } from "@code2-base-ui/ui/components/textarea";
+
+export interface FieldComponentProps {
+	className?: string;
+	disabled?: boolean;
+	error?: string;
+	field?: FieldMeta;
+	id?: string;
+	label?: string;
+	onChange?: (value: unknown) => void;
+	placeholder?: string;
+	value?: unknown;
+}
+
+function FieldWrapper({
+	children,
+	className,
+	error,
+	htmlFor,
+	label,
+}: {
+	children: React.ReactNode;
+	className?: string;
+	error?: string;
+	htmlFor?: string;
+	label?: string;
+}) {
+	return (
+		<Field
+			className={className}
+			data-invalid={!!error || undefined}
+			orientation="vertical"
+		>
+			{label && <FieldLabel htmlFor={htmlFor}>{label}</FieldLabel>}
+			<FieldContent>
+				{children}
+				{error && <FieldError>{error}</FieldError>}
+			</FieldContent>
+		</Field>
+	);
+}
+
+export function ShadcnInputField({
+	className,
+	disabled,
+	error,
+	field: _field,
+	id,
+	label,
+	onChange,
+	placeholder,
+	value,
+}: FieldComponentProps) {
+	if (_field?.enum && _field.enum.length > 0) {
+		return (
+			<FieldWrapper className={className} error={error} label={label}>
+				<Select
+					disabled={disabled}
+					onValueChange={(v) => onChange?.(v)}
+					value={(value as string) ?? ""}
+				>
+					<SelectTrigger>
+						<SelectValue placeholder={placeholder} />
+					</SelectTrigger>
+					<SelectContent>
+						{_field.enum.map((opt) => (
+							<SelectItem key={String(opt)} value={String(opt)}>
+								{String(opt)}
+							</SelectItem>
+						))}
+					</SelectContent>
+				</Select>
+			</FieldWrapper>
+		);
+	}
+
+	const isTextarea =
+		_field?.format === "textarea" || _field?.uiWidget === "textarea";
+
+	if (isTextarea) {
+		return (
+			<FieldWrapper
+				className={className}
+				error={error}
+				htmlFor={id}
+				label={label}
+			>
+				<Textarea
+					disabled={disabled}
+					id={id}
+					onChange={(e) => onChange?.(e.target.value)}
+					placeholder={placeholder}
+					value={(value as string) ?? ""}
+				/>
+			</FieldWrapper>
+		);
+	}
+
+	return (
+		<FieldWrapper
+			className={className}
+			error={error}
+			htmlFor={id}
+			label={label}
+		>
+			<Input
+				aria-invalid={!!error || undefined}
+				disabled={disabled}
+				id={id}
+				onChange={(e) => onChange?.(e.target.value)}
+				placeholder={placeholder}
+				type="text"
+				value={(value as string) ?? ""}
+			/>
+		</FieldWrapper>
+	);
+}
+
+export function ShadcnNumberField({
+	className,
+	disabled,
+	error,
+	field: _field,
+	id,
+	label,
+	onChange,
+	placeholder,
+	value,
+}: FieldComponentProps) {
+	return (
+		<FieldWrapper
+			className={className}
+			error={error}
+			htmlFor={id}
+			label={label}
+		>
+			<Input
+				aria-invalid={!!error || undefined}
+				disabled={disabled}
+				id={id}
+				onChange={(e) => {
+					const v = e.target.value;
+					onChange?.(v === "" ? undefined : Number(v));
+				}}
+				placeholder={placeholder}
+				type="number"
+				value={(value as number | string) ?? ""}
+			/>
+		</FieldWrapper>
+	);
+}
+
+export function ShadcnBooleanField({
+	className,
+	disabled,
+	error,
+	field: _field,
+	id,
+	label,
+	onChange,
+	value,
+}: FieldComponentProps) {
+	if (_field?.uiWidget === "switch") {
+		return (
+			<Field
+				className={className}
+				data-invalid={!!error || undefined}
+				orientation="vertical"
+			>
+				<FieldContent>
+					<div className="flex items-center gap-2">
+						<Switch
+							checked={!!value}
+							disabled={disabled}
+							id={id}
+							onCheckedChange={(v: boolean) => onChange?.(v)}
+						/>
+						{label && <FieldLabel htmlFor={id}>{label}</FieldLabel>}
+					</div>
+					{error && <FieldError>{error}</FieldError>}
+				</FieldContent>
+			</Field>
+		);
+	}
+
+	return (
+		<Field
+			className={className}
+			data-invalid={!!error || undefined}
+			orientation="vertical"
+		>
+			<FieldContent>
+				<div className="flex items-center gap-2">
+					<Checkbox
+						checked={!!value}
+						disabled={disabled}
+						id={id}
+						onCheckedChange={(v: boolean) => onChange?.(v)}
+					/>
+					{label && <FieldLabel htmlFor={id}>{label}</FieldLabel>}
+				</div>
+				{error && <FieldError>{error}</FieldError>}
+			</FieldContent>
+		</Field>
+	);
+}

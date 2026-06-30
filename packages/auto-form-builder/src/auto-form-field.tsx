@@ -1,21 +1,12 @@
 "use client";
 
-import type {
-	FieldMeta,
-	FieldRegistry,
-} from "@code2-base-ui/json-schema-toolkit";
-import type { ComponentType } from "react";
-import type { FormAdapter, FormAPI } from "./adapters/types";
+import type { FieldMeta } from "@code2-base-ui/json-schema-toolkit";
+// biome-ignore lint/style/noExportedImports: imported for local use AND re-exported
+import type { AutoFormFieldProps } from "./auto-form-field-types";
 import { UnionFieldHandler } from "./auto-form-union-field";
 import { useFormLayout } from "./layout/context";
 
-export interface AutoFormFieldProps {
-	adapter: FormAdapter;
-	fieldMeta: FieldMeta;
-	form?: FormAPI;
-	registry: FieldRegistry;
-	unionFieldRenderer?: ComponentType<AutoFormFieldProps>;
-}
+export type { AutoFormFieldProps };
 
 function getDefaultForType(type?: string): unknown {
 	switch (type) {
