@@ -7,7 +7,7 @@ import {
 	type JsonSchemaDraft,
 	type ResolvedSchema,
 } from "@code2-base-ui/json-schema-toolkit";
-import { useMemo } from "react";
+import { useMemo, useRef } from "react";
 import type { FormAdapter, FormAPI } from "./adapters/types";
 
 export interface AutoFormBuilderChildrenProps {
@@ -40,11 +40,15 @@ export function AutoFormBuilder({
 }: AutoFormBuilderProps) {
 	const fnResolve = resolveSchemaProp ?? defaultResolve;
 	const fnTraverse = traverseSchemaProp ?? defaultTraverse;
+	const resolveRef = useRef(fnResolve);
+	resolveRef.current = fnResolve;
+	const traverseRef = useRef(fnTraverse);
+	traverseRef.current = fnTraverse;
 
-	const resolvedSchema = useMemo(() => fnResolve(schema), [fnResolve, schema]);
+	const resolvedSchema = useMemo(() => resolveRef.current(schema), [schema]);
 	const fields = useMemo(
-		() => fnTraverse(resolvedSchema),
-		[fnTraverse, resolvedSchema]
+		() => traverseRef.current(resolvedSchema),
+		[resolvedSchema]
 	);
 
 	return (
