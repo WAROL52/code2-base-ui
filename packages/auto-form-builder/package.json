@@ -15,13 +15,17 @@
   },
   "dependencies": {
     "@code2-base-ui/json-schema-toolkit": "workspace:*",
-
-    "@code2-base-ui/ui": "workspace:*",
     "@tanstack/react-form": "catalog:"
   },
   "peerDependencies": {
+    "@code2-base-ui/ui": "workspace:*",
     "react": "^19.2.6",
     "react-dom": "^19.2.6"
+  },
+  "peerDependenciesMeta": {
+    "@code2-base-ui/ui": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@code2-base-ui/config": "workspace:*",
