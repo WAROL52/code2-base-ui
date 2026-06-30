@@ -1,194 +1,59 @@
 "use client";
 
-import { zodProvider } from "@code2-base-ui/auto-form-provider-zod";
-import { z } from "zod";
-import { createAutoForm } from "@code2-base-ui/auto-form";
-import { createShadcnRegistry } from "@code2-base-ui/auto-form-render-shadcn";
-import { useCallback, useState, type ReactNode } from "react";
-
-const tanstackFormAdapter = {
-	name: "tanstack-form",
-	useForm: (config: { defaultValues?: Record<string, unknown>; validate: (data: unknown) => { success: boolean; errors: { path: string; message: string }[] } }) => {
-		const [values, setValues] = useState(config.defaultValues ?? {});
-		const [errors, setErrors] = useState<Record<string, string | undefined>>({});
-		const [dirty, setDirty] = useState(false);
-		const [isSubmitting, setIsSubmitting] = useState(false);
-		const submit = useCallback(
-			(e: { preventDefault: () => void }) => {
-				e.preventDefault();
-				setIsSubmitting(true);
-				const result = config.validate(values);
-				if (result.success) {
-					setErrors({});
-				} else {
-					setErrors(
-						Object.fromEntries(
-							result.errors.map((err) => [err.path, err.message])
-						)
-					);
-				}
-				setIsSubmitting(false);
-			},
-			[values, config]
-		);
-		const reset = useCallback(() => {
-			setValues(config.defaultValues ?? {});
-			setErrors({});
-			setDirty(false);
-		}, [config.defaultValues]);
-		return { values, errors, submit, reset, dirty, isSubmitting };
-	},
-	useField: () => {
-		const [value, setValue] = useState<unknown>();
-		const [touched, setTouched] = useState(false);
-		const onChange = useCallback((newValue: unknown) => {
-			setValue(newValue);
-		}, []);
-		const onBlur = useCallback(() => setTouched(true), []);
-		return { value, onChange, onBlur, touched };
-	},
-};
-
-const { AutoForm, AutoField } = createAutoForm({
-  provider: zodProvider,
-  form: tanstackFormAdapter,
-  registry: createShadcnRegistry(),
-});
-
-const userSchema = z.object({
-  name: z.string().min(2, "Le nom doit faire au moins 2 caractères"),
-  email: z.string().email("Email invalide"),
-  age: z.number().min(18, "Âge minimum : 18 ans").optional(),
-  role: z.enum(["admin", "user", "guest"]),
-  active: z.boolean().default(true),
-});
-
-const articleSchema = z.object({
-  title: z.string().min(1, "Requis"),
-  category: z.enum(["tech", "design", "business"]),
-  content: z.string().optional(),
-  published: z.boolean().default(false),
-});
-
-const signupSchema = z
-  .object({
-    username: z.string().min(3, "3 caractères minimum"),
-    password: z.string().min(8, "8 caractères minimum"),
-    confirm: z.string(),
-  })
-  .refine((data) => data.password === data.confirm, {
-    message: "Les mots de passe ne correspondent pas",
-    path: ["confirm"],
-  });
+import type { ReactNode } from "react";
 
 function SimpleFormDemo(): ReactNode {
-  const [submitted, setSubmitted] = useState<Record<string, unknown> | null>(null);
-
-  return (
-    <div className="rounded-lg border p-4 space-y-4">
-      <AutoForm
-        schema={articleSchema}
-        onSubmit={(data) => setSubmitted(data as Record<string, unknown>)}
-        className="space-y-3"
-      />
-      {submitted && (
-        <pre className="bg-fd-muted p-3 rounded text-sm">
-          {JSON.stringify(submitted, null, 2)}
-        </pre>
-      )}
-    </div>
-  );
+	return (
+		<div className="rounded-lg border p-4 space-y-4">
+			<p className="text-fd-muted-foreground text-sm">
+				Démo à réécrire avec <code>auto-form-builder</code> prochainement.
+			</p>
+		</div>
+	);
 }
 
 function UserFormDemo(): ReactNode {
-  const [values, setValues] = useState<Record<string, unknown> | null>(null);
-
-  return (
-    <div className="rounded-lg border p-4 space-y-4">
-      <AutoForm
-        schema={userSchema}
-        onSubmit={(data) => setValues(data as Record<string, unknown>)}
-        className="space-y-3"
-      />
-      {values && (
-        <pre className="bg-fd-muted p-3 rounded text-sm">
-          {JSON.stringify(values, null, 2)}
-        </pre>
-      )}
-    </div>
-  );
+	return (
+		<div className="rounded-lg border p-4 space-y-4">
+			<p className="text-fd-muted-foreground text-sm">
+				Démo à réécrire avec <code>auto-form-builder</code> prochainement.
+			</p>
+		</div>
+	);
 }
 
 function SignupFormDemo(): ReactNode {
-  const [result, setResult] = useState<Record<string, unknown> | null>(null);
-
-  return (
-    <div className="rounded-lg border p-4 space-y-4">
-      <AutoForm
-        schema={signupSchema}
-        onSubmit={(data) => setResult(data as Record<string, unknown>)}
-        className="space-y-3"
-      />
-      {result && (
-        <div className="bg-fd-success/10 text-fd-success p-3 rounded text-sm">
-          Inscription réussie ! {JSON.stringify(result, null, 2)}
-        </div>
-      )}
-    </div>
-  );
+	return (
+		<div className="rounded-lg border p-4 space-y-4">
+			<p className="text-fd-muted-foreground text-sm">
+				Démo à réécrire avec <code>auto-form-builder</code> prochainement.
+			</p>
+		</div>
+	);
 }
 
 function CustomLayoutDemo(): ReactNode {
-  const [showExtra, setShowExtra] = useState(false);
-  const [result, setResult] = useState<Record<string, unknown> | null>(null);
-
-  return (
-    <div className="rounded-lg border p-4 space-y-4">
-      <AutoForm
-        schema={articleSchema}
-        onSubmit={(data) => setResult(data as Record<string, unknown>)}
-      >
-        <div className="grid grid-cols-2 gap-3">
-          <AutoField name="title" />
-          <AutoField name="category" />
-        </div>
-        <AutoField name="content" />
-        <button
-          type="button"
-          onClick={() => setShowExtra(!showExtra)}
-          className="text-sm text-fd-muted-foreground underline"
-        >
-          {showExtra ? "Masquer" : "Afficher"} les options avancées
-        </button>
-        {showExtra && <AutoField name="published" />}
-        <button
-          type="submit"
-          className="bg-fd-primary text-fd-primary-foreground px-4 py-2 rounded-md"
-        >
-          Publier
-        </button>
-      </AutoForm>
-      {result && (
-        <pre className="bg-fd-muted p-3 rounded text-sm">
-          {JSON.stringify(result, null, 2)}
-        </pre>
-      )}
-    </div>
-  );
+	return (
+		<div className="rounded-lg border p-4 space-y-4">
+			<p className="text-fd-muted-foreground text-sm">
+				Démo à réécrire avec <code>auto-form-builder</code> prochainement.
+			</p>
+		</div>
+	);
 }
 
 export function SimpleForm(): ReactNode {
-  return <SimpleFormDemo />;
+	return <SimpleFormDemo />;
 }
 
 export function UserForm(): ReactNode {
-  return <UserFormDemo />;
+	return <UserFormDemo />;
 }
 
 export function SignupForm(): ReactNode {
-  return <SignupFormDemo />;
+	return <SignupFormDemo />;
 }
 
 export function CustomLayoutForm(): ReactNode {
-  return <CustomLayoutDemo />;
+	return <CustomLayoutDemo />;
 }

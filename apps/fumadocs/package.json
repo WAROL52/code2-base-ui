@@ -14,7 +14,7 @@
   "dependencies": {
     "@code2-base-ui/auto-form": "workspace:*",
 
-    "@code2-base-ui/auto-form-provider-zod": "workspace:*",
+
     "@code2-base-ui/auto-form-render-shadcn": "workspace:*",
     "@code2-base-ui/json-schema-toolkit": "workspace:*",
     "@code2-base-ui/ui": "workspace:*",

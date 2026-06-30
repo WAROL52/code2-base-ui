@@ -359,21 +359,7 @@
 				}
 			]
 		},
-		{
-			"name": "auto-form-zod-provider",
-			"type": "registry:lib",
-			"title": "Auto Form Zod Provider",
-			"description": "Zod schema provider for auto-form — extracts field metadata from Zod schemas.",
-			"dependencies": ["zod"],
-			"registryDependencies": ["WAROL52/code2-base-ui/auto-form-core"],
-			"files": [
-				{
-					"path": "packages/auto-form-provider-zod/src/zod-provider.ts",
-					"type": "registry:lib",
-					"target": "~/src/lib/auto-form/zod-provider.ts"
-				}
-			]
-		},
+
 
 		{
 			"name": "auto-form-shadcn-registry",
