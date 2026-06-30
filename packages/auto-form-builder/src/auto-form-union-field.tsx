@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { AutoFormFieldProps } from "./auto-form-field-types";
 import { useFormLayout } from "./layout/context";
 
@@ -12,11 +12,19 @@ export function UnionFieldHandler({
 	const [selectedIndex, setSelectedIndex] = useState(0);
 	const variants = fieldMeta.variants;
 
+	useEffect(() => {
+		setSelectedIndex(0);
+	}, [fieldMeta.path]);
+
 	if (!variants || variants.length === 0) {
 		return null;
 	}
 
-	const variant = variants[selectedIndex];
+	const safeIndex =
+		selectedIndex >= variants.length
+			? Math.max(0, variants.length - 1)
+			: selectedIndex;
+	const variant = variants[safeIndex];
 
 	if (!variant) {
 		return null;
@@ -27,7 +35,7 @@ export function UnionFieldHandler({
 			fieldMeta={fieldMeta}
 			onSelect={(index) => setSelectedIndex(index)}
 			options={variants.map((v) => ({ label: v.label }))}
-			selectedIndex={selectedIndex}
+			selectedIndex={safeIndex}
 		>
 			{variant.children.map((child) => renderChild?.(child))}
 		</layout.CompositionsField>
