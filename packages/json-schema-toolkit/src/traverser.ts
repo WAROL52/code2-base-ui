@@ -1,5 +1,10 @@
 import { getUnionVariants, isUnionSchema, normalizeUnion } from "./normalizer";
-import type { FieldMeta, JsonSchema, ResolvedSchema } from "./types";
+import type {
+	FieldMeta,
+	JsonSchema,
+	ResolvedSchema,
+	VariantField,
+} from "./types";
 import {
 	getConstraints,
 	getDefaultValue,
@@ -88,7 +93,7 @@ function schemaToFieldMeta(
 		const rawVariants = getUnionVariants(schema);
 		const variantInfos = normalizeUnion(schema, rawVariants);
 
-		const variants: FieldMeta[][] = variantInfos.map((info) => {
+		const variants: VariantField[] = variantInfos.map((info) => {
 			const variantSchema: JsonSchema = {
 				type: "object",
 				title: info.label,
@@ -101,7 +106,11 @@ function schemaToFieldMeta(
 				path,
 				required
 			);
-			return variantMeta.children ?? [];
+			return {
+				label: info.label,
+				meta: variantMeta,
+				children: variantMeta.children ?? [],
+			};
 		});
 
 		const discriminantKey = variantInfos[0]?.discriminantKey;
@@ -159,9 +168,12 @@ function findByPath(fields: FieldMeta[], path: string): FieldMeta | null {
 
 		if (field.variants) {
 			for (const variant of field.variants) {
-				const found = findByPath(variant, path);
-				if (found) {
-					return found;
+				const foundInChildren = findByPath(variant.children, path);
+				if (foundInChildren) {
+					return foundInChildren;
+				}
+				if (variant.meta.path === path) {
+					return variant.meta;
 				}
 			}
 		}

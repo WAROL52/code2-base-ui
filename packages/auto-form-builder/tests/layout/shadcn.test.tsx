@@ -1,3 +1,4 @@
+import type { FieldMeta } from "@code2-base-ui/json-schema-toolkit";
 import { render } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { shadcnLayout } from "../../src/layout/shadcn";
@@ -20,6 +21,42 @@ describe("shadcnLayout", () => {
 			</shadcnLayout.FieldGroup>
 		);
 		expect(container.querySelector("div")).toBeTruthy();
+	});
+
+	it("renders ObjectField with label, description, and children", () => {
+		const fieldMeta: FieldMeta = {
+			path: "address",
+			type: "object",
+			label: "Address",
+			description: "Your postal address",
+			kind: "object",
+			children: [],
+		};
+		const { container } = render(
+			<shadcnLayout.ObjectField fieldMeta={fieldMeta}>
+				<div data-testid="child" />
+			</shadcnLayout.ObjectField>
+		);
+		expect(container.textContent).toContain("Address");
+		expect(container.textContent).toContain("Your postal address");
+		expect(container.querySelector("fieldset")).toBeTruthy();
+	});
+
+	it("renders ObjectField without label or description", () => {
+		const fieldMeta: FieldMeta = {
+			path: "inner",
+			type: "object",
+			label: "",
+			kind: "object",
+			children: [],
+		};
+		const { container } = render(
+			<shadcnLayout.ObjectField fieldMeta={fieldMeta}>
+				<span>content</span>
+			</shadcnLayout.ObjectField>
+		);
+		expect(container.textContent).not.toContain("legend");
+		expect(container.textContent).toContain("content");
 	});
 
 	it("renders FieldLegend with text", () => {

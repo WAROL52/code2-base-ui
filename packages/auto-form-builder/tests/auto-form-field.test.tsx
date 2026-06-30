@@ -53,7 +53,7 @@ describe("AutoFormField", () => {
 		expect(input.value).toBe("John");
 	});
 
-	it("renders object field with custom layout from context", () => {
+	it("renders object field with custom ObjectField from context", () => {
 		const customLayout: FormLayout = {
 			FieldSet: ({ children }) => (
 				<div data-testid="ctx-fieldset">{children}</div>
@@ -66,6 +66,14 @@ describe("AutoFormField", () => {
 			),
 			FieldDescription: ({ children }) => (
 				<div data-testid="ctx-desc">{children}</div>
+			),
+			ObjectField: ({ fieldMeta, children }) => (
+				<div data-testid="ctx-objectfield">
+					{fieldMeta.label && (
+						<div data-testid="ctx-object-label">{fieldMeta.label}</div>
+					)}
+					{children}
+				</div>
 			),
 			SubmitButton: () => null,
 		};
@@ -100,9 +108,8 @@ describe("AutoFormField", () => {
 			</FormLayoutCtx.Provider>
 		);
 
-		expect(screen.getByTestId("ctx-fieldset")).toBeDefined();
-		expect(screen.getByTestId("ctx-legend")).toBeDefined();
-		expect(screen.getByTestId("ctx-desc")).toBeDefined();
-		expect(screen.getByTestId("ctx-group")).toBeDefined();
+		expect(screen.getByTestId("ctx-objectfield")).toBeDefined();
+		expect(screen.getByTestId("ctx-object-label")).toBeDefined();
+		expect(screen.getByText("Address")).toBeDefined();
 	});
 });

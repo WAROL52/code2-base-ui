@@ -98,6 +98,12 @@ export interface ValidationResult {
 	success: boolean;
 }
 
+export interface VariantField {
+	label: string;
+	meta: FieldMeta;
+	children: FieldMeta[];
+}
+
 export interface FieldMeta {
 	path: string;
 	type: string;
@@ -120,7 +126,7 @@ export interface FieldMeta {
 	uiHidden?: boolean;
 	uiOrder?: number;
 	uiReadonly?: boolean;
-	variants?: FieldMeta[][];
+	variants?: VariantField[];
 }
 
 export interface GroupCriteria {

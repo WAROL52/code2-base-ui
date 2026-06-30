@@ -72,6 +72,9 @@ describe("AutoForm", () => {
 			FieldDescription: ({ children }) => (
 				<div data-testid="custom-desc">{children}</div>
 			),
+			ObjectField: ({ children }) => (
+				<div data-testid="custom-objectfield">{children}</div>
+			),
 			SubmitButton: () => (
 				<button data-testid="custom-submit" type="submit">
 					Save

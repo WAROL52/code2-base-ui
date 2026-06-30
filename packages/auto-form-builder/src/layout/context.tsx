@@ -11,7 +11,7 @@ export function useFormLayout(): FormLayout {
 		throw new Error(
 			"useFormLayout: no FormLayout found in context. " +
 				"Wrap your component tree with AutoForm (which provides a default layout) " +
-				"or provide a FormLayoutCtx.Provider manually.",
+				"or provide a FormLayoutCtx.Provider manually."
 		);
 	}
 	return ctx;

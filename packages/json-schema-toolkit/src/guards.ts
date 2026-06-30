@@ -1,4 +1,4 @@
-import type { FieldMeta, JsonSchema } from "./types";
+import type { FieldMeta, JsonSchema, VariantField } from "./types";
 
 export class FieldGuard {
 	constructor() {
@@ -33,7 +33,7 @@ export class FieldGuard {
 
 	static isFieldUnion(
 		field: FieldMeta
-	): field is FieldMeta & { kind: "union"; variants: FieldMeta[][] } {
+	): field is FieldMeta & { kind: "union"; variants: VariantField[] } {
 		return field.kind === "union" && Array.isArray(field.variants);
 	}
 

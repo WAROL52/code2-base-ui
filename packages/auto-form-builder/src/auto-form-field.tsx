@@ -19,7 +19,7 @@ export function AutoFormField({
 	registry,
 }: AutoFormFieldProps) {
 	const layout = useFormLayout();
-	const { path, label, description, uiHidden, placeholder } = fieldMeta;
+	const { path, label, uiHidden, placeholder } = fieldMeta;
 
 	if (uiHidden) {
 		return null;
@@ -27,24 +27,16 @@ export function AutoFormField({
 
 	if (fieldMeta.kind === "object" && fieldMeta.children) {
 		return (
-			<layout.FieldSet className="border-l pl-4">
-				{label && (
-					<layout.FieldLegend className="mb-2">{label}</layout.FieldLegend>
-				)}
-				{description && (
-					<layout.FieldDescription>{description}</layout.FieldDescription>
-				)}
-				<layout.FieldGroup>
-					{fieldMeta.children.map((child) => (
-						<AutoFormField
-							adapter={adapter}
-							fieldMeta={child}
-							key={child.path}
-							registry={registry}
-						/>
-					))}
-				</layout.FieldGroup>
-			</layout.FieldSet>
+			<layout.ObjectField fieldMeta={fieldMeta}>
+				{fieldMeta.children.map((child) => (
+					<AutoFormField
+						adapter={adapter}
+						fieldMeta={child}
+						key={child.path}
+						registry={registry}
+					/>
+				))}
+			</layout.ObjectField>
 		);
 	}
 

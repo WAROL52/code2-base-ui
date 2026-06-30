@@ -55,6 +55,7 @@ export type {
 	ResolvedSchema,
 	ValidationError,
 	ValidationResult,
+	VariantField,
 } from "./types";
 export {
 	entries,

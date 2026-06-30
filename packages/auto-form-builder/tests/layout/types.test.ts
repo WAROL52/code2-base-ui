@@ -1,3 +1,4 @@
+import type { FieldMeta } from "@code2-base-ui/json-schema-toolkit";
 import type React from "react";
 import { describe, expectTypeOf, it } from "vitest";
 import type { FormLayout } from "../../src/layout/types";
@@ -24,6 +25,15 @@ describe("FormLayout type shape", () => {
 	it("has FieldDescription component", () => {
 		expectTypeOf<FormLayout["FieldDescription"]>().toMatchTypeOf<
 			React.ComponentType<{ children: React.ReactNode }>
+		>();
+	});
+
+	it("has ObjectField component", () => {
+		expectTypeOf<FormLayout["ObjectField"]>().toMatchTypeOf<
+			React.ComponentType<{
+				fieldMeta: FieldMeta;
+				children: React.ReactNode;
+			}>
 		>();
 	});
 
