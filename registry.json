@@ -374,21 +374,7 @@
 				}
 			]
 		},
-		{
-			"name": "auto-form-tanstack-adapter",
-			"type": "registry:lib",
-			"title": "Auto Form TanStack Adapter",
-			"description": "TanStack Form adapter for auto-form — connects form state management.",
-			"dependencies": ["@tanstack/react-form"],
-			"registryDependencies": ["WAROL52/code2-base-ui/auto-form-core"],
-			"files": [
-				{
-					"path": "packages/auto-form-adapter-tanstack/src/tanstack-adapter.ts",
-					"type": "registry:lib",
-					"target": "~/src/lib/auto-form/tanstack-adapter.ts"
-				}
-			]
-		},
+
 		{
 			"name": "auto-form-shadcn-registry",
 			"type": "registry:lib",

@@ -102,9 +102,6 @@ importers:
       '@code2-base-ui/auto-form':
         specifier: workspace:*
         version: link:../../packages/auto-form
-      '@code2-base-ui/auto-form-adapter-tanstack':
-        specifier: workspace:*
-        version: link:../../packages/auto-form-adapter-tanstack
       '@code2-base-ui/auto-form-provider-zod':
         specifier: workspace:*
         version: link:../../packages/auto-form-provider-zod
@@ -353,30 +350,6 @@ importers:
       jsdom:
         specifier: ^29.1.1
         version: 29.1.1
-      typescript:
-        specifier: 'catalog:'
-        version: 6.0.3
-      vitest:
-        specifier: ^3.1.0
-        version: 3.2.6(@types/debug@4.1.13)(@types/node@26.0.1)(jiti@2.7.0)(jsdom@29.1.1)(lightningcss@1.32.0)(msw@2.14.6(@types/node@26.0.1)(typescript@6.0.3))(yaml@2.9.0)
-
-  packages/auto-form-adapter-tanstack:
-    devDependencies:
-      '@code2-base-ui/auto-form':
-        specifier: workspace:*
-        version: link:../auto-form
-      '@code2-base-ui/config':
-        specifier: workspace:*
-        version: link:../config
-      '@code2-base-ui/json-schema-toolkit':
-        specifier: workspace:*
-        version: link:../json-schema-toolkit
-      '@tanstack/react-form':
-        specifier: ^1.0.0
-        version: 1.33.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      '@types/react':
-        specifier: 'catalog:'
-        version: 19.2.17
       typescript:
         specifier: 'catalog:'
         version: 6.0.3
