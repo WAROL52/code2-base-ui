@@ -6,7 +6,15 @@ export interface ObjectFieldProps {
 	fieldMeta: FieldMeta;
 }
 
+export interface ArrayFieldProps {
+	children: ReactNode[];
+	fieldMeta: FieldMeta;
+	onAdd: () => void;
+	onRemove: (index: number) => void;
+}
+
 export interface FormLayout {
+	ArrayField: ComponentType<ArrayFieldProps>;
 	FieldDescription: ComponentType<{ children: ReactNode }>;
 	FieldGroup: ComponentType<{ children: ReactNode }>;
 	FieldLegend: ComponentType<{ children: ReactNode; className?: string }>;

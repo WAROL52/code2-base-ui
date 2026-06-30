@@ -60,6 +60,9 @@ describe("AutoForm", () => {
 
 	it("renders with custom layout", () => {
 		const customLayout: FormLayout = {
+			ArrayField: ({ children }) => (
+				<div data-testid="custom-arrayfield">{children}</div>
+			),
 			FieldSet: ({ children }) => (
 				<div data-testid="custom-fieldset">{children}</div>
 			),

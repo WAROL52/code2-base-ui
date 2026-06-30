@@ -50,6 +50,7 @@ export function AutoForm({
 									<AutoFormField
 										adapter={adapter}
 										fieldMeta={field}
+										form={form}
 										key={field.path}
 										registry={registry}
 									/>

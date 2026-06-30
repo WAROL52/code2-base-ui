@@ -4,18 +4,37 @@ import type {
 	FieldMeta,
 	FieldRegistry,
 } from "@code2-base-ui/json-schema-toolkit";
-import type { FormAdapter } from "./adapters/types";
+import type { FormAdapter, FormAPI } from "./adapters/types";
 import { useFormLayout } from "./layout/context";
 
 export interface AutoFormFieldProps {
 	adapter: FormAdapter;
 	fieldMeta: FieldMeta;
+	form?: FormAPI;
 	registry: FieldRegistry;
+}
+
+function getDefaultForType(type?: string): unknown {
+	switch (type) {
+		case "string":
+			return "";
+		case "number":
+			return 0;
+		case "boolean":
+			return false;
+		case "object":
+			return {};
+		case "array":
+			return [];
+		default:
+			return "";
+	}
 }
 
 export function AutoFormField({
 	fieldMeta,
 	adapter,
+	form,
 	registry,
 }: AutoFormFieldProps) {
 	const layout = useFormLayout();
@@ -32,11 +51,44 @@ export function AutoFormField({
 					<AutoFormField
 						adapter={adapter}
 						fieldMeta={child}
+						form={form}
 						key={child.path}
 						registry={registry}
 					/>
 				))}
 			</layout.ObjectField>
+		);
+	}
+
+	if (fieldMeta.kind === "array" && fieldMeta.itemMeta) {
+		const itemMeta = fieldMeta.itemMeta;
+		const values = (form?.values[path] as unknown[]) ?? [];
+		const items = values.map((_val, index) => {
+			const indexedMeta: FieldMeta = {
+				...itemMeta,
+				path: `${path}[${index}]`,
+			};
+			return (
+				<AutoFormField
+					adapter={adapter}
+					fieldMeta={indexedMeta}
+					form={form}
+					key={indexedMeta.path}
+					registry={registry}
+				/>
+			);
+		});
+
+		return (
+			<layout.ArrayField
+				fieldMeta={fieldMeta}
+				onAdd={() =>
+					form?.appendFieldValue?.(path, getDefaultForType(itemMeta.type))
+				}
+				onRemove={(index) => form?.removeFieldValue?.(path, index)}
+			>
+				{items}
+			</layout.ArrayField>
 		);
 	}
 

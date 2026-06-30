@@ -37,6 +37,17 @@ describe("FormLayout type shape", () => {
 		>();
 	});
 
+	it("has ArrayField component", () => {
+		expectTypeOf<FormLayout["ArrayField"]>().toMatchTypeOf<
+			React.ComponentType<{
+				children: React.ReactNode[];
+				fieldMeta: FieldMeta;
+				onAdd: () => void;
+				onRemove: (index: number) => void;
+			}>
+		>();
+	});
+
 	it("has SubmitButton component", () => {
 		expectTypeOf<FormLayout["SubmitButton"]>().toMatchTypeOf<
 			React.ComponentType<{

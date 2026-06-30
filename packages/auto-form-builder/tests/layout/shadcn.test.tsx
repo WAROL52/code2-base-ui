@@ -73,6 +73,69 @@ describe("shadcnLayout", () => {
 		expect(container.textContent).toBe("Help text");
 	});
 
+	it("renders ArrayField with items and add/remove buttons", () => {
+		const onAdd = vi.fn();
+		const onRemove = vi.fn();
+		const fieldMeta: FieldMeta = {
+			path: "tags",
+			type: "array",
+			label: "Tags",
+			kind: "array",
+			itemMeta: {
+				path: "tags[]",
+				name: "item",
+				type: "string",
+				label: "Tag",
+				kind: "primitive",
+			},
+		};
+		const { container } = render(
+			<shadcnLayout.ArrayField
+				fieldMeta={fieldMeta}
+				onAdd={onAdd}
+				onRemove={onRemove}
+			>
+				{[<span key="0">hello</span>, <span key="1">world</span>]}
+			</shadcnLayout.ArrayField>
+		);
+		expect(container.textContent).toContain("Tags");
+		expect(container.textContent).toContain("hello");
+		expect(container.textContent).toContain("world");
+
+		const buttons = container.querySelectorAll("button");
+		expect(buttons).toHaveLength(3);
+
+		const addBtn = buttons[2] as HTMLButtonElement;
+		addBtn.click();
+		expect(onAdd).toHaveBeenCalledOnce();
+
+		const removeBtn0 = buttons[0] as HTMLButtonElement;
+		removeBtn0.click();
+		expect(onRemove).toHaveBeenCalledWith(0);
+	});
+
+	it("renders ArrayField with empty items", () => {
+		const onAdd = vi.fn();
+		const onRemove = vi.fn();
+		const fieldMeta: FieldMeta = {
+			path: "empty",
+			type: "array",
+			label: "Empty",
+			kind: "array",
+		};
+		const { container } = render(
+			<shadcnLayout.ArrayField
+				fieldMeta={fieldMeta}
+				onAdd={onAdd}
+				onRemove={onRemove}
+			>
+				{[]}
+			</shadcnLayout.ArrayField>
+		);
+		expect(container.textContent).toContain("Empty");
+		expect(container.querySelector("button")).toBeTruthy();
+	});
+
 	it("renders SubmitButton with default text", () => {
 		const { container } = render(<shadcnLayout.SubmitButton />);
 		const btn = container.querySelector("button[type='submit']");

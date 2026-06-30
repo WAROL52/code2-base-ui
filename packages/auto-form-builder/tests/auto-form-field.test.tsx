@@ -55,6 +55,9 @@ describe("AutoFormField", () => {
 
 	it("renders object field with custom ObjectField from context", () => {
 		const customLayout: FormLayout = {
+			ArrayField: ({ children }) => (
+				<div data-testid="ctx-arrayfield">{children}</div>
+			),
 			FieldSet: ({ children }) => (
 				<div data-testid="ctx-fieldset">{children}</div>
 			),

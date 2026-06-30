@@ -27,6 +27,8 @@ interface TanStackFormValue {
 		children: (field: TanStackField) => React.ReactNode;
 	}>;
 	handleSubmit: () => void;
+	pushFieldValue: (name: string, value: unknown) => void;
+	removeFieldValue: (name: string, index: number) => void;
 	reset: () => void;
 	state: {
 		values: Record<string, unknown>;
@@ -54,10 +56,14 @@ export const tanstackAdapter: FormAdapter = {
 			isSubmitting: form.state.isSubmitting,
 			handleSubmit: () => form.handleSubmit(),
 			reset: () => form.reset(),
+			appendFieldValue: (name, value) =>
+				(form as unknown as TanStackFormValue).pushFieldValue(name, value),
+			removeFieldValue: (name, index) =>
+				(form as unknown as TanStackFormValue).removeFieldValue(name, index),
 		};
 
 		return (
-			<TanStackCtx.Provider value={form as TanStackFormValue}>
+			<TanStackCtx.Provider value={form as unknown as TanStackFormValue}>
 				{children(formAPI)}
 			</TanStackCtx.Provider>
 		);
