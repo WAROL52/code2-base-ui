@@ -14,7 +14,7 @@
     "@code2-base-ui/api": "workspace:*",
     "@code2-base-ui/env": "workspace:*",
     "@code2-base-ui/ui": "workspace:*",
-    "@code2-base-ui/preset-auto-form-tanstack-shadcn": "workspace:*",
+
     "@orpc/client": "catalog:",
     "@orpc/openapi": "catalog:",
     "@orpc/server": "catalog:",

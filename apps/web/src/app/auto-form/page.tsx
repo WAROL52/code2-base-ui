@@ -1,4 +1,4 @@
-// import { AutoForm } from "@code2-base-ui/preset-auto-form-tanstack-shadcn";
+
 import AutoFormDemo from "@code2-base-ui/ui/components/auto-form/auto-form-demo";
 export default function AutoFormPage() {
 	return (

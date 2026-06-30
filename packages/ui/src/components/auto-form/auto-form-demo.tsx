@@ -1,6 +1,15 @@
 "use client";
-import { AutoForm } from "@code2-base-ui/preset-auto-form-tanstack-shadcn";
+import { createAutoForm } from "@code2-base-ui/auto-form";
+import { zodProvider } from "@code2-base-ui/auto-form-provider-zod";
+import { tanstackFormAdapter } from "@code2-base-ui/auto-form-adapter-tanstack";
+import { createShadcnRegistry } from "@code2-base-ui/auto-form-render-shadcn";
 import { z } from "zod";
+
+const { AutoForm } = createAutoForm({
+	provider: zodProvider,
+	form: tanstackFormAdapter,
+	registry: createShadcnRegistry(),
+});
 
 const loginSchema = z.object({
 	email: z.string().email(),

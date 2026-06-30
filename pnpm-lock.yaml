@@ -212,9 +212,6 @@ importers:
       '@code2-base-ui/env':
         specifier: workspace:*
         version: link:../../packages/env
-      '@code2-base-ui/preset-auto-form-tanstack-shadcn':
-        specifier: workspace:*
-        version: link:../../packages/preset-auto-form-tanstack-shadcn
       '@code2-base-ui/ui':
         specifier: workspace:*
         version: link:../../packages/ui
@@ -389,18 +386,12 @@ importers:
 
   packages/auto-form-builder:
     dependencies:
-      '@code2-base-ui/auto-form':
-        specifier: workspace:*
-        version: link:../auto-form
       '@code2-base-ui/json-schema-toolkit':
         specifier: workspace:*
         version: link:../json-schema-toolkit
       '@code2-base-ui/ui':
         specifier: workspace:*
         version: link:../ui
-      '@sinclair/typebox':
-        specifier: ^0.34.49
-        version: 0.34.49
       '@tanstack/react-form':
         specifier: 'catalog:'
         version: 1.33.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -540,43 +531,6 @@ importers:
       vitest:
         specifier: ^3.1.0
         version: 3.2.6(@types/debug@4.1.13)(@types/node@26.0.1)(jiti@2.7.0)(jsdom@29.1.1)(lightningcss@1.32.0)(msw@2.14.6(@types/node@26.0.1)(typescript@6.0.3))(yaml@2.9.0)
-
-  packages/preset-auto-form-tanstack-shadcn:
-    dependencies:
-      '@code2-base-ui/auto-form':
-        specifier: workspace:*
-        version: link:../auto-form
-      '@code2-base-ui/auto-form-adapter-tanstack':
-        specifier: workspace:*
-        version: link:../auto-form-adapter-tanstack
-      '@code2-base-ui/auto-form-provider-zod':
-        specifier: workspace:*
-        version: link:../auto-form-provider-zod
-      '@code2-base-ui/auto-form-render-shadcn':
-        specifier: workspace:*
-        version: link:../auto-form-render-shadcn
-    devDependencies:
-      '@code2-base-ui/config':
-        specifier: workspace:*
-        version: link:../config
-      '@code2-base-ui/json-schema-toolkit':
-        specifier: workspace:*
-        version: link:../json-schema-toolkit
-      '@types/react':
-        specifier: 'catalog:'
-        version: 19.2.17
-      '@types/react-dom':
-        specifier: 'catalog:'
-        version: 19.2.3(@types/react@19.2.17)
-      typescript:
-        specifier: 'catalog:'
-        version: 6.0.3
-      vitest:
-        specifier: ^3.1.0
-        version: 3.2.6(@types/debug@4.1.13)(@types/node@26.0.1)(jiti@2.7.0)(jsdom@29.1.1)(lightningcss@1.32.0)(msw@2.14.6(@types/node@26.0.1)(typescript@6.0.3))(yaml@2.9.0)
-      zod:
-        specifier: ^4.1.13
-        version: 4.4.3
 
   packages/ui:
     dependencies:
