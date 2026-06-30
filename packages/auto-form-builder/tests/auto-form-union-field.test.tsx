@@ -7,6 +7,7 @@ import { describe, expect, it, vi } from "vitest";
 import { tanstackAdapter } from "../src/adapters/tanstack";
 import { AutoForm } from "../src/auto-form";
 import { AutoFormField } from "../src/auto-form-field";
+import type { AutoFormFieldProps } from "../src/auto-form-field-types";
 import { UnionFieldHandler } from "../src/auto-form-union-field";
 import type { FormLayout } from "../src/layout";
 import { FormLayoutCtx } from "../src/layout/context";
@@ -26,6 +27,19 @@ const mockResolve = vi
 			</label>
 		</div>
 	));
+
+function renderChild(props: AutoFormFieldProps) {
+	return (childMeta: FieldMeta) => (
+		<AutoFormField
+			adapter={props.adapter}
+			fieldMeta={childMeta}
+			form={props.form}
+			key={childMeta.path}
+			registry={props.registry}
+			unionFieldRenderer={props.unionFieldRenderer}
+		/>
+	);
+}
 
 const unionFieldMeta: FieldMeta = {
 	path: "contact",
@@ -110,11 +124,18 @@ describe("UnionFieldHandler", () => {
 		render(
 			<FormLayoutCtx.Provider value={shadcnLayout}>
 				<tanstackAdapter.FormProvider defaultValues={{}}>
-					{(_formAPI) => (
+					{(formAPI) => (
 						<UnionFieldHandler
 							adapter={tanstackAdapter}
 							fieldMeta={unionFieldMeta}
+							form={formAPI}
 							registry={{ resolve: mockResolve } as unknown as FieldRegistry}
+							renderChild={renderChild({
+								adapter: tanstackAdapter,
+								fieldMeta: unionFieldMeta,
+								form: formAPI,
+								registry: { resolve: mockResolve } as unknown as FieldRegistry,
+							})}
 						/>
 					)}
 				</tanstackAdapter.FormProvider>

@@ -1,12 +1,9 @@
 "use client";
 
 import type { FieldMeta } from "@code2-base-ui/json-schema-toolkit";
-// biome-ignore lint/style/noExportedImports: imported for local use AND re-exported
 import type { AutoFormFieldProps } from "./auto-form-field-types";
 import { UnionFieldHandler } from "./auto-form-union-field";
 import { useFormLayout } from "./layout/context";
-
-export type { AutoFormFieldProps };
 
 function getDefaultForType(type?: string): unknown {
 	switch (type) {
@@ -91,12 +88,24 @@ export function AutoFormField({
 	}
 
 	if (fieldMeta.kind === "union" && fieldMeta.variants) {
+		const renderChild = (childMeta: FieldMeta) => (
+			<AutoFormField
+				adapter={adapter}
+				fieldMeta={childMeta}
+				form={form}
+				key={childMeta.path}
+				registry={registry}
+				unionFieldRenderer={UnionRenderer}
+			/>
+		);
+
 		return (
 			<RenderUnion
 				adapter={adapter}
 				fieldMeta={fieldMeta}
 				form={form}
 				registry={registry}
+				renderChild={renderChild}
 				unionFieldRenderer={UnionRenderer}
 			/>
 		);
