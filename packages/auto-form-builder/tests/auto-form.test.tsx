@@ -6,6 +6,7 @@ import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { tanstackAdapter } from "../src/adapters/tanstack";
 import { AutoForm } from "../src/auto-form";
+import type { FormLayout } from "../src/layout";
 
 const testSchema: Record<string, unknown> = {
 	type: "object",
@@ -55,5 +56,42 @@ describe("AutoForm", () => {
 			/>
 		);
 		expect(screen.getByText("Envoyer")).toBeDefined();
+	});
+
+	it("renders with custom layout", () => {
+		const customLayout: FormLayout = {
+			FieldSet: ({ children }) => (
+				<div data-testid="custom-fieldset">{children}</div>
+			),
+			FieldGroup: ({ children }) => (
+				<div data-testid="custom-group">{children}</div>
+			),
+			FieldLegend: ({ children }) => (
+				<div data-testid="custom-legend">{children}</div>
+			),
+			FieldDescription: ({ children }) => (
+				<div data-testid="custom-desc">{children}</div>
+			),
+			SubmitButton: () => (
+				<button data-testid="custom-submit" type="submit">
+					Save
+				</button>
+			),
+		};
+
+		render(
+			<AutoForm
+				adapter={tanstackAdapter}
+				layout={customLayout}
+				registry={mockRegistry}
+				schema={testSchema}
+			/>
+		);
+
+		expect(screen.getByTestId("custom-fieldset")).toBeDefined();
+		expect(screen.getByTestId("custom-legend")).toBeDefined();
+		expect(screen.getByTestId("custom-desc")).toBeDefined();
+		expect(screen.getByTestId("custom-group")).toBeDefined();
+		expect(screen.getByTestId("custom-submit")).toBeDefined();
 	});
 });

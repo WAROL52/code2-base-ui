@@ -1,13 +1,9 @@
 "use client";
 
-import {
-	FieldDescription,
-	FieldGroup,
-	FieldLegend,
-	FieldSet,
-} from "@code2-base-ui/ui/components/field";
 import { AutoFormBuilder } from "./auto-form-builder";
 import { AutoFormField } from "./auto-form-field";
+import { FormLayoutCtx } from "./layout/context";
+import { shadcnLayout } from "./layout/shadcn";
 import type { AutoFormProps } from "./types";
 
 export function AutoForm({
@@ -18,6 +14,7 @@ export function AutoForm({
 	onSubmit,
 	className,
 	children,
+	layout = shadcnLayout,
 }: AutoFormProps) {
 	return (
 		<AutoFormBuilder
@@ -27,42 +24,41 @@ export function AutoForm({
 			schema={schema}
 		>
 			{({ fields, form }) => (
-				<form
-					className={className}
-					onSubmit={(e) => {
-						e.preventDefault();
-						e.stopPropagation();
-						form.handleSubmit();
-					}}
-				>
-					<FieldSet>
-						{"title" in schema && typeof schema.title === "string" && (
-							<FieldLegend className="mb-2">{schema.title}</FieldLegend>
-						)}
-						{"description" in schema &&
-							typeof schema.description === "string" && (
-								<FieldDescription>{schema.description}</FieldDescription>
+				<FormLayoutCtx.Provider value={layout}>
+					<form
+						className={className}
+						onSubmit={(e) => {
+							e.preventDefault();
+							e.stopPropagation();
+							form.handleSubmit();
+						}}
+					>
+						<layout.FieldSet>
+							{"title" in schema && typeof schema.title === "string" && (
+								<layout.FieldLegend className="mb-2">
+									{schema.title}
+								</layout.FieldLegend>
 							)}
-						<FieldGroup>
-							{fields.map((field) => (
-								<AutoFormField
-									adapter={adapter}
-									fieldMeta={field}
-									key={field.path}
-									registry={registry}
-								/>
-							))}
-						</FieldGroup>
-					</FieldSet>
-					{children ?? (
-						<button
-							className="mt-4 rounded-md bg-primary px-4 py-2 text-primary-foreground transition-colors hover:bg-primary/90"
-							type="submit"
-						>
-							Envoyer
-						</button>
-					)}
-				</form>
+							{"description" in schema &&
+								typeof schema.description === "string" && (
+									<layout.FieldDescription>
+										{schema.description}
+									</layout.FieldDescription>
+								)}
+							<layout.FieldGroup>
+								{fields.map((field) => (
+									<AutoFormField
+										adapter={adapter}
+										fieldMeta={field}
+										key={field.path}
+										registry={registry}
+									/>
+								))}
+							</layout.FieldGroup>
+						</layout.FieldSet>
+						{children ?? <layout.SubmitButton />}
+					</form>
+				</FormLayoutCtx.Provider>
 			)}
 		</AutoFormBuilder>
 	);
