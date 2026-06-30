@@ -93,14 +93,18 @@ describe("FieldAPI runtime behavior", () => {
 describe("FormAPI runtime behavior", () => {
 	it("has required methods", () => {
 		const form: FormAPI = {
-			values: {},
+			appendFieldValue: vi.fn(),
 			errors: {},
-			isSubmitting: false,
 			handleSubmit: vi.fn(),
+			isSubmitting: false,
+			removeFieldValue: vi.fn(),
 			reset: vi.fn(),
+			values: {},
 		};
 		expect(typeof form.handleSubmit).toBe("function");
 		expect(typeof form.reset).toBe("function");
+		expect(typeof form.appendFieldValue).toBe("function");
+		expect(typeof form.removeFieldValue).toBe("function");
 		expect(form.isSubmitting).toBe(false);
 	});
 });

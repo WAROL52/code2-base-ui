@@ -90,9 +90,9 @@ export function AutoFormField({
 			<layout.ArrayField
 				fieldMeta={fieldMeta}
 				onAdd={() =>
-					form?.appendFieldValue?.(path, getDefaultForType(itemMeta.type))
+					form?.appendFieldValue(path, getDefaultForType(itemMeta.type))
 				}
-				onRemove={(index) => form?.removeFieldValue?.(path, index)}
+				onRemove={(index) => form?.removeFieldValue(path, index)}
 			>
 				{items}
 			</layout.ArrayField>
