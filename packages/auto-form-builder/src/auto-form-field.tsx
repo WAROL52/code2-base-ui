@@ -4,8 +4,9 @@ import type {
 	FieldMeta,
 	FieldRegistry,
 } from "@code2-base-ui/json-schema-toolkit";
-import { useState } from "react";
+import type { ComponentType } from "react";
 import type { FormAdapter, FormAPI } from "./adapters/types";
+import { UnionFieldHandler } from "./auto-form-union-field";
 import { useFormLayout } from "./layout/context";
 
 export interface AutoFormFieldProps {
@@ -13,6 +14,7 @@ export interface AutoFormFieldProps {
 	fieldMeta: FieldMeta;
 	form?: FormAPI;
 	registry: FieldRegistry;
+	unionFieldRenderer?: ComponentType<AutoFormFieldProps>;
 }
 
 function getDefaultForType(type?: string): unknown {
@@ -32,54 +34,16 @@ function getDefaultForType(type?: string): unknown {
 	}
 }
 
-function UnionFieldHandler({
-	adapter,
-	fieldMeta,
-	form,
-	registry,
-}: AutoFormFieldProps) {
-	const layout = useFormLayout();
-	const [selectedIndex, setSelectedIndex] = useState(0);
-	const variants = fieldMeta.variants;
-
-	if (!variants || variants.length === 0) {
-		return null;
-	}
-
-	const variant = variants[selectedIndex];
-
-	if (!variant) {
-		return null;
-	}
-
-	return (
-		<layout.CompositionsField
-			fieldMeta={fieldMeta}
-			onSelect={(index) => setSelectedIndex(index)}
-			options={variants.map((v) => ({ label: v.label }))}
-			selectedIndex={selectedIndex}
-		>
-			{variant.children.map((child) => (
-				<AutoFormField
-					adapter={adapter}
-					fieldMeta={child}
-					form={form}
-					key={child.path}
-					registry={registry}
-				/>
-			))}
-		</layout.CompositionsField>
-	);
-}
-
 export function AutoFormField({
 	fieldMeta,
 	adapter,
 	form,
 	registry,
+	unionFieldRenderer: UnionRenderer,
 }: AutoFormFieldProps) {
 	const layout = useFormLayout();
 	const { path, label, uiHidden, placeholder } = fieldMeta;
+	const RenderUnion = UnionRenderer ?? UnionFieldHandler;
 
 	if (uiHidden) {
 		return null;
@@ -95,6 +59,7 @@ export function AutoFormField({
 						form={form}
 						key={child.path}
 						registry={registry}
+						unionFieldRenderer={UnionRenderer}
 					/>
 				))}
 			</layout.ObjectField>
@@ -116,6 +81,7 @@ export function AutoFormField({
 					form={form}
 					key={indexedMeta.path}
 					registry={registry}
+					unionFieldRenderer={UnionRenderer}
 				/>
 			);
 		});
@@ -135,11 +101,12 @@ export function AutoFormField({
 
 	if (fieldMeta.kind === "union" && fieldMeta.variants) {
 		return (
-			<UnionFieldHandler
+			<RenderUnion
 				adapter={adapter}
 				fieldMeta={fieldMeta}
 				form={form}
 				registry={registry}
+				unionFieldRenderer={UnionRenderer}
 			/>
 		);
 	}

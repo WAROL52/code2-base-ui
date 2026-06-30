@@ -15,6 +15,7 @@ export function AutoForm({
 	className,
 	children,
 	layout = shadcnLayout,
+	unionFieldRenderer,
 }: AutoFormProps) {
 	return (
 		<AutoFormBuilder
@@ -53,6 +54,7 @@ export function AutoForm({
 										form={form}
 										key={field.path}
 										registry={registry}
+										unionFieldRenderer={unionFieldRenderer}
 									/>
 								))}
 							</layout.FieldGroup>
