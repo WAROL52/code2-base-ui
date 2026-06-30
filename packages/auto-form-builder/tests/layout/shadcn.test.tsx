@@ -114,6 +114,82 @@ describe("shadcnLayout", () => {
 		expect(onRemove).toHaveBeenCalledWith(0);
 	});
 
+	it("renders CompositionsField with variant selector", () => {
+		const onSelect = vi.fn();
+		const fieldMeta: FieldMeta = {
+			path: "contact",
+			type: "object",
+			label: "Contact",
+			kind: "union",
+			variants: [
+				{
+					label: "Email",
+					meta: {
+						path: "",
+						type: "object",
+						label: "Email",
+						kind: "object",
+						children: [],
+					},
+					children: [],
+				},
+				{
+					label: "Phone",
+					meta: {
+						path: "",
+						type: "object",
+						label: "Phone",
+						kind: "object",
+						children: [],
+					},
+					children: [],
+				},
+			],
+		};
+		const { container } = render(
+			<shadcnLayout.CompositionsField
+				fieldMeta={fieldMeta}
+				onSelect={onSelect}
+				options={[{ label: "Email" }, { label: "Phone" }]}
+				selectedIndex={0}
+			>
+				<span data-testid="variant-content">content</span>
+			</shadcnLayout.CompositionsField>
+		);
+		expect(container.textContent).toContain("Contact");
+		expect(container.textContent).toContain("Email");
+		expect(container.textContent).toContain("Phone");
+		expect(container.textContent).toContain("content");
+
+		const buttons = container.querySelectorAll("button");
+		expect(buttons).toHaveLength(2);
+
+		(buttons[1] as HTMLButtonElement).click();
+		expect(onSelect).toHaveBeenCalledWith(1);
+	});
+
+	it("renders CompositionsField without variants (empty options)", () => {
+		const onSelect = vi.fn();
+		const fieldMeta: FieldMeta = {
+			path: "empty",
+			type: "object",
+			kind: "union",
+			label: "",
+			variants: [],
+		};
+		const { container } = render(
+			<shadcnLayout.CompositionsField
+				fieldMeta={fieldMeta}
+				onSelect={onSelect}
+				options={[]}
+				selectedIndex={0}
+			>
+				<span>no variants</span>
+			</shadcnLayout.CompositionsField>
+		);
+		expect(container.textContent).toContain("no variants");
+	});
+
 	it("renders ArrayField with empty items", () => {
 		const onAdd = vi.fn();
 		const onRemove = vi.fn();

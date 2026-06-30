@@ -63,6 +63,9 @@ describe("AutoForm", () => {
 			ArrayField: ({ children }) => (
 				<div data-testid="custom-arrayfield">{children}</div>
 			),
+			CompositionsField: ({ children }) => (
+				<div data-testid="custom-compositions">{children}</div>
+			),
 			FieldSet: ({ children }) => (
 				<div data-testid="custom-fieldset">{children}</div>
 			),

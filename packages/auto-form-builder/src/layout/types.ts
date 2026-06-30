@@ -13,8 +13,17 @@ export interface ArrayFieldProps {
 	onRemove: (index: number) => void;
 }
 
+export interface CompositionsFieldProps {
+	children: ReactNode;
+	fieldMeta: FieldMeta;
+	onSelect: (index: number) => void;
+	options: { label: string }[];
+	selectedIndex: number;
+}
+
 export interface FormLayout {
 	ArrayField: ComponentType<ArrayFieldProps>;
+	CompositionsField: ComponentType<CompositionsFieldProps>;
 	FieldDescription: ComponentType<{ children: ReactNode }>;
 	FieldGroup: ComponentType<{ children: ReactNode }>;
 	FieldLegend: ComponentType<{ children: ReactNode; className?: string }>;

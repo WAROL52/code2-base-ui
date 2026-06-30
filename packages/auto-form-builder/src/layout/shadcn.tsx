@@ -62,6 +62,41 @@ export const shadcnLayout: FormLayout = {
 			</button>
 		</FieldSet>
 	),
+	CompositionsField: ({
+		fieldMeta,
+		children,
+		onSelect,
+		options,
+		selectedIndex,
+	}) => (
+		<FieldSet className="border-l pl-4">
+			{fieldMeta.label && (
+				<FieldLegend className="mb-2">{fieldMeta.label}</FieldLegend>
+			)}
+			{fieldMeta.description && (
+				<FieldDescription>{fieldMeta.description}</FieldDescription>
+			)}
+			{options.length > 0 && (
+				<div className="mb-3 flex flex-wrap gap-2">
+					{options.map((option, index) => (
+						<button
+							className={
+								index === selectedIndex
+									? "rounded bg-primary px-3 py-1 text-primary-foreground text-sm"
+									: "rounded bg-secondary px-3 py-1 text-secondary-foreground text-sm hover:bg-secondary/80"
+							}
+							key={option.label}
+							onClick={() => onSelect(index)}
+							type="button"
+						>
+							{option.label}
+						</button>
+					))}
+				</div>
+			)}
+			<FieldGroup>{children}</FieldGroup>
+		</FieldSet>
+	),
 	SubmitButton: ({ children, disabled = false }) => (
 		<button
 			className="mt-4 rounded-md bg-primary px-4 py-2 text-primary-foreground transition-colors hover:bg-primary/90"

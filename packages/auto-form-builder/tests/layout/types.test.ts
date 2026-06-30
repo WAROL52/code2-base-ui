@@ -48,6 +48,18 @@ describe("FormLayout type shape", () => {
 		>();
 	});
 
+	it("has CompositionsField component", () => {
+		expectTypeOf<FormLayout["CompositionsField"]>().toMatchTypeOf<
+			React.ComponentType<{
+				children: React.ReactNode;
+				fieldMeta: FieldMeta;
+				onSelect: (index: number) => void;
+				options: { label: string }[];
+				selectedIndex: number;
+			}>
+		>();
+	});
+
 	it("has SubmitButton component", () => {
 		expectTypeOf<FormLayout["SubmitButton"]>().toMatchTypeOf<
 			React.ComponentType<{

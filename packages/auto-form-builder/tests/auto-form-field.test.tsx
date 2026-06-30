@@ -58,6 +58,9 @@ describe("AutoFormField", () => {
 			ArrayField: ({ children }) => (
 				<div data-testid="ctx-arrayfield">{children}</div>
 			),
+			CompositionsField: ({ children }) => (
+				<div data-testid="ctx-compositions">{children}</div>
+			),
 			FieldSet: ({ children }) => (
 				<div data-testid="ctx-fieldset">{children}</div>
 			),

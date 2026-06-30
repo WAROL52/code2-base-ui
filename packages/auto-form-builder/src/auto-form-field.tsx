@@ -4,6 +4,7 @@ import type {
 	FieldMeta,
 	FieldRegistry,
 } from "@code2-base-ui/json-schema-toolkit";
+import { useState } from "react";
 import type { FormAdapter, FormAPI } from "./adapters/types";
 import { useFormLayout } from "./layout/context";
 
@@ -29,6 +30,46 @@ function getDefaultForType(type?: string): unknown {
 		default:
 			return "";
 	}
+}
+
+function UnionFieldHandler({
+	adapter,
+	fieldMeta,
+	form,
+	registry,
+}: AutoFormFieldProps) {
+	const layout = useFormLayout();
+	const [selectedIndex, setSelectedIndex] = useState(0);
+	const variants = fieldMeta.variants;
+
+	if (!variants || variants.length === 0) {
+		return null;
+	}
+
+	const variant = variants[selectedIndex];
+
+	if (!variant) {
+		return null;
+	}
+
+	return (
+		<layout.CompositionsField
+			fieldMeta={fieldMeta}
+			onSelect={(index) => setSelectedIndex(index)}
+			options={variants.map((v) => ({ label: v.label }))}
+			selectedIndex={selectedIndex}
+		>
+			{variant.children.map((child) => (
+				<AutoFormField
+					adapter={adapter}
+					fieldMeta={child}
+					form={form}
+					key={child.path}
+					registry={registry}
+				/>
+			))}
+		</layout.CompositionsField>
+	);
 }
 
 export function AutoFormField({
@@ -89,6 +130,17 @@ export function AutoFormField({
 			>
 				{items}
 			</layout.ArrayField>
+		);
+	}
+
+	if (fieldMeta.kind === "union" && fieldMeta.variants) {
+		return (
+			<UnionFieldHandler
+				adapter={adapter}
+				fieldMeta={fieldMeta}
+				form={form}
+				registry={registry}
+			/>
 		);
 	}
 
