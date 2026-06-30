@@ -6,6 +6,8 @@ import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { tanstackAdapter } from "../src/adapters/tanstack";
 import { AutoFormField } from "../src/auto-form-field";
+import type { FormLayout } from "../src/layout";
+import { FormLayoutCtx, shadcnLayout } from "../src/layout";
 
 const mockResolve = vi
 	.fn<(fieldMeta: FieldMeta) => React.ComponentType<Record<string, unknown>>>()
@@ -33,19 +35,74 @@ const textFieldMeta: FieldMeta = {
 describe("AutoFormField", () => {
 	it("renders a primitive field using adapter.Field", () => {
 		render(
-			<tanstackAdapter.FormProvider defaultValues={{ name: "John" }}>
-				{(_formAPI) => (
-					<AutoFormField
-						adapter={tanstackAdapter}
-						fieldMeta={textFieldMeta}
-						registry={{ resolve: mockResolve } as unknown as FieldRegistry}
-					/>
-				)}
-			</tanstackAdapter.FormProvider>
+			<FormLayoutCtx.Provider value={shadcnLayout}>
+				<tanstackAdapter.FormProvider defaultValues={{ name: "John" }}>
+					{(_formAPI) => (
+						<AutoFormField
+							adapter={tanstackAdapter}
+							fieldMeta={textFieldMeta}
+							registry={{ resolve: mockResolve } as unknown as FieldRegistry}
+						/>
+					)}
+				</tanstackAdapter.FormProvider>
+			</FormLayoutCtx.Provider>
 		);
 
 		expect(screen.getByText("Name")).toBeDefined();
 		const input = screen.getByTestId("field-input") as HTMLInputElement;
 		expect(input.value).toBe("John");
+	});
+
+	it("renders object field with custom layout from context", () => {
+		const customLayout: FormLayout = {
+			FieldSet: ({ children }) => (
+				<div data-testid="ctx-fieldset">{children}</div>
+			),
+			FieldGroup: ({ children }) => (
+				<div data-testid="ctx-group">{children}</div>
+			),
+			FieldLegend: ({ children }) => (
+				<div data-testid="ctx-legend">{children}</div>
+			),
+			FieldDescription: ({ children }) => (
+				<div data-testid="ctx-desc">{children}</div>
+			),
+			SubmitButton: () => null,
+		};
+
+		const objectFieldMeta: FieldMeta = {
+			path: "address",
+			type: "object",
+			label: "Address",
+			description: "Your address",
+			kind: "object",
+			children: [
+				{
+					path: "address.street",
+					type: "string",
+					label: "Street",
+					kind: "primitive",
+				},
+			],
+		};
+
+		render(
+			<FormLayoutCtx.Provider value={customLayout}>
+				<tanstackAdapter.FormProvider defaultValues={{}}>
+					{(_formAPI) => (
+						<AutoFormField
+							adapter={tanstackAdapter}
+							fieldMeta={objectFieldMeta}
+							registry={{ resolve: mockResolve } as unknown as FieldRegistry}
+						/>
+					)}
+				</tanstackAdapter.FormProvider>
+			</FormLayoutCtx.Provider>
+		);
+
+		expect(screen.getByTestId("ctx-fieldset")).toBeDefined();
+		expect(screen.getByTestId("ctx-legend")).toBeDefined();
+		expect(screen.getByTestId("ctx-desc")).toBeDefined();
+		expect(screen.getByTestId("ctx-group")).toBeDefined();
 	});
 });

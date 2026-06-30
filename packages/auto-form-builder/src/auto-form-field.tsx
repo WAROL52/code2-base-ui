@@ -4,13 +4,8 @@ import type {
 	FieldMeta,
 	FieldRegistry,
 } from "@code2-base-ui/json-schema-toolkit";
-import {
-	FieldDescription,
-	FieldGroup,
-	FieldLegend,
-	FieldSet,
-} from "@code2-base-ui/ui/components/field";
 import type { FormAdapter } from "./adapters/types";
+import { useFormLayout } from "./layout/context";
 
 export interface AutoFormFieldProps {
 	adapter: FormAdapter;
@@ -23,6 +18,7 @@ export function AutoFormField({
 	adapter,
 	registry,
 }: AutoFormFieldProps) {
+	const layout = useFormLayout();
 	const { path, label, description, uiHidden, placeholder } = fieldMeta;
 
 	if (uiHidden) {
@@ -31,10 +27,14 @@ export function AutoFormField({
 
 	if (fieldMeta.kind === "object" && fieldMeta.children) {
 		return (
-			<FieldSet className="border-l pl-4">
-				{label && <FieldLegend className="mb-2">{label}</FieldLegend>}
-				{description && <FieldDescription>{description}</FieldDescription>}
-				<FieldGroup>
+			<layout.FieldSet className="border-l pl-4">
+				{label && (
+					<layout.FieldLegend className="mb-2">{label}</layout.FieldLegend>
+				)}
+				{description && (
+					<layout.FieldDescription>{description}</layout.FieldDescription>
+				)}
+				<layout.FieldGroup>
 					{fieldMeta.children.map((child) => (
 						<AutoFormField
 							adapter={adapter}
@@ -43,8 +43,8 @@ export function AutoFormField({
 							registry={registry}
 						/>
 					))}
-				</FieldGroup>
-			</FieldSet>
+				</layout.FieldGroup>
+			</layout.FieldSet>
 		);
 	}
 
