@@ -82,7 +82,7 @@ describe("ShadcnTextareaField", () => {
 		);
 		const textarea = container.querySelector("textarea");
 		expect(textarea).toBeTruthy();
-		expect(textarea?.textContent).toBe("");
+		expect((textarea as HTMLTextAreaElement).value).toBe("");
 	});
 });
 
@@ -197,6 +197,14 @@ describe("ShadcnBooleanField", () => {
 
 		expect(container.querySelector('input[type="checkbox"]')).toBeTruthy();
 	});
+
+	it("renders without label", () => {
+		const { container } = render(
+			<ShadcnBooleanField value={false} />
+		);
+
+		expect(container.querySelector('input[type="checkbox"]')).toBeTruthy();
+	});
 });
 
 describe("ShadcnSwitchField", () => {
@@ -208,16 +216,6 @@ describe("ShadcnSwitchField", () => {
 		expect(container.querySelector('[role="switch"]')).toBeTruthy();
 	});
 });
-
-describe("ShadcnBooleanField", () => {
-	it("renders without label", () => {
-		const { container } = render(
-			<ShadcnBooleanField value={false} />
-		);
-		expect(container.querySelector('input[type="checkbox"]')).toBeTruthy();
-	});
-});
-
 describe("createShadcnRegistry", () => {
 	it("returns a FieldRegistry with string, number, boolean, and fallback", () => {
 		const registry = createShadcnRegistry();
