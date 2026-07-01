@@ -210,4 +210,14 @@ describe("tanstackAdapter", () => {
 		fireEvent.blur(screen.getByTestId("input"));
 		expect(screen.getByTestId("touched").textContent).toBe("true");
 	});
+
+	it("throws when Field is rendered outside FormProvider", () => {
+		expect(() =>
+			render(
+				<tanstackAdapter.Field name="name">
+					{() => <div />}
+				</tanstackAdapter.Field>
+			)
+		).toThrow("tanstackAdapter: missing FormProvider");
+	});
 });
