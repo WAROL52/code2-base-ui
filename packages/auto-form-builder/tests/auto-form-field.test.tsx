@@ -225,4 +225,136 @@ describe("AutoFormField", () => {
 		expect(screen.getByTestId("ctx-object-label")).toBeDefined();
 		expect(screen.getByText("Address")).toBeDefined();
 	});
+
+	it("renders array field with items when values exist", () => {
+		mockResolve.mockClear();
+		const arrayField: FieldMeta = {
+			path: "tags",
+			type: "array",
+			label: "Tags",
+			kind: "array",
+			itemMeta: {
+				path: "tags[]",
+				name: "tag",
+				type: "string",
+				label: "Tag",
+				kind: "primitive",
+			},
+		};
+		const customLayout: FormLayout = {
+			...shadcnLayout,
+			ArrayField: ({ children }) => (
+				<div data-testid="ctx-arrayfield">
+					<div data-testid="items">{children}</div>
+				</div>
+			),
+		};
+		render(
+			<FormLayoutCtx.Provider value={customLayout}>
+				<tanstackAdapter.FormProvider defaultValues={{ tags: ["a", "b"] }}>
+					{(formAPI) => (
+						<AutoFormField
+							adapter={tanstackAdapter}
+							fieldMeta={arrayField}
+							form={formAPI}
+							registry={{ resolve: mockResolve } as unknown as FieldRegistry}
+						/>
+					)}
+				</tanstackAdapter.FormProvider>
+			</FormLayoutCtx.Provider>
+		);
+		expect(screen.getByTestId("ctx-arrayfield")).toBeDefined();
+		expect(screen.getByTestId("items")).toBeDefined();
+		expect(mockResolve).toHaveBeenCalled();
+	});
+
+	it("calls appendFieldValue with empty string for unknown item type", () => {
+		const onAppend = vi.fn();
+		const arrayField: FieldMeta = {
+			path: "items",
+			type: "array",
+			label: "Items",
+			kind: "array",
+			itemMeta: {
+				path: "items[]",
+				name: "item",
+				type: "unknown",
+				label: "Item",
+				kind: "primitive",
+			},
+		};
+		const customLayout: FormLayout = {
+			...shadcnLayout,
+			ArrayField: ({ onAdd }) => (
+				<div>
+					<button data-testid="add-btn" onClick={() => onAdd()} type="button">
+						Add
+					</button>
+				</div>
+			),
+		};
+		render(
+			<FormLayoutCtx.Provider value={customLayout}>
+				<AutoFormField
+					adapter={tanstackAdapter}
+					fieldMeta={arrayField}
+					form={{
+						appendFieldValue: onAppend,
+						handleSubmit: vi.fn(),
+						isSubmitting: false,
+						removeFieldValue: vi.fn(),
+						reset: vi.fn(),
+						values: { items: [] },
+					}}
+					registry={{ resolve: mockResolve } as unknown as FieldRegistry}
+				/>
+			</FormLayoutCtx.Provider>
+		);
+		fireEvent.click(screen.getByTestId("add-btn"));
+		expect(onAppend).toHaveBeenCalledWith("items", "");
+	});
+
+	it("renders union field through AutoFormField", () => {
+		const unionField: FieldMeta = {
+			path: "contact",
+			type: "object",
+			label: "Contact",
+			kind: "union",
+			variants: [
+				{
+					label: "Email",
+					meta: {
+						path: "contact.email",
+						type: "object",
+						label: "Email",
+						kind: "object",
+						children: [],
+					},
+					children: [
+						{
+							path: "contact.email.address",
+							type: "string",
+							label: "Address",
+							kind: "primitive",
+						},
+					],
+				},
+			],
+		};
+		render(
+			<FormLayoutCtx.Provider value={shadcnLayout}>
+				<tanstackAdapter.FormProvider defaultValues={{}}>
+					{(formAPI) => (
+						<AutoFormField
+							adapter={tanstackAdapter}
+							fieldMeta={unionField}
+							form={formAPI}
+							registry={{ resolve: mockResolve } as unknown as FieldRegistry}
+						/>
+					)}
+				</tanstackAdapter.FormProvider>
+			</FormLayoutCtx.Provider>
+		);
+		expect(screen.getByText("Email")).toBeTruthy();
+	});
 });
