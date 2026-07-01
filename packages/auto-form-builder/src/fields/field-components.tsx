@@ -196,6 +196,36 @@ export function ShadcnNumberField({
 	);
 }
 
+function BooleanFieldWrapper({
+	children,
+	className,
+	error,
+	id,
+	label,
+}: {
+	children: React.ReactNode;
+	className?: string;
+	error?: string | { message: string; type?: string; path?: string[] };
+	id?: string;
+	label?: string;
+}) {
+	return (
+		<Field
+			className={className}
+			data-invalid={!!error || undefined}
+			orientation="vertical"
+		>
+			<FieldContent>
+				<div className="flex items-center gap-2">
+					{children}
+					{label && <FieldLabel htmlFor={id}>{label}</FieldLabel>}
+				</div>
+				<ErrorDisplay error={error} />
+			</FieldContent>
+		</Field>
+	);
+}
+
 export function ShadcnSwitchField({
 	className,
 	disabled,
@@ -206,24 +236,19 @@ export function ShadcnSwitchField({
 	value,
 }: FieldComponentProps) {
 	return (
-		<Field
+		<BooleanFieldWrapper
 			className={className}
-			data-invalid={!!error || undefined}
-			orientation="vertical"
+			error={error}
+			id={id}
+			label={label}
 		>
-			<FieldContent>
-				<div className="flex items-center gap-2">
-					<Switch
-						checked={!!value}
-						disabled={disabled}
-						id={id}
-						onCheckedChange={(v: boolean) => onChange?.(v)}
-					/>
-					{label && <FieldLabel htmlFor={id}>{label}</FieldLabel>}
-				</div>
-				<ErrorDisplay error={error} />
-			</FieldContent>
-		</Field>
+			<Switch
+				checked={!!value}
+				disabled={disabled}
+				id={id}
+				onCheckedChange={(v: boolean) => onChange?.(v)}
+			/>
+		</BooleanFieldWrapper>
 	);
 }
 
@@ -237,23 +262,18 @@ export function ShadcnBooleanField({
 	value,
 }: FieldComponentProps) {
 	return (
-		<Field
+		<BooleanFieldWrapper
 			className={className}
-			data-invalid={!!error || undefined}
-			orientation="vertical"
+			error={error}
+			id={id}
+			label={label}
 		>
-			<FieldContent>
-				<div className="flex items-center gap-2">
-					<Checkbox
-						checked={!!value}
-						disabled={disabled}
-						id={id}
-						onCheckedChange={(v: boolean) => onChange?.(v)}
-					/>
-					{label && <FieldLabel htmlFor={id}>{label}</FieldLabel>}
-				</div>
-				<ErrorDisplay error={error} />
-			</FieldContent>
-		</Field>
+			<Checkbox
+				checked={!!value}
+				disabled={disabled}
+				id={id}
+				onCheckedChange={(v: boolean) => onChange?.(v)}
+			/>
+		</BooleanFieldWrapper>
 	);
 }
