@@ -9,16 +9,10 @@ import {
 import type { FormLayout } from "./types";
 
 export const shadcnLayout: FormLayout = {
-	FieldSet: ({ children, className }) => (
-		<FieldSet className={className}>{children}</FieldSet>
-	),
-	FieldGroup: ({ children }) => <FieldGroup>{children}</FieldGroup>,
-	FieldLegend: ({ children, className }) => (
-		<FieldLegend className={className}>{children}</FieldLegend>
-	),
-	FieldDescription: ({ children }) => (
-		<FieldDescription>{children}</FieldDescription>
-	),
+	FieldSet,
+	FieldGroup,
+	FieldLegend,
+	FieldDescription,
 	ObjectField: ({ fieldMeta, children }) => (
 		<FieldSet className="border-l pl-4">
 			{fieldMeta.label && (
