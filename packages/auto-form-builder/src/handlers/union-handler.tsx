@@ -1,13 +1,19 @@
 "use client";
 
+import type { FieldMeta } from "@code2-base-ui/json-schema-toolkit";
+import type { ReactNode } from "react";
 import { useState } from "react";
-import type { AutoFormFieldProps } from "./auto-form-field-types";
-import { useFormLayout } from "./layout/context";
+import { useFormLayout } from "../layout/context";
+
+export interface UnionFieldHandlerProps {
+	fieldMeta: FieldMeta;
+	renderField: (childMeta: FieldMeta) => ReactNode;
+}
 
 export function UnionFieldHandler({
 	fieldMeta,
-	renderChild,
-}: AutoFormFieldProps) {
+	renderField,
+}: UnionFieldHandlerProps) {
 	const layout = useFormLayout();
 	const [selectedIndex, setSelectedIndex] = useState(0);
 	const variants = fieldMeta.variants;
@@ -33,7 +39,7 @@ export function UnionFieldHandler({
 			options={variants.map((v) => ({ label: v.label }))}
 			selectedIndex={safeIndex}
 		>
-			{variant.children.map((child) => renderChild?.(child))}
+			{variant.children.map((child) => renderField(child))}
 		</layout.CompositionsField>
 	);
 }
