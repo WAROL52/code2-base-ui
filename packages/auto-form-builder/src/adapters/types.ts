@@ -1,7 +1,21 @@
 import type React from "react";
 
+export type FieldError =
+	| string
+	| { message: string; type?: string; path?: string[] };
+
+export function toErrorString(error?: FieldError): string | undefined {
+	if (!error) {
+		return;
+	}
+	if (typeof error === "string") {
+		return error;
+	}
+	return error.message;
+}
+
 export interface FieldAPI {
-	error?: string;
+	error?: FieldError;
 	isTouched: boolean;
 	onBlur: () => void;
 	onChange: (value: unknown) => void;

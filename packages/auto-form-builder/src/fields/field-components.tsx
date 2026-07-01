@@ -19,17 +19,27 @@ import {
 } from "@code2-base-ui/ui/components/select";
 import { Switch } from "@code2-base-ui/ui/components/switch";
 import { Textarea } from "@code2-base-ui/ui/components/textarea";
+import { toErrorString } from "../adapters/types";
 
 export interface FieldComponentProps {
 	className?: string;
 	disabled?: boolean;
-	error?: string;
+	error?: string | { message: string; type?: string; path?: string[] };
 	field?: FieldMeta;
 	id?: string;
 	label?: string;
 	onChange?: (value: unknown) => void;
 	placeholder?: string;
 	value?: unknown;
+}
+
+function ErrorDisplay({
+	error,
+}: {
+	error?: string | { message: string; type?: string; path?: string[] };
+}) {
+	const msg = toErrorString(error);
+	return msg ? <FieldError>{msg}</FieldError> : null;
 }
 
 function FieldWrapper({
@@ -41,7 +51,7 @@ function FieldWrapper({
 }: {
 	children: React.ReactNode;
 	className?: string;
-	error?: string;
+	error?: string | { message: string; type?: string; path?: string[] };
 	htmlFor?: string;
 	label?: string;
 }) {
@@ -54,7 +64,7 @@ function FieldWrapper({
 			{label && <FieldLabel htmlFor={htmlFor}>{label}</FieldLabel>}
 			<FieldContent>
 				{children}
-				{error && <FieldError>{error}</FieldError>}
+				<ErrorDisplay error={error} />
 			</FieldContent>
 		</Field>
 	);
@@ -211,7 +221,7 @@ export function ShadcnSwitchField({
 					/>
 					{label && <FieldLabel htmlFor={id}>{label}</FieldLabel>}
 				</div>
-				{error && <FieldError>{error}</FieldError>}
+				<ErrorDisplay error={error} />
 			</FieldContent>
 		</Field>
 	);
@@ -242,7 +252,7 @@ export function ShadcnBooleanField({
 					/>
 					{label && <FieldLabel htmlFor={id}>{label}</FieldLabel>}
 				</div>
-				{error && <FieldError>{error}</FieldError>}
+				<ErrorDisplay error={error} />
 			</FieldContent>
 		</Field>
 	);

@@ -1,5 +1,10 @@
 export { tanstackAdapter } from "./adapters/tanstack";
-export type { FieldAPI, FormAdapter, FormAPI } from "./adapters/types";
+export type {
+	FieldAPI,
+	FieldError,
+	FormAdapter,
+	FormAPI,
+} from "./adapters/types";
 export { AutoForm } from "./auto-form";
 export { AutoFormBuilder } from "./auto-form-builder";
 export { AutoFormField } from "./auto-form-field";

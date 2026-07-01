@@ -1,6 +1,11 @@
 import type React from "react";
 import { describe, expect, expectTypeOf, it } from "vitest";
-import type { FieldAPI, FormAdapter, FormAPI } from "../../src/adapters/types";
+import type {
+	FieldAPI,
+	FieldError,
+	FormAdapter,
+	FormAPI,
+} from "../../src/adapters/types";
 
 describe("FormAdapter types", () => {
 	it("module can be loaded at runtime", async () => {
@@ -13,7 +18,7 @@ describe("FormAdapter types", () => {
 			(value: unknown) => void
 		>();
 		expectTypeOf<FieldAPI["onBlur"]>().toMatchTypeOf<() => void>();
-		expectTypeOf<FieldAPI["error"]>().toMatchTypeOf<string | undefined>();
+		expectTypeOf<FieldAPI["error"]>().toMatchTypeOf<FieldError | undefined>();
 		expectTypeOf<FieldAPI["isTouched"]>().toBeBoolean();
 	});
 
@@ -75,6 +80,20 @@ describe("FieldAPI runtime behavior", () => {
 			isTouched: true,
 		};
 		expect(field2.error).toBe("Required");
+	});
+
+	it("accepts structured errors", () => {
+		const field: FieldAPI = {
+			value: null,
+			onChange: vi.fn(),
+			onBlur: vi.fn(),
+			error: { message: "Required", type: "required", path: ["email"] },
+			isTouched: true,
+		};
+		expect(typeof field.error).toBe("object");
+		if (typeof field.error === "object") {
+			expect(field.error?.message).toBe("Required");
+		}
 	});
 
 	it("isTouched is boolean", () => {

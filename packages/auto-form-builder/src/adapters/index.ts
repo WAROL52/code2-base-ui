@@ -1,2 +1,2 @@
 export { tanstackAdapter } from "./tanstack";
-export type { FieldAPI, FormAdapter, FormAPI } from "./types";
+export type { FieldAPI, FieldError, FormAdapter, FormAPI } from "./types";
