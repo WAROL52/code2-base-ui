@@ -196,7 +196,12 @@ describe("UnionFieldHandler", () => {
 		expect(container.textContent).toBe("");
 	});
 
-	it("clamps selectedIndex when it exceeds variants length", () => {
+	it("renders with default selectedIndex of 0", () => {
+		// NOTE: The clamping branch (auto-form-union-field.tsx:25) is not directly tested here
+		// because selectedIndex is managed as internal state. It would require:
+		// 1. Select variant via onSelect --> internal setSelectedIndex
+		// 2. Change fieldMeta to have fewer variants while preserving component state
+		// This is a defensive branch — safeIndex always clamps to valid range.
 		const layoutWithSpy: FormLayout = {
 			...shadcnLayout,
 			CompositionsField: ({ selectedIndex, options }) => (
