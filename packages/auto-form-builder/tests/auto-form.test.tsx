@@ -3,7 +3,7 @@ import type {
 	FieldRegistry,
 	ResolvedSchema,
 } from "@code2-base-ui/json-schema-toolkit";
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { tanstackAdapter } from "../src/adapters/tanstack";
 import { AutoForm } from "../src/auto-form";
@@ -129,5 +129,25 @@ describe("AutoForm", () => {
 		);
 
 		expect(customResolve).toHaveBeenCalledTimes(1);
+	});
+
+	it("calls handleSubmit on form submission", async () => {
+		const onSubmit = vi.fn();
+		const { container } = render(
+			<AutoForm
+				adapter={tanstackAdapter}
+				defaultValues={{ name: "John" }}
+				onSubmit={onSubmit}
+				registry={mockRegistry}
+				schema={testSchema}
+			/>
+		);
+
+		const form = container.querySelector("form");
+		expect(form).toBeTruthy();
+		fireEvent.submit(form!);
+		await waitFor(() => {
+			expect(onSubmit).toHaveBeenCalledWith({ name: "John" });
+		});
 	});
 });
