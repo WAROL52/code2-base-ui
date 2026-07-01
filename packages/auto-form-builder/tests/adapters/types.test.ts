@@ -19,7 +19,6 @@ describe("FormAdapter types", () => {
 
 	it("FormAPI type shape", () => {
 		expectTypeOf<FormAPI["values"]>().toBeObject();
-		expectTypeOf<FormAPI["errors"]>().toBeObject();
 		expectTypeOf<FormAPI["isSubmitting"]>().toBeBoolean();
 		expectTypeOf<FormAPI["handleSubmit"]>().toMatchTypeOf<() => void>();
 		expectTypeOf<FormAPI["reset"]>().toMatchTypeOf<() => void>();
@@ -94,7 +93,6 @@ describe("FormAPI runtime behavior", () => {
 	it("has required methods", () => {
 		const form: FormAPI = {
 			appendFieldValue: vi.fn(),
-			errors: {},
 			handleSubmit: vi.fn(),
 			isSubmitting: false,
 			removeFieldValue: vi.fn(),

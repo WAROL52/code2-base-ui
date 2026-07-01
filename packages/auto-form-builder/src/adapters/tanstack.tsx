@@ -52,7 +52,6 @@ export const tanstackAdapter: FormAdapter = {
 			get values() {
 				return form.state.values as Record<string, unknown>;
 			},
-			errors: {},
 			isSubmitting: form.state.isSubmitting,
 			handleSubmit: () => form.handleSubmit(),
 			reset: () => form.reset(),

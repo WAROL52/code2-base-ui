@@ -10,7 +10,6 @@ export interface FieldAPI {
 
 export interface FormAPI {
 	appendFieldValue: (name: string, value: unknown) => void;
-	errors: Record<string, string | undefined>;
 	handleSubmit: () => void;
 	isSubmitting: boolean;
 	removeFieldValue: (name: string, index: number) => void;
