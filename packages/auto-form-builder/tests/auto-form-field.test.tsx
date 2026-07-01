@@ -437,4 +437,28 @@ describe("AutoFormField", () => {
 		);
 		expect(screen.getByText("Email")).toBeTruthy();
 	});
+
+	it("renders array field without form prop", () => {
+		const field: FieldMeta = {
+			path: "items", type: "array", label: "Items", kind: "array",
+			itemMeta: { path: "items[]", name: "i", type: "string", label: "I", kind: "primitive" },
+		};
+		const layout = {
+			...shadcnLayout,
+			ArrayField: ({ children }: { children: React.ReactNode }) => (
+				<div data-testid="noform-array">{children}</div>
+			),
+		};
+		render(
+			<FormLayoutCtx.Provider value={layout}>
+				<AutoFormField
+					adapter={tanstackAdapter}
+					fieldMeta={field}
+					// no form prop!
+					registry={{ resolve: mockResolve } as unknown as FieldRegistry}
+				/>
+			</FormLayoutCtx.Provider>
+		);
+		expect(screen.getByTestId("noform-array")).toBeDefined();
+	});
 });
