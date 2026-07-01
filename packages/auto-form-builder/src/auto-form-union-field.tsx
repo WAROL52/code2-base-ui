@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import type { AutoFormFieldProps } from "./auto-form-field-types";
 import { useFormLayout } from "./layout/context";
 
@@ -11,10 +11,6 @@ export function UnionFieldHandler({
 	const layout = useFormLayout();
 	const [selectedIndex, setSelectedIndex] = useState(0);
 	const variants = fieldMeta.variants;
-
-	useEffect(() => {
-		setSelectedIndex(0);
-	}, [fieldMeta.path]);
 
 	if (!variants || variants.length === 0) {
 		return null;

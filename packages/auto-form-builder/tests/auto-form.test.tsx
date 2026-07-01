@@ -145,7 +145,7 @@ describe("AutoForm", () => {
 
 		const form = container.querySelector("form");
 		expect(form).toBeTruthy();
-		fireEvent.submit(form!);
+		fireEvent.submit(form as HTMLFormElement);
 		await waitFor(() => {
 			expect(onSubmit).toHaveBeenCalledWith({ name: "John" });
 		});

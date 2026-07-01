@@ -104,6 +104,7 @@ export function AutoFormField({
 				adapter={adapter}
 				fieldMeta={fieldMeta}
 				form={form}
+				key={fieldMeta.path}
 				registry={registry}
 				renderChild={renderChild}
 				unionFieldRenderer={UnionRenderer}

@@ -38,7 +38,15 @@ describe("ShadcnEnumField", () => {
 
 	it("renders with empty string when value is undefined", () => {
 		const { container } = render(
-			<ShadcnEnumField field={{ kind: "enum", label: "E", path: "e", type: "string", enum: ["a", "b"] }} />
+			<ShadcnEnumField
+				field={{
+					kind: "enum",
+					label: "E",
+					path: "e",
+					type: "string",
+					enum: ["a", "b"],
+				}}
+			/>
 		);
 		const select = container.querySelector('[role="combobox"]');
 		expect(select).toBeTruthy();
@@ -85,9 +93,7 @@ describe("ShadcnTextareaField", () => {
 	});
 
 	it("renders with empty string when value is undefined", () => {
-		const { container } = render(
-			<ShadcnTextareaField field={baseField} />
-		);
+		const { container } = render(<ShadcnTextareaField field={baseField} />);
 		const textarea = container.querySelector("textarea");
 		expect(textarea).toBeTruthy();
 		expect((textarea as HTMLTextAreaElement).value).toBe("");
@@ -138,9 +144,7 @@ describe("ShadcnTextField", () => {
 	});
 
 	it("renders with empty string when value is undefined", () => {
-		const { container } = render(
-			<ShadcnTextField field={baseField} />
-		);
+		const { container } = render(<ShadcnTextField field={baseField} />);
 		const input = container.querySelector("input") as HTMLInputElement | null;
 		expect(input).toBeTruthy();
 		expect(input?.value).toBe("");
@@ -179,10 +183,10 @@ describe("ShadcnNumberField", () => {
 	});
 
 	it("renders with empty string when value is undefined", () => {
-		const { container } = render(
-			<ShadcnNumberField field={baseField} />
-		);
-		const input = container.querySelector('input[type="number"]') as HTMLInputElement | null;
+		const { container } = render(<ShadcnNumberField field={baseField} />);
+		const input = container.querySelector(
+			'input[type="number"]'
+		) as HTMLInputElement | null;
 		expect(input).toBeTruthy();
 		expect(input?.value).toBe("");
 	});
@@ -191,7 +195,9 @@ describe("ShadcnNumberField", () => {
 		const { container } = render(
 			<ShadcnNumberField field={baseField} value={0} />
 		);
-		const input = container.querySelector('input[type="number"]') as HTMLInputElement | null;
+		const input = container.querySelector(
+			'input[type="number"]'
+		) as HTMLInputElement | null;
 		expect(input).toBeTruthy();
 		expect(input?.value).toBe("0");
 	});
@@ -207,9 +213,7 @@ describe("ShadcnBooleanField", () => {
 	});
 
 	it("renders without label", () => {
-		const { container } = render(
-			<ShadcnBooleanField value={false} />
-		);
+		const { container } = render(<ShadcnBooleanField value={false} />);
 
 		expect(container.querySelector('input[type="checkbox"]')).toBeTruthy();
 	});

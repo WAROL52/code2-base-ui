@@ -317,15 +317,39 @@ describe("AutoFormField", () => {
 	it("calls appendFieldValue with 0 for number item type", () => {
 		const onAppend = vi.fn();
 		const field = {
-			path: "nums", type: "array", label: "Nums", kind: "array" as const,
-			itemMeta: { path: "nums[]", name: "n", type: "number", label: "N", kind: "primitive" as const },
+			path: "nums",
+			type: "array",
+			label: "Nums",
+			kind: "array" as const,
+			itemMeta: {
+				path: "nums[]",
+				name: "n",
+				type: "number",
+				label: "N",
+				kind: "primitive" as const,
+			},
 		};
-		const layout = { ...shadcnLayout, ArrayField: ({ onAdd }: { onAdd: () => void }) => <button data-testid="add-btn" onClick={() => onAdd()} type="button">Add</button> };
+		const layout = {
+			...shadcnLayout,
+			ArrayField: ({ onAdd }: { onAdd: () => void }) => (
+				<button data-testid="add-btn" onClick={() => onAdd()} type="button">
+					Add
+				</button>
+			),
+		};
 		render(
 			<FormLayoutCtx.Provider value={layout}>
 				<AutoFormField
-					adapter={tanstackAdapter} fieldMeta={field}
-					form={{ appendFieldValue: onAppend, handleSubmit: vi.fn(), isSubmitting: false, removeFieldValue: vi.fn(), reset: vi.fn(), values: { nums: [] } }}
+					adapter={tanstackAdapter}
+					fieldMeta={field}
+					form={{
+						appendFieldValue: onAppend,
+						handleSubmit: vi.fn(),
+						isSubmitting: false,
+						removeFieldValue: vi.fn(),
+						reset: vi.fn(),
+						values: { nums: [] },
+					}}
 					registry={{ resolve: mockResolve } as unknown as FieldRegistry}
 				/>
 			</FormLayoutCtx.Provider>
@@ -337,15 +361,39 @@ describe("AutoFormField", () => {
 	it("calls appendFieldValue with false for boolean item type", () => {
 		const onAppend = vi.fn();
 		const field = {
-			path: "flags", type: "array", label: "Flags", kind: "array" as const,
-			itemMeta: { path: "flags[]", name: "f", type: "boolean", label: "F", kind: "primitive" as const },
+			path: "flags",
+			type: "array",
+			label: "Flags",
+			kind: "array" as const,
+			itemMeta: {
+				path: "flags[]",
+				name: "f",
+				type: "boolean",
+				label: "F",
+				kind: "primitive" as const,
+			},
 		};
-		const layout = { ...shadcnLayout, ArrayField: ({ onAdd }: { onAdd: () => void }) => <button data-testid="add-btn2" onClick={() => onAdd()} type="button">Add</button> };
+		const layout = {
+			...shadcnLayout,
+			ArrayField: ({ onAdd }: { onAdd: () => void }) => (
+				<button data-testid="add-btn2" onClick={() => onAdd()} type="button">
+					Add
+				</button>
+			),
+		};
 		render(
 			<FormLayoutCtx.Provider value={layout}>
 				<AutoFormField
-					adapter={tanstackAdapter} fieldMeta={field}
-					form={{ appendFieldValue: onAppend, handleSubmit: vi.fn(), isSubmitting: false, removeFieldValue: vi.fn(), reset: vi.fn(), values: { flags: [] } }}
+					adapter={tanstackAdapter}
+					fieldMeta={field}
+					form={{
+						appendFieldValue: onAppend,
+						handleSubmit: vi.fn(),
+						isSubmitting: false,
+						removeFieldValue: vi.fn(),
+						reset: vi.fn(),
+						values: { flags: [] },
+					}}
 					registry={{ resolve: mockResolve } as unknown as FieldRegistry}
 				/>
 			</FormLayoutCtx.Provider>
@@ -357,15 +405,39 @@ describe("AutoFormField", () => {
 	it("calls appendFieldValue with {} for object item type", () => {
 		const onAppend = vi.fn();
 		const field = {
-			path: "objs", type: "array", label: "Objs", kind: "array" as const,
-			itemMeta: { path: "objs[]", name: "o", type: "object", label: "O", kind: "primitive" as const },
+			path: "objs",
+			type: "array",
+			label: "Objs",
+			kind: "array" as const,
+			itemMeta: {
+				path: "objs[]",
+				name: "o",
+				type: "object",
+				label: "O",
+				kind: "primitive" as const,
+			},
 		};
-		const layout = { ...shadcnLayout, ArrayField: ({ onAdd }: { onAdd: () => void }) => <button data-testid="add-btn3" onClick={() => onAdd()} type="button">Add</button> };
+		const layout = {
+			...shadcnLayout,
+			ArrayField: ({ onAdd }: { onAdd: () => void }) => (
+				<button data-testid="add-btn3" onClick={() => onAdd()} type="button">
+					Add
+				</button>
+			),
+		};
 		render(
 			<FormLayoutCtx.Provider value={layout}>
 				<AutoFormField
-					adapter={tanstackAdapter} fieldMeta={field}
-					form={{ appendFieldValue: onAppend, handleSubmit: vi.fn(), isSubmitting: false, removeFieldValue: vi.fn(), reset: vi.fn(), values: { objs: [] } }}
+					adapter={tanstackAdapter}
+					fieldMeta={field}
+					form={{
+						appendFieldValue: onAppend,
+						handleSubmit: vi.fn(),
+						isSubmitting: false,
+						removeFieldValue: vi.fn(),
+						reset: vi.fn(),
+						values: { objs: [] },
+					}}
 					registry={{ resolve: mockResolve } as unknown as FieldRegistry}
 				/>
 			</FormLayoutCtx.Provider>
@@ -377,15 +449,39 @@ describe("AutoFormField", () => {
 	it("calls appendFieldValue with [] for array item type", () => {
 		const onAppend = vi.fn();
 		const field = {
-			path: "arrs", type: "array", label: "Arrs", kind: "array" as const,
-			itemMeta: { path: "arrs[]", name: "a", type: "array", label: "A", kind: "primitive" as const },
+			path: "arrs",
+			type: "array",
+			label: "Arrs",
+			kind: "array" as const,
+			itemMeta: {
+				path: "arrs[]",
+				name: "a",
+				type: "array",
+				label: "A",
+				kind: "primitive" as const,
+			},
 		};
-		const layout = { ...shadcnLayout, ArrayField: ({ onAdd }: { onAdd: () => void }) => <button data-testid="add-btn4" onClick={() => onAdd()} type="button">Add</button> };
+		const layout = {
+			...shadcnLayout,
+			ArrayField: ({ onAdd }: { onAdd: () => void }) => (
+				<button data-testid="add-btn4" onClick={() => onAdd()} type="button">
+					Add
+				</button>
+			),
+		};
 		render(
 			<FormLayoutCtx.Provider value={layout}>
 				<AutoFormField
-					adapter={tanstackAdapter} fieldMeta={field}
-					form={{ appendFieldValue: onAppend, handleSubmit: vi.fn(), isSubmitting: false, removeFieldValue: vi.fn(), reset: vi.fn(), values: { arrs: [] } }}
+					adapter={tanstackAdapter}
+					fieldMeta={field}
+					form={{
+						appendFieldValue: onAppend,
+						handleSubmit: vi.fn(),
+						isSubmitting: false,
+						removeFieldValue: vi.fn(),
+						reset: vi.fn(),
+						values: { arrs: [] },
+					}}
 					registry={{ resolve: mockResolve } as unknown as FieldRegistry}
 				/>
 			</FormLayoutCtx.Provider>
@@ -440,8 +536,17 @@ describe("AutoFormField", () => {
 
 	it("renders array field without form prop", () => {
 		const field: FieldMeta = {
-			path: "items", type: "array", label: "Items", kind: "array",
-			itemMeta: { path: "items[]", name: "i", type: "string", label: "I", kind: "primitive" },
+			path: "items",
+			type: "array",
+			label: "Items",
+			kind: "array",
+			itemMeta: {
+				path: "items[]",
+				name: "i",
+				type: "string",
+				label: "I",
+				kind: "primitive",
+			},
 		};
 		const layout = {
 			...shadcnLayout,
