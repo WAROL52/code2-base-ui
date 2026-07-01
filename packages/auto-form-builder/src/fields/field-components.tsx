@@ -186,39 +186,46 @@ export function ShadcnNumberField({
 	);
 }
 
-export function ShadcnBooleanField({
+export function ShadcnSwitchField({
 	className,
 	disabled,
 	error,
-	field: _field,
 	id,
 	label,
 	onChange,
 	value,
 }: FieldComponentProps) {
-	if (_field?.uiWidget === "switch") {
-		return (
-			<Field
-				className={className}
-				data-invalid={!!error || undefined}
-				orientation="vertical"
-			>
-				<FieldContent>
-					<div className="flex items-center gap-2">
-						<Switch
-							checked={!!value}
-							disabled={disabled}
-							id={id}
-							onCheckedChange={(v: boolean) => onChange?.(v)}
-						/>
-						{label && <FieldLabel htmlFor={id}>{label}</FieldLabel>}
-					</div>
-					{error && <FieldError>{error}</FieldError>}
-				</FieldContent>
-			</Field>
-		);
-	}
+	return (
+		<Field
+			className={className}
+			data-invalid={!!error || undefined}
+			orientation="vertical"
+		>
+			<FieldContent>
+				<div className="flex items-center gap-2">
+					<Switch
+						checked={!!value}
+						disabled={disabled}
+						id={id}
+						onCheckedChange={(v: boolean) => onChange?.(v)}
+					/>
+					{label && <FieldLabel htmlFor={id}>{label}</FieldLabel>}
+				</div>
+				{error && <FieldError>{error}</FieldError>}
+			</FieldContent>
+		</Field>
+	);
+}
 
+export function ShadcnBooleanField({
+	className,
+	disabled,
+	error,
+	id,
+	label,
+	onChange,
+	value,
+}: FieldComponentProps) {
 	return (
 		<Field
 			className={className}

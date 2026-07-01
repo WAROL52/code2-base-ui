@@ -6,6 +6,7 @@ import {
 	ShadcnBooleanField,
 	ShadcnEnumField,
 	ShadcnNumberField,
+	ShadcnSwitchField,
 	ShadcnTextareaField,
 	ShadcnTextField,
 } from "../../src/fields/field-components";
@@ -153,38 +154,19 @@ describe("ShadcnNumberField", () => {
 });
 
 describe("ShadcnBooleanField", () => {
-	it("renders a checkbox by default", () => {
+	it("renders a checkbox", () => {
 		const { container } = render(
 			<ShadcnBooleanField field={baseField} value={false} />
 		);
 
 		expect(container.querySelector('input[type="checkbox"]')).toBeTruthy();
 	});
+});
 
-	it("renders a switch when uiWidget is switch", () => {
-		const switchField: FieldMeta = {
-			...baseField,
-			uiWidget: "switch",
-		};
+describe("ShadcnSwitchField", () => {
+	it("renders a switch", () => {
 		const { container } = render(
-			<ShadcnBooleanField field={switchField} value={false} />
-		);
-
-		expect(container.querySelector('[role="switch"]')).toBeTruthy();
-	});
-
-	it("renders a switch trigger", () => {
-		const onChange = vi.fn();
-		const switchField: FieldMeta = {
-			...baseField,
-			uiWidget: "switch",
-		};
-		const { container } = render(
-			<ShadcnBooleanField
-				field={switchField}
-				onChange={onChange}
-				value={false}
-			/>
+			<ShadcnSwitchField field={baseField} value={false} />
 		);
 
 		expect(container.querySelector('[role="switch"]')).toBeTruthy();
@@ -236,5 +218,14 @@ describe("createShadcnRegistry", () => {
 			type: "boolean",
 		};
 		expect(registry.resolve(booleanField)).toBe(ShadcnBooleanField);
+
+		const switchField: FieldMeta = {
+			kind: "primitive",
+			label: "Toggle",
+			path: "toggle",
+			type: "boolean",
+			uiWidget: "switch",
+		};
+		expect(registry.resolve(switchField)).toBe(ShadcnSwitchField);
 	});
 });

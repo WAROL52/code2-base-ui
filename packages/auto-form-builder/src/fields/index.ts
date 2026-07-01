@@ -4,6 +4,7 @@ import {
 	ShadcnBooleanField,
 	ShadcnEnumField,
 	ShadcnNumberField,
+	ShadcnSwitchField,
 	ShadcnTextareaField,
 	ShadcnTextField,
 } from "./field-components";
@@ -13,6 +14,7 @@ export {
 	ShadcnBooleanField,
 	ShadcnEnumField,
 	ShadcnNumberField,
+	ShadcnSwitchField,
 	ShadcnTextareaField,
 	ShadcnTextField,
 } from "./field-components";
@@ -26,10 +28,19 @@ export function createShadcnRegistry(): FieldRegistry {
 		ShadcnTextareaField,
 		10
 	);
+	registry.register(
+		{ type: "boolean", widget: "switch" },
+		ShadcnSwitchField,
+		10
+	);
 	registry.register({ type: "string", kind: "primitive" }, ShadcnTextField, 0);
 	registry.register({ type: "number" }, ShadcnNumberField, 0);
 	registry.register({ type: "integer" }, ShadcnNumberField, 0);
-	registry.register({ type: "boolean" }, ShadcnBooleanField, 0);
+	registry.register(
+		{ type: "boolean", kind: "primitive" },
+		ShadcnBooleanField,
+		0
+	);
 
 	registry.setFallback(ShadcnTextField);
 
