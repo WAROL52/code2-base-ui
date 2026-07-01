@@ -195,6 +195,56 @@ describe("UnionFieldHandler", () => {
 
 		expect(container.textContent).toBe("");
 	});
+
+	it("clamps selectedIndex when it exceeds variants length", () => {
+		const layoutWithSpy: FormLayout = {
+			...shadcnLayout,
+			CompositionsField: ({ selectedIndex, options }) => (
+				<div>
+					<span data-testid="selected">{selectedIndex}</span>
+					{options.map((o) => (
+						<span key={o.label}>{o.label}</span>
+					))}
+				</div>
+			),
+		};
+
+		render(
+			<FormLayoutCtx.Provider value={layoutWithSpy}>
+				<tanstackAdapter.FormProvider defaultValues={{}}>
+					{(_formAPI) => (
+						<UnionFieldHandler
+							adapter={tanstackAdapter}
+							fieldMeta={{
+								path: "test",
+								type: "object",
+								label: "Test",
+								kind: "union",
+								variants: [
+									{
+										label: "Only",
+										meta: {
+											path: "test.a",
+											type: "object",
+											label: "A",
+											kind: "object",
+											children: [],
+										},
+										children: [],
+									},
+								],
+							}}
+							registry={{ resolve: mockResolve } as unknown as FieldRegistry}
+						/>
+					)}
+				</tanstackAdapter.FormProvider>
+			</FormLayoutCtx.Provider>
+		);
+
+		// After mount, useEffect resets selectedIndex to 0.
+		// If selectedIndex was somehow > variants.length, it clamps to variants.length - 1.
+		expect(screen.getByTestId("selected").textContent).toBe("0");
+	});
 });
 
 describe("AutoFormField — unionFieldRenderer seam", () => {
