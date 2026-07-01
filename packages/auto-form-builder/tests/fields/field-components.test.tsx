@@ -75,6 +75,15 @@ describe("ShadcnTextareaField", () => {
 		fireEvent.change(textarea, { target: { value: "hello" } });
 		expect(onChange).toHaveBeenCalledWith("hello");
 	});
+
+	it("renders with empty string when value is undefined", () => {
+		const { container } = render(
+			<ShadcnTextareaField field={baseField} />
+		);
+		const textarea = container.querySelector("textarea");
+		expect(textarea).toBeTruthy();
+		expect(textarea?.textContent).toBe("");
+	});
 });
 
 describe("ShadcnTextField", () => {
@@ -119,6 +128,15 @@ describe("ShadcnTextField", () => {
 
 		expect(screen.getByText("This field is required")).toBeTruthy();
 	});
+
+	it("renders with empty string when value is undefined", () => {
+		const { container } = render(
+			<ShadcnTextField field={baseField} />
+		);
+		const input = container.querySelector("input") as HTMLInputElement | null;
+		expect(input).toBeTruthy();
+		expect(input?.value).toBe("");
+	});
 });
 
 describe("ShadcnNumberField", () => {
@@ -151,6 +169,24 @@ describe("ShadcnNumberField", () => {
 		fireEvent.change(input, { target: { value: "42" } });
 		expect(onChange).toHaveBeenCalledWith(42);
 	});
+
+	it("renders with empty string when value is undefined", () => {
+		const { container } = render(
+			<ShadcnNumberField field={baseField} />
+		);
+		const input = container.querySelector('input[type="number"]') as HTMLInputElement | null;
+		expect(input).toBeTruthy();
+		expect(input?.value).toBe("");
+	});
+
+	it("renders number zero correctly", () => {
+		const { container } = render(
+			<ShadcnNumberField field={baseField} value={0} />
+		);
+		const input = container.querySelector('input[type="number"]') as HTMLInputElement | null;
+		expect(input).toBeTruthy();
+		expect(input?.value).toBe("0");
+	});
 });
 
 describe("ShadcnBooleanField", () => {
@@ -170,6 +206,15 @@ describe("ShadcnSwitchField", () => {
 		);
 
 		expect(container.querySelector('[role="switch"]')).toBeTruthy();
+	});
+});
+
+describe("ShadcnBooleanField", () => {
+	it("renders without label", () => {
+		const { container } = render(
+			<ShadcnBooleanField value={false} />
+		);
+		expect(container.querySelector('input[type="checkbox"]')).toBeTruthy();
 	});
 });
 
