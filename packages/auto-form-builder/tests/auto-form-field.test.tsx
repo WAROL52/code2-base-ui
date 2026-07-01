@@ -2,9 +2,10 @@ import type {
 	FieldMeta,
 	FieldRegistry,
 } from "@code2-base-ui/json-schema-toolkit";
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { tanstackAdapter } from "../src/adapters/tanstack";
+import type { FormAPI } from "../src/adapters/types";
 import { AutoFormField } from "../src/auto-form-field";
 import type { FormLayout } from "../src/layout";
 import { FormLayoutCtx } from "../src/layout/context";
@@ -12,19 +13,22 @@ import { shadcnLayout } from "../src/layout/shadcn";
 
 const mockResolve = vi
 	.fn<(fieldMeta: FieldMeta) => React.ComponentType<Record<string, unknown>>>()
-	.mockReturnValue(({ value, onChange, label }: Record<string, unknown>) => (
-		<div>
-			<label>
-				{label as string}
-				<input
-					data-error=""
-					data-testid="field-input"
-					onChange={(e) => (onChange as (v: string) => void)(e.target.value)}
-					value={(value as string) ?? ""}
-				/>
-			</label>
-		</div>
-	));
+	.mockReturnValue(
+		({ disabled, onChange, value, label }: Record<string, unknown>) => (
+			<div>
+				<label>
+					{label as string}
+					<input
+						data-error=""
+						data-testid="field-input"
+						disabled={!!disabled}
+						onChange={(e) => (onChange as (v: string) => void)(e.target.value)}
+						value={(value as string) ?? ""}
+					/>
+				</label>
+			</div>
+		)
+	);
 
 const textFieldMeta: FieldMeta = {
 	path: "name",
@@ -52,6 +56,108 @@ describe("AutoFormField", () => {
 		expect(screen.getByText("Name")).toBeDefined();
 		const input = screen.getByTestId("field-input") as HTMLInputElement;
 		expect(input.value).toBe("John");
+	});
+
+	it("returns null when uiHidden is true", () => {
+		const hiddenField: FieldMeta = {
+			...textFieldMeta,
+			uiHidden: true,
+		};
+		const { container } = render(
+			<FormLayoutCtx.Provider value={shadcnLayout}>
+				<tanstackAdapter.FormProvider defaultValues={{ name: "" }}>
+					{(_formAPI) => (
+						<AutoFormField
+							adapter={tanstackAdapter}
+							fieldMeta={hiddenField}
+							registry={{ resolve: mockResolve } as unknown as FieldRegistry}
+						/>
+					)}
+				</tanstackAdapter.FormProvider>
+			</FormLayoutCtx.Provider>
+		);
+		expect(container.innerHTML).toBe("");
+	});
+
+	it("renders with opacity-50 when uiReadonly is true", () => {
+		const readonlyField: FieldMeta = {
+			...textFieldMeta,
+			uiReadonly: true,
+		};
+		render(
+			<FormLayoutCtx.Provider value={shadcnLayout}>
+				<tanstackAdapter.FormProvider defaultValues={{ name: "John" }}>
+					{(_formAPI) => (
+						<AutoFormField
+							adapter={tanstackAdapter}
+							fieldMeta={readonlyField}
+							registry={{ resolve: mockResolve } as unknown as FieldRegistry}
+						/>
+					)}
+				</tanstackAdapter.FormProvider>
+			</FormLayoutCtx.Provider>
+		);
+		const input = screen.getByTestId("field-input") as HTMLInputElement;
+		expect(input.disabled).toBe(true);
+	});
+
+	it("renders array field with add/remove callbacks", () => {
+		const onAppend = vi.fn();
+		const onRemove = vi.fn();
+		const arrayField: FieldMeta = {
+			path: "tags",
+			type: "array",
+			label: "Tags",
+			kind: "array",
+			itemMeta: {
+				path: "tags[]",
+				name: "tag",
+				type: "string",
+				label: "Tag",
+				kind: "primitive",
+			},
+		};
+		const customLayout: FormLayout = {
+			...shadcnLayout,
+			ArrayField: ({ children, onAdd, onRemove }) => (
+				<div data-testid="ctx-arrayfield">
+					<div data-testid="items">{children}</div>
+					<button data-testid="add-btn" onClick={() => onAdd()} type="button">
+						Add
+					</button>
+					<button
+						data-testid="remove-btn"
+						onClick={() => onRemove(0)}
+						type="button"
+					>
+						Remove
+					</button>
+				</div>
+			),
+		};
+		const formWithSpies: FormAPI = {
+			appendFieldValue: onAppend,
+			handleSubmit: vi.fn(),
+			isSubmitting: false,
+			removeFieldValue: onRemove,
+			reset: vi.fn(),
+			values: { tags: [] },
+		};
+		render(
+			<FormLayoutCtx.Provider value={customLayout}>
+				<AutoFormField
+					adapter={tanstackAdapter}
+					fieldMeta={arrayField}
+					form={formWithSpies}
+					registry={{ resolve: mockResolve } as unknown as FieldRegistry}
+				/>
+			</FormLayoutCtx.Provider>
+		);
+		expect(screen.getByTestId("ctx-arrayfield")).toBeDefined();
+		fireEvent.click(screen.getByTestId("add-btn"));
+		expect(onAppend).toHaveBeenCalledWith("tags", "");
+		fireEvent.click(screen.getByTestId("remove-btn"));
+		expect(onRemove).toHaveBeenCalledWith("tags", 0);
 	});
 
 	it("renders object field with custom ObjectField from context", () => {
