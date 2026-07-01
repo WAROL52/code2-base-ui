@@ -137,6 +137,7 @@ export interface RegistrySelector {
 	type?: string;
 	format?: string;
 	widget?: string;
+	kind?: FieldKind;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

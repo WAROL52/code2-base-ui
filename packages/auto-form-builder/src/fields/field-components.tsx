@@ -60,7 +60,7 @@ function FieldWrapper({
 	);
 }
 
-export function ShadcnInputField({
+export function ShadcnEnumField({
 	className,
 	disabled,
 	error,
@@ -71,51 +71,67 @@ export function ShadcnInputField({
 	placeholder,
 	value,
 }: FieldComponentProps) {
-	if (_field?.enum && _field.enum.length > 0) {
-		return (
-			<FieldWrapper className={className} error={error} label={label}>
-				<Select
-					disabled={disabled}
-					onValueChange={(v) => onChange?.(v)}
-					value={(value as string) ?? ""}
-				>
-					<SelectTrigger>
-						<SelectValue placeholder={placeholder} />
-					</SelectTrigger>
-					<SelectContent>
-						{_field.enum.map((opt) => (
-							<SelectItem key={String(opt)} value={String(opt)}>
-								{String(opt)}
-							</SelectItem>
-						))}
-					</SelectContent>
-				</Select>
-			</FieldWrapper>
-		);
-	}
-
-	const isTextarea =
-		_field?.format === "textarea" || _field?.uiWidget === "textarea";
-
-	if (isTextarea) {
-		return (
-			<FieldWrapper
-				className={className}
-				error={error}
-				htmlFor={id}
-				label={label}
+	return (
+		<FieldWrapper className={className} error={error} label={label}>
+			<Select
+				disabled={disabled}
+				onValueChange={(v) => onChange?.(v)}
+				value={(value as string) ?? ""}
 			>
-				<Textarea
-					disabled={disabled}
-					id={id}
-					onChange={(e) => onChange?.(e.target.value)}
-					placeholder={placeholder}
-					value={(value as string) ?? ""}
-				/>
-			</FieldWrapper>
-		);
-	}
+				<SelectTrigger id={id}>
+					<SelectValue placeholder={placeholder} />
+				</SelectTrigger>
+				<SelectContent>
+					{_field?.enum?.map((opt) => (
+						<SelectItem key={String(opt)} value={String(opt)}>
+							{String(opt)}
+						</SelectItem>
+					))}
+				</SelectContent>
+			</Select>
+		</FieldWrapper>
+	);
+}
 
+export function ShadcnTextareaField({
+	className,
+	disabled,
+	error,
+	field: _field,
+	id,
+	label,
+	onChange,
+	placeholder,
+	value,
+}: FieldComponentProps) {
+	return (
+		<FieldWrapper
+			className={className}
+			error={error}
+			htmlFor={id}
+			label={label}
+		>
+			<Textarea
+				disabled={disabled}
+				id={id}
+				onChange={(e) => onChange?.(e.target.value)}
+				placeholder={placeholder}
+				value={(value as string) ?? ""}
+			/>
+		</FieldWrapper>
+	);
+}
+
+export function ShadcnTextField({
+	className,
+	disabled,
+	error,
+	id,
+	label,
+	onChange,
+	placeholder,
+	value,
+}: FieldComponentProps) {
 	return (
 		<FieldWrapper
 			className={className}

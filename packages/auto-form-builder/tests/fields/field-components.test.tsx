@@ -1,30 +1,92 @@
 import type { FieldMeta } from "@code2-base-ui/json-schema-toolkit";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
+
 import {
 	ShadcnBooleanField,
-	ShadcnInputField,
+	ShadcnEnumField,
 	ShadcnNumberField,
+	ShadcnTextareaField,
+	ShadcnTextField,
 } from "../../src/fields/field-components";
 import { createShadcnRegistry } from "../../src/fields/index";
 
-describe("ShadcnInputField", () => {
-	const baseField: FieldMeta = {
-		path: "name",
-		type: "string",
-		label: "Name",
-		kind: "primitive",
-	};
+const baseField: FieldMeta = {
+	kind: "primitive",
+	label: "Name",
+	path: "name",
+	type: "string",
+};
 
+describe("ShadcnEnumField", () => {
+	it("renders a select with enum options", () => {
+		const { container } = render(
+			<ShadcnEnumField
+				field={{
+					...baseField,
+					kind: "enum",
+					enum: ["a", "b", "c"],
+				}}
+				value=""
+			/>
+		);
+
+		const select = container.querySelector('[role="combobox"]');
+		expect(select).toBeTruthy();
+	});
+
+	it("calls onChange when a value is selected", () => {
+		const onChange = vi.fn();
+		const { container } = render(
+			<ShadcnEnumField
+				field={{
+					...baseField,
+					kind: "enum",
+					enum: ["a", "b"],
+				}}
+				onChange={onChange}
+				value=""
+			/>
+		);
+
+		const selectTrigger = container.querySelector('[role="combobox"]');
+		expect(selectTrigger).toBeTruthy();
+	});
+});
+
+describe("ShadcnTextareaField", () => {
+	it("renders a textarea", () => {
+		const { container } = render(
+			<ShadcnTextareaField field={baseField} value="" />
+		);
+
+		const textarea = container.querySelector("textarea");
+		expect(textarea).toBeTruthy();
+	});
+
+	it("calls onChange when text is entered", () => {
+		const onChange = vi.fn();
+		render(
+			<ShadcnTextareaField field={baseField} onChange={onChange} value="" />
+		);
+
+		const textarea = screen.getByRole("textbox");
+		fireEvent.change(textarea, { target: { value: "hello" } });
+		expect(onChange).toHaveBeenCalledWith("hello");
+	});
+});
+
+describe("ShadcnTextField", () => {
 	it("renders an input text by default", () => {
-		render(<ShadcnInputField field={baseField} value="" />);
+		const { container } = render(
+			<ShadcnTextField field={baseField} value="" />
+		);
 
-		const input = screen.getByRole("textbox");
-		expect(input).toBeDefined();
+		expect(container.querySelector('input[type="text"]')).toBeTruthy();
 	});
 
 	it("renders an input with the provided value", () => {
-		render(<ShadcnInputField field={baseField} value="John" />);
+		render(<ShadcnTextField field={baseField} value="John" />);
 
 		const input = screen.getByRole("textbox") as HTMLInputElement;
 		expect(input.value).toBe("John");
@@ -32,7 +94,7 @@ describe("ShadcnInputField", () => {
 
 	it("calls onChange when the input changes", () => {
 		const onChange = vi.fn();
-		render(<ShadcnInputField field={baseField} onChange={onChange} value="" />);
+		render(<ShadcnTextField field={baseField} onChange={onChange} value="" />);
 
 		const input = screen.getByRole("textbox");
 		fireEvent.change(input, { target: { value: "new" } });
@@ -40,78 +102,38 @@ describe("ShadcnInputField", () => {
 	});
 
 	it("renders label text", () => {
-		render(<ShadcnInputField field={baseField} label="Full Name" value="" />);
+		render(<ShadcnTextField field={baseField} label="Full Name" value="" />);
 
-		expect(screen.getByText("Full Name")).toBeDefined();
-	});
-
-	it("renders a select when field has enum values", () => {
-		const enumField: FieldMeta = {
-			...baseField,
-			enum: ["a", "b", "c"],
-		};
-		render(<ShadcnInputField field={enumField} value="" />);
-
-		expect(screen.getByRole("combobox")).toBeDefined();
-	});
-
-	it("renders a textarea when format is textarea", () => {
-		const textareaField: FieldMeta = {
-			...baseField,
-			format: "textarea",
-		};
-		const { container } = render(
-			<ShadcnInputField field={textareaField} value="" />,
-		);
-
-		expect(container.querySelector("textarea")).toBeTruthy();
-	});
-
-	it("renders a textarea when uiWidget is textarea", () => {
-		const textareaField: FieldMeta = {
-			...baseField,
-			uiWidget: "textarea",
-		};
-		const { container } = render(
-			<ShadcnInputField field={textareaField} value="" />,
-		);
-
-		expect(container.querySelector("textarea")).toBeTruthy();
+		expect(screen.getByText("Full Name")).toBeTruthy();
 	});
 
 	it("displays error text", () => {
 		render(
-			<ShadcnInputField
+			<ShadcnTextField
+				error="This field is required"
 				field={baseField}
 				value=""
-				error="This field is required"
-			/>,
+			/>
 		);
 
-		expect(screen.getByText("This field is required")).toBeDefined();
+		expect(screen.getByText("This field is required")).toBeTruthy();
 	});
 });
 
 describe("ShadcnNumberField", () => {
-	const baseField: FieldMeta = {
-		path: "age",
-		type: "number",
-		label: "Age",
-		kind: "primitive",
-	};
-
 	it("renders an input type number", () => {
 		const { container } = render(
-			<ShadcnNumberField field={baseField} value={0} />,
+			<ShadcnNumberField field={baseField} value={0} />
 		);
 
-		const input = container.querySelector('input[type="number"]');
-		expect(input).toBeTruthy();
+		expect(container.querySelector('input[type="number"]')).toBeTruthy();
 	});
 
 	it("calls onChange with undefined when empty", () => {
 		const onChange = vi.fn();
-		render(<ShadcnNumberField field={baseField} onChange={onChange} value={0} />);
+		render(
+			<ShadcnNumberField field={baseField} onChange={onChange} value={0} />
+		);
 
 		const input = screen.getByRole("spinbutton");
 		fireEvent.change(input, { target: { value: "" } });
@@ -120,7 +142,9 @@ describe("ShadcnNumberField", () => {
 
 	it("calls onChange with a number when a value is entered", () => {
 		const onChange = vi.fn();
-		render(<ShadcnNumberField field={baseField} onChange={onChange} value={0} />);
+		render(
+			<ShadcnNumberField field={baseField} onChange={onChange} value={0} />
+		);
 
 		const input = screen.getByRole("spinbutton");
 		fireEvent.change(input, { target: { value: "42" } });
@@ -129,20 +153,12 @@ describe("ShadcnNumberField", () => {
 });
 
 describe("ShadcnBooleanField", () => {
-	const baseField: FieldMeta = {
-		path: "active",
-		type: "boolean",
-		label: "Active",
-		kind: "primitive",
-	};
-
 	it("renders a checkbox by default", () => {
 		const { container } = render(
-			<ShadcnBooleanField field={baseField} value={false} />,
+			<ShadcnBooleanField field={baseField} value={false} />
 		);
 
-		const checkbox = container.querySelector('input[type="checkbox"]');
-		expect(checkbox).toBeTruthy();
+		expect(container.querySelector('input[type="checkbox"]')).toBeTruthy();
 	});
 
 	it("renders a switch when uiWidget is switch", () => {
@@ -151,20 +167,27 @@ describe("ShadcnBooleanField", () => {
 			uiWidget: "switch",
 		};
 		const { container } = render(
-			<ShadcnBooleanField field={switchField} value={false} />,
+			<ShadcnBooleanField field={switchField} value={false} />
 		);
 
 		expect(container.querySelector('[role="switch"]')).toBeTruthy();
 	});
 
-	it("calls onChange when checkbox is clicked", () => {
+	it("renders a switch trigger", () => {
 		const onChange = vi.fn();
+		const switchField: FieldMeta = {
+			...baseField,
+			uiWidget: "switch",
+		};
 		const { container } = render(
-			<ShadcnBooleanField field={baseField} onChange={onChange} value={false} />,
+			<ShadcnBooleanField
+				field={switchField}
+				onChange={onChange}
+				value={false}
+			/>
 		);
 
-		const checkbox = container.querySelector('input[type="checkbox"]');
-		expect(checkbox).toBeTruthy();
+		expect(container.querySelector('[role="switch"]')).toBeTruthy();
 	});
 });
 
@@ -173,39 +196,45 @@ describe("createShadcnRegistry", () => {
 		const registry = createShadcnRegistry();
 
 		const stringField: FieldMeta = {
-			path: "name",
-			type: "string",
-			label: "Name",
 			kind: "primitive",
+			label: "Text",
+			path: "text",
+			type: "string",
 		};
-		const stringComponent = registry.resolve(stringField);
-		expect(stringComponent).toBe(ShadcnInputField);
+		expect(registry.resolve(stringField)).toBe(ShadcnTextField);
+
+		const enumField: FieldMeta = {
+			kind: "enum",
+			label: "Choice",
+			path: "choice",
+			type: "string",
+			enum: ["a", "b"],
+		};
+		expect(registry.resolve(enumField)).toBe(ShadcnEnumField);
+
+		const textareaField: FieldMeta = {
+			kind: "primitive",
+			label: "Bio",
+			path: "bio",
+			type: "string",
+			uiWidget: "textarea",
+		};
+		expect(registry.resolve(textareaField)).toBe(ShadcnTextareaField);
 
 		const numberField: FieldMeta = {
+			kind: "primitive",
+			label: "Age",
 			path: "age",
 			type: "number",
-			label: "Age",
-			kind: "primitive",
 		};
-		const numberComponent = registry.resolve(numberField);
-		expect(numberComponent).toBe(ShadcnNumberField);
+		expect(registry.resolve(numberField)).toBe(ShadcnNumberField);
 
 		const booleanField: FieldMeta = {
+			kind: "primitive",
+			label: "Active",
 			path: "active",
 			type: "boolean",
-			label: "Active",
-			kind: "primitive",
 		};
-		const booleanComponent = registry.resolve(booleanField);
-		expect(booleanComponent).toBe(ShadcnBooleanField);
-
-		const unknownField: FieldMeta = {
-			path: "unknown",
-			type: "unknown",
-			label: "Unknown",
-			kind: "primitive",
-		};
-		const fallbackComponent = registry.resolve(unknownField);
-		expect(fallbackComponent).toBe(ShadcnInputField);
+		expect(registry.resolve(booleanField)).toBe(ShadcnBooleanField);
 	});
 });

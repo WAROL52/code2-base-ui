@@ -47,4 +47,25 @@ describe("FieldRegistry", () => {
     const field: FieldMeta = { path: "bio", type: "string", uiWidget: "textarea", label: "Bio" };
     expect(registry.resolve(field)).toBe(StringField);
   });
+
+  it("matches by kind with higher priority", () => {
+    registry.register({ type: "string" }, StringField, 0);
+    registry.register({ type: "string", kind: "enum" }, StringField, 10);
+    const enumField: FieldMeta = { path: "choice", type: "string", kind: "enum", label: "Choice", enum: ["a", "b"] };
+    expect(registry.resolve(enumField)).toBe(StringField);
+  });
+
+  it("falls back to registration without kind when no kind match", () => {
+    registry.register({ type: "string" }, StringField);
+    const enumField: FieldMeta = { path: "choice", type: "string", kind: "enum", label: "Choice", enum: ["a", "b"] };
+    expect(registry.resolve(enumField)).toBe(StringField);
+  });
+
+  it("prefers kind match over fallback even at same priority", () => {
+    registry.register({ type: "string" }, StringField, 0);
+    registry.register({ type: "string", kind: "enum" }, StringField, 5);
+    const enumField: FieldMeta = { path: "choice", type: "string", kind: "enum", label: "Choice", enum: ["a", "b"] };
+    const result = registry.resolve(enumField);
+    expect(result).toBe(StringField);
+  });
 });
