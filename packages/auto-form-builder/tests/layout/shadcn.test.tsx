@@ -1,6 +1,6 @@
 import type { FieldMeta } from "@code2-base-ui/json-schema-toolkit";
 import { render } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { shadcnLayout } from "../../src/layout/shadcn";
 
 describe("shadcnLayout", () => {
@@ -157,6 +157,41 @@ describe("shadcnLayout", () => {
 		expect(container.textContent).toContain("no variants");
 	});
 
+	it("renders CompositionsField with description", () => {
+		const onSelect = vi.fn();
+		const fieldMeta: FieldMeta = {
+			path: "contact",
+			type: "object",
+			label: "Contact",
+			description: "Choose your contact method",
+			kind: "union",
+			variants: [
+				{
+					label: "Email",
+					meta: {
+						path: "",
+						type: "object",
+						label: "Email",
+						kind: "object",
+						children: [],
+					},
+					children: [],
+				},
+			],
+		};
+		const { container } = render(
+			<shadcnLayout.CompositionsField
+				fieldMeta={fieldMeta}
+				onSelect={onSelect}
+				options={[{ label: "Email" }]}
+				selectedIndex={0}
+			>
+				<span>content</span>
+			</shadcnLayout.CompositionsField>
+		);
+		expect(container.textContent).toContain("Choose your contact method");
+	});
+
 	it("renders ArrayField with empty items", () => {
 		const onAdd = vi.fn();
 		const onRemove = vi.fn();
@@ -177,6 +212,35 @@ describe("shadcnLayout", () => {
 		);
 		expect(container.textContent).toContain("Empty");
 		expect(container.querySelector("button")).toBeTruthy();
+	});
+
+	it("renders ArrayField with description", () => {
+		const onAdd = vi.fn();
+		const onRemove = vi.fn();
+		const fieldMeta: FieldMeta = {
+			path: "tags",
+			type: "array",
+			label: "Tags",
+			description: "Add your tags",
+			kind: "array",
+			itemMeta: {
+				path: "tags[]",
+				name: "item",
+				type: "string",
+				label: "Tag",
+				kind: "primitive",
+			},
+		};
+		const { container } = render(
+			<shadcnLayout.ArrayField
+				fieldMeta={fieldMeta}
+				onAdd={onAdd}
+				onRemove={onRemove}
+			>
+				{[]}
+			</shadcnLayout.ArrayField>
+		);
+		expect(container.textContent).toContain("Add your tags");
 	});
 
 	it("renders SubmitButton with default text", () => {
