@@ -36,6 +36,14 @@ describe("ShadcnEnumField", () => {
 		expect(select).toBeTruthy();
 	});
 
+	it("renders with empty string when value is undefined", () => {
+		const { container } = render(
+			<ShadcnEnumField field={{ kind: "enum", label: "E", path: "e", type: "string", enum: ["a", "b"] }} />
+		);
+		const select = container.querySelector('[role="combobox"]');
+		expect(select).toBeTruthy();
+	});
+
 	it("calls onChange when a value is selected", () => {
 		const onChange = vi.fn();
 		const { container } = render(
@@ -204,6 +212,11 @@ describe("ShadcnBooleanField", () => {
 		);
 
 		expect(container.querySelector('input[type="checkbox"]')).toBeTruthy();
+	});
+
+	it("renders with label", () => {
+		render(<ShadcnBooleanField label="Active" value={false} />);
+		expect(screen.getByText("Active")).toBeTruthy();
 	});
 });
 

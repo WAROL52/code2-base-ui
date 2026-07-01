@@ -314,6 +314,86 @@ describe("AutoFormField", () => {
 		expect(onAppend).toHaveBeenCalledWith("items", "");
 	});
 
+	it("calls appendFieldValue with 0 for number item type", () => {
+		const onAppend = vi.fn();
+		const field = {
+			path: "nums", type: "array", label: "Nums", kind: "array" as const,
+			itemMeta: { path: "nums[]", name: "n", type: "number", label: "N", kind: "primitive" as const },
+		};
+		const layout = { ...shadcnLayout, ArrayField: ({ onAdd }: { onAdd: () => void }) => <button data-testid="add-btn" onClick={() => onAdd()} type="button">Add</button> };
+		render(
+			<FormLayoutCtx.Provider value={layout}>
+				<AutoFormField
+					adapter={tanstackAdapter} fieldMeta={field}
+					form={{ appendFieldValue: onAppend, handleSubmit: vi.fn(), isSubmitting: false, removeFieldValue: vi.fn(), reset: vi.fn(), values: { nums: [] } }}
+					registry={{ resolve: mockResolve } as unknown as FieldRegistry}
+				/>
+			</FormLayoutCtx.Provider>
+		);
+		fireEvent.click(screen.getByTestId("add-btn"));
+		expect(onAppend).toHaveBeenCalledWith("nums", 0);
+	});
+
+	it("calls appendFieldValue with false for boolean item type", () => {
+		const onAppend = vi.fn();
+		const field = {
+			path: "flags", type: "array", label: "Flags", kind: "array" as const,
+			itemMeta: { path: "flags[]", name: "f", type: "boolean", label: "F", kind: "primitive" as const },
+		};
+		const layout = { ...shadcnLayout, ArrayField: ({ onAdd }: { onAdd: () => void }) => <button data-testid="add-btn2" onClick={() => onAdd()} type="button">Add</button> };
+		render(
+			<FormLayoutCtx.Provider value={layout}>
+				<AutoFormField
+					adapter={tanstackAdapter} fieldMeta={field}
+					form={{ appendFieldValue: onAppend, handleSubmit: vi.fn(), isSubmitting: false, removeFieldValue: vi.fn(), reset: vi.fn(), values: { flags: [] } }}
+					registry={{ resolve: mockResolve } as unknown as FieldRegistry}
+				/>
+			</FormLayoutCtx.Provider>
+		);
+		fireEvent.click(screen.getByTestId("add-btn2"));
+		expect(onAppend).toHaveBeenCalledWith("flags", false);
+	});
+
+	it("calls appendFieldValue with {} for object item type", () => {
+		const onAppend = vi.fn();
+		const field = {
+			path: "objs", type: "array", label: "Objs", kind: "array" as const,
+			itemMeta: { path: "objs[]", name: "o", type: "object", label: "O", kind: "primitive" as const },
+		};
+		const layout = { ...shadcnLayout, ArrayField: ({ onAdd }: { onAdd: () => void }) => <button data-testid="add-btn3" onClick={() => onAdd()} type="button">Add</button> };
+		render(
+			<FormLayoutCtx.Provider value={layout}>
+				<AutoFormField
+					adapter={tanstackAdapter} fieldMeta={field}
+					form={{ appendFieldValue: onAppend, handleSubmit: vi.fn(), isSubmitting: false, removeFieldValue: vi.fn(), reset: vi.fn(), values: { objs: [] } }}
+					registry={{ resolve: mockResolve } as unknown as FieldRegistry}
+				/>
+			</FormLayoutCtx.Provider>
+		);
+		fireEvent.click(screen.getByTestId("add-btn3"));
+		expect(onAppend).toHaveBeenCalledWith("objs", {});
+	});
+
+	it("calls appendFieldValue with [] for array item type", () => {
+		const onAppend = vi.fn();
+		const field = {
+			path: "arrs", type: "array", label: "Arrs", kind: "array" as const,
+			itemMeta: { path: "arrs[]", name: "a", type: "array", label: "A", kind: "primitive" as const },
+		};
+		const layout = { ...shadcnLayout, ArrayField: ({ onAdd }: { onAdd: () => void }) => <button data-testid="add-btn4" onClick={() => onAdd()} type="button">Add</button> };
+		render(
+			<FormLayoutCtx.Provider value={layout}>
+				<AutoFormField
+					adapter={tanstackAdapter} fieldMeta={field}
+					form={{ appendFieldValue: onAppend, handleSubmit: vi.fn(), isSubmitting: false, removeFieldValue: vi.fn(), reset: vi.fn(), values: { arrs: [] } }}
+					registry={{ resolve: mockResolve } as unknown as FieldRegistry}
+				/>
+			</FormLayoutCtx.Provider>
+		);
+		fireEvent.click(screen.getByTestId("add-btn4"));
+		expect(onAppend).toHaveBeenCalledWith("arrs", []);
+	});
+
 	it("renders union field through AutoFormField", () => {
 		const unionField: FieldMeta = {
 			path: "contact",
