@@ -1,0 +1,1 @@
+export { formischAdapter } from "./formisch";

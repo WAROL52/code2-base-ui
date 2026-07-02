@@ -1,0 +1,33 @@
+{
+  "name": "@code2-base-ui/auto-form-adapter-formisch",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "check-types": "tsc --noEmit",
+    "check": "biome check src/ tests/",
+    "fix": "biome check --write src/ tests/",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@code2-base-ui/auto-form-builder": "workspace:*",
+    "@formisch/react": "catalog:",
+    "valibot": "catalog:"
+  },
+  "peerDependencies": {
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6"
+  },
+  "devDependencies": {
+    "@code2-base-ui/config": "workspace:*",
+    "@testing-library/react": "^16.3.2",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "jsdom": "^29.1.1",
+    "typescript": "catalog:",
+    "vitest": "^3.1.0"
+  }
+}
