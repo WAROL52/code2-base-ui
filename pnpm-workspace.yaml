@@ -15,6 +15,7 @@ catalog:
   '@orpc/server': ^1.13.14
   '@orpc/zod': ^1.13.14
   '@tanstack/react-form': ^1.33.0
+  react-hook-form: ^7.80.0
   '@types/react': ^19.2.15
   '@types/react-dom': ^19.2.3
   dotenv: ^17.2.2
