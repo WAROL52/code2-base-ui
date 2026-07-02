@@ -5,7 +5,7 @@ import type {
 } from "@code2-base-ui/json-schema-toolkit";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import { tanstackAdapter } from "../src/adapters/tanstack";
+import { mockAdapter } from "./test-utils";
 import { AutoForm } from "../src/auto-form";
 import type { FormLayout } from "../src/layout";
 
@@ -36,7 +36,7 @@ describe("AutoForm", () => {
 	it("renders form with title and fields", () => {
 		render(
 			<AutoForm
-				adapter={tanstackAdapter}
+				adapter={mockAdapter}
 				defaultValues={{ name: "John" }}
 				registry={mockRegistry}
 				schema={testSchema}
@@ -51,7 +51,7 @@ describe("AutoForm", () => {
 	it("renders submit button when no children", () => {
 		render(
 			<AutoForm
-				adapter={tanstackAdapter}
+				adapter={mockAdapter}
 				registry={mockRegistry}
 				schema={testSchema}
 			/>
@@ -91,7 +91,7 @@ describe("AutoForm", () => {
 
 		render(
 			<AutoForm
-				adapter={tanstackAdapter}
+				adapter={mockAdapter}
 				layout={customLayout}
 				registry={mockRegistry}
 				schema={testSchema}
@@ -121,7 +121,7 @@ describe("AutoForm", () => {
 
 		render(
 			<AutoForm
-				adapter={tanstackAdapter}
+				adapter={mockAdapter}
 				registry={mockRegistry}
 				resolveSchema={customResolve}
 				schema={testSchema}
@@ -135,7 +135,7 @@ describe("AutoForm", () => {
 		const onSubmit = vi.fn();
 		const { container } = render(
 			<AutoForm
-				adapter={tanstackAdapter}
+				adapter={mockAdapter}
 				defaultValues={{ name: "John" }}
 				onSubmit={onSubmit}
 				registry={mockRegistry}

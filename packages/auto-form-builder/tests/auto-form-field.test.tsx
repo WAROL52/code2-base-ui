@@ -4,7 +4,7 @@ import type {
 } from "@code2-base-ui/json-schema-toolkit";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import { tanstackAdapter } from "../src/adapters/tanstack";
+import { mockAdapter } from "./test-utils";
 import type { FormAPI } from "../src/adapters/types";
 import { AutoFormField } from "../src/auto-form-field";
 import type { FormLayout } from "../src/layout";
@@ -41,15 +41,15 @@ describe("AutoFormField", () => {
 	it("renders a primitive field using adapter.Field", () => {
 		render(
 			<FormLayoutCtx.Provider value={shadcnLayout}>
-				<tanstackAdapter.FormProvider defaultValues={{ name: "John" }}>
+				<mockAdapter.FormProvider defaultValues={{ name: "John" }}>
 					{(_formAPI) => (
 						<AutoFormField
-							adapter={tanstackAdapter}
+							adapter={mockAdapter}
 							fieldMeta={textFieldMeta}
 							registry={{ resolve: mockResolve } as unknown as FieldRegistry}
 						/>
 					)}
-				</tanstackAdapter.FormProvider>
+				</mockAdapter.FormProvider>
 			</FormLayoutCtx.Provider>
 		);
 
@@ -65,15 +65,15 @@ describe("AutoFormField", () => {
 		};
 		const { container } = render(
 			<FormLayoutCtx.Provider value={shadcnLayout}>
-				<tanstackAdapter.FormProvider defaultValues={{ name: "" }}>
+				<mockAdapter.FormProvider defaultValues={{ name: "" }}>
 					{(_formAPI) => (
 						<AutoFormField
-							adapter={tanstackAdapter}
+							adapter={mockAdapter}
 							fieldMeta={hiddenField}
 							registry={{ resolve: mockResolve } as unknown as FieldRegistry}
 						/>
 					)}
-				</tanstackAdapter.FormProvider>
+				</mockAdapter.FormProvider>
 			</FormLayoutCtx.Provider>
 		);
 		expect(container.innerHTML).toBe("");
@@ -86,15 +86,15 @@ describe("AutoFormField", () => {
 		};
 		render(
 			<FormLayoutCtx.Provider value={shadcnLayout}>
-				<tanstackAdapter.FormProvider defaultValues={{ name: "John" }}>
+				<mockAdapter.FormProvider defaultValues={{ name: "John" }}>
 					{(_formAPI) => (
 						<AutoFormField
-							adapter={tanstackAdapter}
+							adapter={mockAdapter}
 							fieldMeta={readonlyField}
 							registry={{ resolve: mockResolve } as unknown as FieldRegistry}
 						/>
 					)}
-				</tanstackAdapter.FormProvider>
+				</mockAdapter.FormProvider>
 			</FormLayoutCtx.Provider>
 		);
 		const input = screen.getByTestId("field-input") as HTMLInputElement;
@@ -146,7 +146,7 @@ describe("AutoFormField", () => {
 		render(
 			<FormLayoutCtx.Provider value={customLayout}>
 				<AutoFormField
-					adapter={tanstackAdapter}
+					adapter={mockAdapter}
 					fieldMeta={arrayField}
 					form={formWithSpies}
 					registry={{ resolve: mockResolve } as unknown as FieldRegistry}
@@ -209,15 +209,15 @@ describe("AutoFormField", () => {
 
 		render(
 			<FormLayoutCtx.Provider value={customLayout}>
-				<tanstackAdapter.FormProvider defaultValues={{}}>
+				<mockAdapter.FormProvider defaultValues={{}}>
 					{(_formAPI) => (
 						<AutoFormField
-							adapter={tanstackAdapter}
+							adapter={mockAdapter}
 							fieldMeta={objectFieldMeta}
 							registry={{ resolve: mockResolve } as unknown as FieldRegistry}
 						/>
 					)}
-				</tanstackAdapter.FormProvider>
+				</mockAdapter.FormProvider>
 			</FormLayoutCtx.Provider>
 		);
 
@@ -251,16 +251,16 @@ describe("AutoFormField", () => {
 		};
 		render(
 			<FormLayoutCtx.Provider value={customLayout}>
-				<tanstackAdapter.FormProvider defaultValues={{ tags: ["a", "b"] }}>
+				<mockAdapter.FormProvider defaultValues={{ tags: ["a", "b"] }}>
 					{(formAPI) => (
 						<AutoFormField
-							adapter={tanstackAdapter}
+							adapter={mockAdapter}
 							fieldMeta={arrayField}
 							form={formAPI}
 							registry={{ resolve: mockResolve } as unknown as FieldRegistry}
 						/>
 					)}
-				</tanstackAdapter.FormProvider>
+				</mockAdapter.FormProvider>
 			</FormLayoutCtx.Provider>
 		);
 		expect(screen.getByTestId("ctx-arrayfield")).toBeDefined();
@@ -296,7 +296,7 @@ describe("AutoFormField", () => {
 		render(
 			<FormLayoutCtx.Provider value={customLayout}>
 				<AutoFormField
-					adapter={tanstackAdapter}
+					adapter={mockAdapter}
 					fieldMeta={arrayField}
 					form={{
 						appendFieldValue: onAppend,
@@ -340,7 +340,7 @@ describe("AutoFormField", () => {
 		render(
 			<FormLayoutCtx.Provider value={layout}>
 				<AutoFormField
-					adapter={tanstackAdapter}
+					adapter={mockAdapter}
 					fieldMeta={field}
 					form={{
 						appendFieldValue: onAppend,
@@ -384,7 +384,7 @@ describe("AutoFormField", () => {
 		render(
 			<FormLayoutCtx.Provider value={layout}>
 				<AutoFormField
-					adapter={tanstackAdapter}
+					adapter={mockAdapter}
 					fieldMeta={field}
 					form={{
 						appendFieldValue: onAppend,
@@ -428,7 +428,7 @@ describe("AutoFormField", () => {
 		render(
 			<FormLayoutCtx.Provider value={layout}>
 				<AutoFormField
-					adapter={tanstackAdapter}
+					adapter={mockAdapter}
 					fieldMeta={field}
 					form={{
 						appendFieldValue: onAppend,
@@ -472,7 +472,7 @@ describe("AutoFormField", () => {
 		render(
 			<FormLayoutCtx.Provider value={layout}>
 				<AutoFormField
-					adapter={tanstackAdapter}
+					adapter={mockAdapter}
 					fieldMeta={field}
 					form={{
 						appendFieldValue: onAppend,
@@ -519,16 +519,16 @@ describe("AutoFormField", () => {
 		};
 		render(
 			<FormLayoutCtx.Provider value={shadcnLayout}>
-				<tanstackAdapter.FormProvider defaultValues={{}}>
+				<mockAdapter.FormProvider defaultValues={{}}>
 					{(formAPI) => (
 						<AutoFormField
-							adapter={tanstackAdapter}
+							adapter={mockAdapter}
 							fieldMeta={unionField}
 							form={formAPI}
 							registry={{ resolve: mockResolve } as unknown as FieldRegistry}
 						/>
 					)}
-				</tanstackAdapter.FormProvider>
+				</mockAdapter.FormProvider>
 			</FormLayoutCtx.Provider>
 		);
 		expect(screen.getByText("Email")).toBeTruthy();
@@ -557,7 +557,7 @@ describe("AutoFormField", () => {
 		render(
 			<FormLayoutCtx.Provider value={layout}>
 				<AutoFormField
-					adapter={tanstackAdapter}
+					adapter={mockAdapter}
 					fieldMeta={field}
 					// no form prop!
 					registry={{ resolve: mockResolve } as unknown as FieldRegistry}

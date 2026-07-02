@@ -4,7 +4,7 @@ import type {
 } from "@code2-base-ui/json-schema-toolkit";
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import { tanstackAdapter } from "../src/adapters/tanstack";
+import { mockAdapter } from "./test-utils";
 import { AutoForm } from "../src/auto-form";
 import { AutoFormField } from "../src/auto-form-field";
 import { UnionFieldHandler } from "../src/handlers/union-handler";
@@ -85,14 +85,14 @@ describe("UnionFieldHandler", () => {
 
 		render(
 			<FormLayoutCtx.Provider value={captureLayout}>
-				<tanstackAdapter.FormProvider defaultValues={{}}>
+				<mockAdapter.FormProvider defaultValues={{}}>
 					{(_formAPI) => (
 						<UnionFieldHandler
 							fieldMeta={unionFieldMeta}
 							renderField={vi.fn()}
 						/>
 					)}
-				</tanstackAdapter.FormProvider>
+				</mockAdapter.FormProvider>
 			</FormLayoutCtx.Provider>
 		);
 
@@ -108,14 +108,14 @@ describe("UnionFieldHandler", () => {
 	it("renders children of the selected variant", () => {
 		render(
 			<FormLayoutCtx.Provider value={shadcnLayout}>
-				<tanstackAdapter.FormProvider defaultValues={{}}>
+				<mockAdapter.FormProvider defaultValues={{}}>
 					{(_formAPI) => (
 						<UnionFieldHandler
 							fieldMeta={unionFieldMeta}
 							renderField={(child) => <div key={child.path}>{child.label}</div>}
 						/>
 					)}
-				</tanstackAdapter.FormProvider>
+				</mockAdapter.FormProvider>
 			</FormLayoutCtx.Provider>
 		);
 
@@ -133,14 +133,14 @@ describe("UnionFieldHandler", () => {
 
 		const { container } = render(
 			<FormLayoutCtx.Provider value={shadcnLayout}>
-				<tanstackAdapter.FormProvider defaultValues={{}}>
+				<mockAdapter.FormProvider defaultValues={{}}>
 					{(_formAPI) => (
 						<UnionFieldHandler
 							fieldMeta={emptyVariants}
 							renderField={vi.fn()}
 						/>
 					)}
-				</tanstackAdapter.FormProvider>
+				</mockAdapter.FormProvider>
 			</FormLayoutCtx.Provider>
 		);
 
@@ -157,11 +157,11 @@ describe("UnionFieldHandler", () => {
 
 		const { container } = render(
 			<FormLayoutCtx.Provider value={shadcnLayout}>
-				<tanstackAdapter.FormProvider defaultValues={{}}>
+				<mockAdapter.FormProvider defaultValues={{}}>
 					{(_formAPI) => (
 						<UnionFieldHandler fieldMeta={noVariants} renderField={vi.fn()} />
 					)}
-				</tanstackAdapter.FormProvider>
+				</mockAdapter.FormProvider>
 			</FormLayoutCtx.Provider>
 		);
 
@@ -188,7 +188,7 @@ describe("UnionFieldHandler", () => {
 
 		render(
 			<FormLayoutCtx.Provider value={layoutWithSpy}>
-				<tanstackAdapter.FormProvider defaultValues={{}}>
+				<mockAdapter.FormProvider defaultValues={{}}>
 					{(_formAPI) => (
 						<UnionFieldHandler
 							fieldMeta={{
@@ -213,7 +213,7 @@ describe("UnionFieldHandler", () => {
 							renderField={vi.fn()}
 						/>
 					)}
-				</tanstackAdapter.FormProvider>
+				</mockAdapter.FormProvider>
 			</FormLayoutCtx.Provider>
 		);
 
@@ -231,16 +231,16 @@ describe("AutoFormField — unionFieldRenderer seam", () => {
 
 		render(
 			<FormLayoutCtx.Provider value={shadcnLayout}>
-				<tanstackAdapter.FormProvider defaultValues={{}}>
+				<mockAdapter.FormProvider defaultValues={{}}>
 					{(_formAPI) => (
 						<AutoFormField
-							adapter={tanstackAdapter}
+							adapter={mockAdapter}
 							fieldMeta={unionFieldMeta}
 							registry={{ resolve: mockResolve } as unknown as FieldRegistry}
 							unionFieldRenderer={CustomUnion}
 						/>
 					)}
-				</tanstackAdapter.FormProvider>
+				</mockAdapter.FormProvider>
 			</FormLayoutCtx.Provider>
 		);
 
@@ -268,16 +268,16 @@ describe("AutoFormField — unionFieldRenderer seam", () => {
 
 		render(
 			<FormLayoutCtx.Provider value={shadcnLayout}>
-				<tanstackAdapter.FormProvider defaultValues={{}}>
+				<mockAdapter.FormProvider defaultValues={{}}>
 					{(_formAPI) => (
 						<AutoFormField
-							adapter={tanstackAdapter}
+							adapter={mockAdapter}
 							fieldMeta={nestedUnion}
 							registry={{ resolve: mockResolve } as unknown as FieldRegistry}
 							unionFieldRenderer={CustomUnion}
 						/>
 					)}
-				</tanstackAdapter.FormProvider>
+				</mockAdapter.FormProvider>
 			</FormLayoutCtx.Provider>
 		);
 
@@ -318,7 +318,7 @@ describe("AutoForm — unionFieldRenderer prop", () => {
 
 		render(
 			<AutoForm
-				adapter={tanstackAdapter}
+				adapter={mockAdapter}
 				registry={{ resolve: mockResolve } as unknown as FieldRegistry}
 				schema={schema}
 				unionFieldRenderer={CustomUnion}

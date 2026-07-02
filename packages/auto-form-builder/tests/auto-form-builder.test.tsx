@@ -5,8 +5,8 @@ import type {
 } from "@code2-base-ui/json-schema-toolkit";
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import { tanstackAdapter } from "../src/adapters/tanstack";
 import type { FormAPI } from "../src/adapters/types";
+import { mockAdapter } from "./test-utils";
 import { AutoFormBuilder } from "../src/auto-form-builder";
 
 const testSchema: Record<string, unknown> = {
@@ -39,7 +39,7 @@ describe("AutoFormBuilder", () => {
 
 		render(
 			<AutoFormBuilder
-				adapter={tanstackAdapter}
+				adapter={mockAdapter}
 				defaultValues={{ name: "" }}
 				schema={testSchema}
 			>
@@ -66,7 +66,7 @@ describe("AutoFormBuilder", () => {
 
 		render(
 			<AutoFormBuilder
-				adapter={tanstackAdapter}
+				adapter={mockAdapter}
 				resolveSchema={customResolve}
 				schema={testSchema}
 			>
@@ -90,7 +90,7 @@ describe("AutoFormBuilder", () => {
 
 		render(
 			<AutoFormBuilder
-				adapter={tanstackAdapter}
+				adapter={mockAdapter}
 				schema={testSchema}
 				traverseSchema={customTraverse}
 			>
@@ -110,7 +110,7 @@ describe("AutoFormBuilder", () => {
 
 	it("falls back to default resolveSchema when not provided", () => {
 		render(
-			<AutoFormBuilder adapter={tanstackAdapter} schema={testSchema}>
+			<AutoFormBuilder adapter={mockAdapter} schema={testSchema}>
 				{({ fields, resolvedSchema }) => (
 					<div data-testid="fallback">
 						<span>{resolvedSchema.draft}</span>
