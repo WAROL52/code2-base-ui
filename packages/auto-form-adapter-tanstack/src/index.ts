@@ -1,0 +1,1 @@
+export { tanstackAdapter } from "./tanstack";
