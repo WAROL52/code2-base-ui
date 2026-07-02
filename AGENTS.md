@@ -3,6 +3,11 @@
 > **Workflow création de package :** voir [PACKAGE-WORKFLOW.md](./PACKAGE-WORKFLOW.md)
 > **Skill dédiée :** `/new_package <name> : <description>` — `.agents/skills/new-package/SKILL.md`
 > **auto-form-builder :** `.agents/skills/auto-form-builder/SKILL.md`
+>
+> **Adaptateurs FormAdapter :**
+> - shadcn-rhf — `.agents/skills/shadcn-rhf/SKILL.md` (React Hook Form)
+> - shadcn-tanstack-form — `.agents/skills/shadcn-tanstack-form/SKILL.md` (TanStack Form)
+> - shadcn-formisch — `.agents/skills/shadcn-formisch/SKILL.md` (Formisch)
 
 Monorepo **Better-T-Stack** orchestré par **Nx** + **pnpm workspaces**.
 
@@ -90,13 +95,21 @@ Package `@code2-base-ui/auto-form-builder` — génération de formulaires par r
 ```
 packages/auto-form-builder/src/
 ├── adapters/
+│   ├── index.ts          # Exports des adapters
 │   ├── types.ts          # FieldAPI, FormAPI, FormAdapter
-│   └── tanstack.tsx      # tanstackAdapter (TanStack Form)
-├── auto-form-builder.tsx # Render-prop builder (wrapper adapter.FormProvider)
-├── auto-form-field.tsx   # Rendu récursif des champs (via adapter.Field)
-├── auto-form.tsx         # Composant AutoForm de haut niveau
-├── types.ts              # AutoFormProps simplifiés
-└── index.ts              # Exports
+│   ├── tanstack.tsx      # tanstackAdapter (TanStack Form)
+│   ├── rhf.tsx           # rhfAdapter (React Hook Form)
+│   └── formisch.tsx      # formischAdapter (Formisch)
+├── handlers/
+│   ├── object-handler.tsx # Rendu des objets
+│   ├── array-handler.tsx  # Rendu des tableaux
+│   ├── union-handler.tsx  # Rendu des unions
+│   └── leaf-handler.tsx   # Rendu des feuilles (registry)
+├── auto-form-builder.tsx  # Render-prop builder (wrapper adapter.FormProvider)
+├── auto-form-field.tsx    # Dispatcher récursif (délègue aux handlers)
+├── auto-form.tsx          # Composant AutoForm de haut niveau
+├── types.ts               # AutoFormProps simplifiés
+└── index.ts               # Exports
 ```
 
 ### FormAdapter pattern
@@ -113,6 +126,7 @@ Interface `FormAdapter` (2 composants React) :
 - **Field** — render-prop standardisé avec `{ value, onChange, onBlur, error, isTouched }`
 
 Ajouter un nouveau form manager = créer 1 fichier `src/adapters/mon-adapter.tsx`.
+Utiliser les skills `.agents/skills/shadcn-rhf/`, `.agents/skills/shadcn-tanstack-form/` ou `.agents/skills/shadcn-formisch/` pour les implémentations guidées.
 
 ### Tests
 
@@ -123,7 +137,7 @@ pnpm --filter @code2-base-ui/auto-form-builder check
 ```
 
 - vitest + jsdom + @testing-library/react
-- 18 tests
+- 95 tests (98% statements, 96% branches)
 
 ## Particularités techniques
 
