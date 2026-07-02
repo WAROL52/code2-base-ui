@@ -4,12 +4,12 @@ import type {
 } from "@code2-base-ui/json-schema-toolkit";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import { mockAdapter } from "./test-utils";
 import type { FormAPI } from "../src/adapters/types";
 import { AutoFormField } from "../src/auto-form-field";
 import type { FormLayout } from "../src/layout";
 import { FormLayoutCtx } from "../src/layout/context";
 import { shadcnLayout } from "../src/layout/shadcn";
+import { mockAdapter } from "./test-utils";
 
 const mockResolve = vi
 	.fn<(fieldMeta: FieldMeta) => React.ComponentType<Record<string, unknown>>>()

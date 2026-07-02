@@ -5,9 +5,9 @@ import type {
 } from "@code2-base-ui/json-schema-toolkit";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import { mockAdapter } from "./test-utils";
 import { AutoForm } from "../src/auto-form";
 import type { FormLayout } from "../src/layout";
+import { mockAdapter } from "./test-utils";
 
 const testSchema: Record<string, unknown> = {
 	type: "object",

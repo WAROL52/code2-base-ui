@@ -1,7 +1,7 @@
+import type { FormAPI } from "@code2-base-ui/auto-form-builder";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { rhfAdapter } from "../src/rhf";
-import type { FormAPI } from "@code2-base-ui/auto-form-builder";
 
 describe("rhfAdapter", () => {
 	it("has name 'rhf'", () => {
@@ -213,11 +213,7 @@ describe("rhfAdapter", () => {
 
 	it("throws when Field is rendered outside FormProvider", () => {
 		expect(() =>
-			render(
-				<rhfAdapter.Field name="name">
-					{() => <div />}
-				</rhfAdapter.Field>
-			)
+			render(<rhfAdapter.Field name="name">{() => <div />}</rhfAdapter.Field>)
 		).toThrow("rhfAdapter: missing FormProvider");
 	});
 });

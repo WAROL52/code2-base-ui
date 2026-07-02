@@ -6,8 +6,8 @@ import type {
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import type { FormAPI } from "../src/adapters/types";
-import { mockAdapter } from "./test-utils";
 import { AutoFormBuilder } from "../src/auto-form-builder";
+import { mockAdapter } from "./test-utils";
 
 const testSchema: Record<string, unknown> = {
 	type: "object",

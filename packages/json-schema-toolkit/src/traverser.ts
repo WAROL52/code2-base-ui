@@ -1,10 +1,4 @@
 import { getUnionVariants, isUnionSchema, normalizeUnion } from "./normalizer";
-import type {
-	FieldMeta,
-	JsonSchema,
-	ResolvedSchema,
-	VariantField,
-} from "./types";
 import {
 	getConstraints,
 	getDefaultValue,
@@ -14,6 +8,12 @@ import {
 	getType,
 	getUiOptions,
 } from "./schema-utils";
+import type {
+	FieldMeta,
+	JsonSchema,
+	ResolvedSchema,
+	VariantField,
+} from "./types";
 
 function schemaToFieldMeta(
 	schema: JsonSchema,

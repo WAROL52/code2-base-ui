@@ -1,13 +1,13 @@
-import { describe, it, expectTypeOf } from "vitest";
+import { describe, expectTypeOf, it } from "vitest";
 import type {
-	JsonSchema,
-	ValidationResult,
-	ValidationError,
+	FieldComponent,
 	FieldMeta,
 	GroupCriteria,
-	RegistrySelector,
-	FieldComponent,
+	JsonSchema,
 	RegistryEntry,
+	RegistrySelector,
+	ValidationError,
+	ValidationResult,
 } from "../src/types";
 
 describe("core types", () => {
@@ -84,7 +84,9 @@ describe("registry types", () => {
 	});
 
 	it("FieldComponent is a React component type", () => {
-		const Comp: FieldComponent<{ label: string }> = (_props: { label: string }) => null;
+		const Comp: FieldComponent<{ label: string }> = (_props: {
+			label: string;
+		}) => null;
 		expectTypeOf(Comp).toMatchTypeOf<FieldComponent<{ label: string }>>();
 	});
 

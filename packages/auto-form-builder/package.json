@@ -3,12 +3,12 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-	"exports": {
-		".": "./src/index.ts",
-		"./adapters": "./src/adapters/index.ts",
-		"./layout": "./src/layout/index.ts",
-		"./fields": "./src/fields/index.ts"
-	},
+  "exports": {
+    ".": "./src/index.ts",
+    "./adapters": "./src/adapters/index.ts",
+    "./layout": "./src/layout/index.ts",
+    "./fields": "./src/fields/index.ts"
+  },
   "scripts": {
     "check-types": "tsc --noEmit",
     "check": "biome check src/ tests/",

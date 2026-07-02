@@ -1,13 +1,13 @@
-import { describe, it, expect, expectTypeOf } from "vitest";
 import type { TSchema } from "@sinclair/typebox";
+import { describe, expect, expectTypeOf, it } from "vitest";
+import type { StandardSchema } from "../../src/core/schema";
 import {
-	stringSchema,
 	numberSchema,
 	objectSchema,
+	stringSchema,
 	toJsonSchema,
 	validateSchema,
 } from "../../src/core/schema";
-import type { StandardSchema } from "../../src/core/schema";
 
 describe("core/schema types", () => {
 	it("imports compile", () => {

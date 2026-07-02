@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { resolveSchema } from "../src/resolver";
 import { getFieldMeta, traverseSchema } from "../src/traverser";
-import type { JsonSchema, VariantField } from "../src/types";
 
 describe("traverseSchema — object", () => {
 	it("traverses simple object properties", () => {

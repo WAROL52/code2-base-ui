@@ -124,10 +124,7 @@ describe("resolveSchema", () => {
 
 	it("preserves enum on array type", () => {
 		const schema: JsonSchema = {
-			allOf: [
-				{ type: "string" },
-				{ enum: ["a", "b", "c"] },
-			],
+			allOf: [{ type: "string" }, { enum: ["a", "b", "c"] }],
 		};
 		const resolved = resolveSchema(schema);
 		expect(resolved.root.type).toBe("string");

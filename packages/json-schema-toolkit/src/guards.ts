@@ -51,7 +51,9 @@ export class FieldGuard {
 		if (typeof f.type !== "string") {
 			throw new Error("Invalid FieldMeta: missing type");
 		}
-		if (!["primitive", "object", "array", "enum", "union"].includes(f.kind ?? "")) {
+		if (
+			!["primitive", "object", "array", "enum", "union"].includes(f.kind ?? "")
+		) {
 			throw new Error(`Invalid FieldMeta: unknown kind "${f.kind}"`);
 		}
 	}

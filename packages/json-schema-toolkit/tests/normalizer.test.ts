@@ -84,66 +84,61 @@ describe("detectDiscriminant", () => {
 	});
 
 	it("detects implicit discriminant from const properties", () => {
-		const result = detectDiscriminant(
-			{},
-			[
-				{
-					type: "object",
-					properties: { kind: { const: "human" }, name: { type: "string" } },
-				},
-				{
-					type: "object",
-					properties: { kind: { const: "robot" }, model: { type: "string" } },
-				},
-			]
-		);
+		const result = detectDiscriminant({}, [
+			{
+				type: "object",
+				properties: { kind: { const: "human" }, name: { type: "string" } },
+			},
+			{
+				type: "object",
+				properties: { kind: { const: "robot" }, model: { type: "string" } },
+			},
+		]);
 		expect(result).toBe("kind");
 	});
 
 	it("returns undefined when variants have no properties", () => {
-		expect(detectDiscriminant({}, [{ type: "string" }, { type: "number" }])).toBeUndefined();
+		expect(
+			detectDiscriminant({}, [{ type: "string" }, { type: "number" }])
+		).toBeUndefined();
 	});
 
 	it("returns undefined when no shared const property", () => {
 		expect(
-			detectDiscriminant(
-				{},
-				[
-					{
-						type: "object",
-						properties: { name: { type: "string" } },
-					},
-					{
-						type: "object",
-						properties: { age: { type: "number" } },
-					},
-				]
-			)
+			detectDiscriminant({}, [
+				{
+					type: "object",
+					properties: { name: { type: "string" } },
+				},
+				{
+					type: "object",
+					properties: { age: { type: "number" } },
+				},
+			])
 		).toBeUndefined();
 	});
 
 	it("returns undefined when const values are not unique", () => {
 		expect(
-			detectDiscriminant(
-				{},
-				[
-					{
-						type: "object",
-						properties: { kind: { const: "same" } },
-					},
-					{
-						type: "object",
-						properties: { kind: { const: "same" } },
-					},
-				]
-			)
+			detectDiscriminant({}, [
+				{
+					type: "object",
+					properties: { kind: { const: "same" } },
+				},
+				{
+					type: "object",
+					properties: { kind: { const: "same" } },
+				},
+			])
 		).toBeUndefined();
 	});
 });
 
 describe("getVariantLabel", () => {
 	it("returns schema title when present", () => {
-		expect(getVariantLabel({ title: "My Variant", type: "string" }, undefined, 0)).toBe("My Variant");
+		expect(
+			getVariantLabel({ title: "My Variant", type: "string" }, undefined, 0)
+		).toBe("My Variant");
 	});
 
 	it("returns discriminant value when available", () => {
@@ -163,8 +158,16 @@ describe("getVariantLabel", () => {
 describe("normalizeUnion", () => {
 	it("returns variant info with labels and discriminant", () => {
 		const variants = [
-			{ title: "Human", type: "object", properties: { name: { type: "string" } } },
-			{ title: "Robot", type: "object", properties: { model: { type: "string" } } },
+			{
+				title: "Human",
+				type: "object",
+				properties: { name: { type: "string" } },
+			},
+			{
+				title: "Robot",
+				type: "object",
+				properties: { model: { type: "string" } },
+			},
 		];
 		const result = normalizeUnion({}, variants);
 		expect(result).toHaveLength(2);

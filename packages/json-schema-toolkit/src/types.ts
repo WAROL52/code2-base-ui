@@ -60,12 +60,7 @@ export interface JsonSchema {
 	[key: string]: unknown;
 }
 
-export type FieldKind =
-	| "primitive"
-	| "object"
-	| "array"
-	| "enum"
-	| "union";
+export type FieldKind = "primitive" | "object" | "array" | "enum" | "union";
 
 export interface FieldConstraints {
 	exclusiveMaximum?: number;
@@ -99,33 +94,33 @@ export interface ValidationResult {
 }
 
 export interface VariantField {
+	children: FieldMeta[];
 	label: string;
 	meta: FieldMeta;
-	children: FieldMeta[];
 }
 
 export interface FieldMeta {
-	path: string;
-	type: string;
-	label: string;
-	format?: string;
-	uiWidget?: string;
-	required?: boolean;
-	description?: string;
-	defaultValue?: unknown;
-	enum?: unknown[];
-	properties?: Record<string, FieldMeta>;
-	kind?: FieldKind;
 	children?: FieldMeta[];
-	name?: string;
-	placeholder?: string;
 	constraints?: FieldConstraints;
+	defaultValue?: unknown;
+	description?: string;
 	discriminantKey?: string;
+	enum?: unknown[];
+	format?: string;
 	itemMeta?: FieldMeta;
+	kind?: FieldKind;
+	label: string;
+	name?: string;
+	path: string;
+	placeholder?: string;
+	properties?: Record<string, FieldMeta>;
+	required?: boolean;
 	resolvedSchema?: JsonSchema;
+	type: string;
 	uiHidden?: boolean;
 	uiOrder?: number;
 	uiReadonly?: boolean;
+	uiWidget?: string;
 	variants?: VariantField[];
 }
 
@@ -134,19 +129,20 @@ export interface GroupCriteria {
 }
 
 export interface RegistrySelector {
-	type?: string;
 	format?: string;
-	widget?: string;
 	kind?: FieldKind;
+	type?: string;
+	widget?: string;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type FieldComponent<TProps = Record<string, any>> = React.ComponentType<TProps>;
+export type FieldComponent<TProps = Record<string, any>> =
+	React.ComponentType<TProps>;
 
 export interface RegistryEntry {
-	selector: RegistrySelector;
 	component: FieldComponent;
 	priority: number;
+	selector: RegistrySelector;
 }
 
 export type Locale = string;

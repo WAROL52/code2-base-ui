@@ -1,8 +1,4 @@
-import {
-	createContext,
-	useContext,
-	useState,
-} from "react";
+import { createContext, useContext, useState } from "react";
 import type {
 	FieldAPI,
 	FieldProps,
@@ -22,7 +18,8 @@ export const mockAdapter: FormAdapter = {
 	name: "mock",
 
 	FormProvider({ defaultValues = {}, onSubmit, children }: FormProviderProps) {
-		const [values, setValues] = useState<Record<string, unknown>>(defaultValues);
+		const [values, setValues] =
+			useState<Record<string, unknown>>(defaultValues);
 
 		const ctx: MockCtxValue = {
 			getFieldValue: (name) => values[name],
@@ -55,11 +52,7 @@ export const mockAdapter: FormAdapter = {
 			},
 		};
 
-		return (
-			<MockCtx.Provider value={ctx}>
-				{children(formAPI)}
-			</MockCtx.Provider>
-		);
+		return <MockCtx.Provider value={ctx}>{children(formAPI)}</MockCtx.Provider>;
 	},
 
 	Field({ name, children }: FieldProps) {

@@ -1,7 +1,7 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import type { FormAPI } from "@code2-base-ui/auto-form-builder";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { formischAdapter } from "../src/formisch";
-import type { FormAPI } from "@code2-base-ui/auto-form-builder";
 
 describe("formischAdapter", () => {
 	it("has name 'formisch'", () => {

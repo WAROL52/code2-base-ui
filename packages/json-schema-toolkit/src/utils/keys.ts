@@ -8,5 +8,5 @@ import { flatfields } from "./flatfields";
  * @returns An array of field path strings
  */
 export function keys(schema: JsonSchema): string[] {
-  return flatfields(schema).map((f) => f.path);
+	return flatfields(schema).map((f) => f.path);
 }

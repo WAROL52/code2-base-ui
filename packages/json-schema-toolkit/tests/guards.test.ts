@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { FieldGuard } from "../src/guards";
-import type { FieldMeta, VariantField } from "../src/types";
+import type { FieldMeta } from "../src/types";
 
 describe("FieldGuard", () => {
 	const primitiveField: FieldMeta = {
@@ -18,7 +18,13 @@ describe("FieldGuard", () => {
 		label: "Address",
 		kind: "object",
 		children: [
-			{ path: "address.street", name: "street", type: "string", label: "Street", kind: "primitive" },
+			{
+				path: "address.street",
+				name: "street",
+				type: "string",
+				label: "Street",
+				kind: "primitive",
+			},
 		],
 	};
 
@@ -28,7 +34,13 @@ describe("FieldGuard", () => {
 		type: "array",
 		label: "Tags",
 		kind: "array",
-		itemMeta: { path: "tags[]", name: "items", type: "string", label: "Item", kind: "primitive" },
+		itemMeta: {
+			path: "tags[]",
+			name: "items",
+			type: "string",
+			label: "Item",
+			kind: "primitive",
+		},
 	};
 
 	const enumField: FieldMeta = {
@@ -131,7 +143,9 @@ describe("FieldGuard", () => {
 		});
 
 		it("throws for null", () => {
-			expect(() => FieldGuard.assertFieldMeta(null)).toThrow("Invalid FieldMeta: value must be an object");
+			expect(() => FieldGuard.assertFieldMeta(null)).toThrow(
+				"Invalid FieldMeta: value must be an object"
+			);
 		});
 
 		it("throws for missing path", () => {
@@ -146,7 +160,9 @@ describe("FieldGuard", () => {
 
 		it("throws for unknown kind", () => {
 			const invalid = { path: "t", name: "t", type: "string", kind: "invalid" };
-			expect(() => FieldGuard.assertFieldMeta(invalid)).toThrow('unknown kind "invalid"');
+			expect(() => FieldGuard.assertFieldMeta(invalid)).toThrow(
+				'unknown kind "invalid"'
+			);
 		});
 	});
 

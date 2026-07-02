@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import { humanizePath } from "../../src/utils/humanize-path";
 
 describe("humanizePath", () => {
@@ -15,7 +15,9 @@ describe("humanizePath", () => {
 	});
 
 	it("handles combined camelCase + snake_case", () => {
-		expect(humanizePath("shippingAddressStreet")).toBe("Shipping Address Street");
+		expect(humanizePath("shippingAddressStreet")).toBe(
+			"Shipping Address Street"
+		);
 	});
 
 	it("handles multiple underscores", () => {

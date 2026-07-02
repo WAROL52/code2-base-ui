@@ -1,27 +1,27 @@
 "use client";
 
-import { Controller, useForm } from "react-hook-form";
-import { createContext, useContext } from "react";
 import type {
 	FieldProps,
 	FormAdapter,
 	FormAPI,
 	FormProviderProps,
 } from "@code2-base-ui/auto-form-builder";
+import { createContext, useContext } from "react";
+import { Controller, useForm } from "react-hook-form";
 
 interface RHFControl {
-	getValues: () => Record<string, unknown>;
 	control: object;
+	getValues: () => Record<string, unknown>;
 }
 
 interface RHFForm extends RHFControl {
+	formState: { isSubmitting: boolean };
+	getValues: (name?: string) => unknown;
 	handleSubmit: (
 		onValid: (data: unknown) => void
 	) => (e?: React.BaseSyntheticEvent) => void;
 	reset: (values?: Record<string, unknown>) => void;
-	formState: { isSubmitting: boolean };
 	setValue: (name: string, value: unknown) => void;
-	getValues: (name?: string) => unknown;
 }
 
 const RHFContext = createContext<RHFControl | null>(null);

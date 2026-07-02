@@ -1,27 +1,25 @@
 "use client";
 
-import {
-	Field as FormischField,
-	Form,
-	getInput,
-	insert,
-	remove as formischRemove,
-	reset as formischReset,
-	submit as formischSubmit,
-	useForm,
-} from "@formisch/react";
-import * as v from "valibot";
-import { createContext, useContext, useMemo } from "react";
 import type {
 	FieldProps,
 	FormAdapter,
 	FormAPI,
 	FormProviderProps,
 } from "@code2-base-ui/auto-form-builder";
+import {
+	Form,
+	Field as FormischField,
+	remove as formischRemove,
+	reset as formischReset,
+	submit as formischSubmit,
+	getInput,
+	insert,
+	useForm,
+} from "@formisch/react";
+import { createContext, useContext, useMemo } from "react";
+import * as v from "valibot";
 
-interface FormischStore {
-	// Store opaque — on caste useForm() en unknown
-}
+type FormischStore = {};
 
 const FormischCtx = createContext<FormischStore | null>(null);
 
@@ -43,16 +41,13 @@ function inferSchema(value: unknown) {
 		return v.boolean();
 	}
 	if (Array.isArray(value)) {
-		const itemSchema =
-			value.length > 0 ? inferSchema(value[0]) : v.any();
+		const itemSchema = value.length > 0 ? inferSchema(value[0]) : v.any();
 		return v.array(itemSchema);
 	}
 	if (typeof value === "object") {
 		const entries: Record<string, v.GenericSchema> = {};
 		for (const key of Object.keys(value as Record<string, unknown>)) {
-			entries[key] = inferSchema(
-				(value as Record<string, unknown>)[key]
-			);
+			entries[key] = inferSchema((value as Record<string, unknown>)[key]);
 		}
 		return v.object(entries);
 	}

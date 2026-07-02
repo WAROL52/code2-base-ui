@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 
 function SimpleFormDemo(): ReactNode {
 	return (
-		<div className="rounded-lg border p-4 space-y-4">
+		<div className="space-y-4 rounded-lg border p-4">
 			<p className="text-fd-muted-foreground text-sm">
 				Démo à réécrire avec <code>auto-form-builder</code> prochainement.
 			</p>
@@ -14,7 +14,7 @@ function SimpleFormDemo(): ReactNode {
 
 function UserFormDemo(): ReactNode {
 	return (
-		<div className="rounded-lg border p-4 space-y-4">
+		<div className="space-y-4 rounded-lg border p-4">
 			<p className="text-fd-muted-foreground text-sm">
 				Démo à réécrire avec <code>auto-form-builder</code> prochainement.
 			</p>
@@ -24,7 +24,7 @@ function UserFormDemo(): ReactNode {
 
 function SignupFormDemo(): ReactNode {
 	return (
-		<div className="rounded-lg border p-4 space-y-4">
+		<div className="space-y-4 rounded-lg border p-4">
 			<p className="text-fd-muted-foreground text-sm">
 				Démo à réécrire avec <code>auto-form-builder</code> prochainement.
 			</p>
@@ -34,7 +34,7 @@ function SignupFormDemo(): ReactNode {
 
 function CustomLayoutDemo(): ReactNode {
 	return (
-		<div className="rounded-lg border p-4 space-y-4">
+		<div className="space-y-4 rounded-lg border p-4">
 			<p className="text-fd-muted-foreground text-sm">
 				Démo à réécrire avec <code>auto-form-builder</code> prochainement.
 			</p>

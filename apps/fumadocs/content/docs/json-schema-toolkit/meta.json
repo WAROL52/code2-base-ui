@@ -1,11 +1,11 @@
 {
-	"pages": [
-		"index",
-		"installation",
-		"core",
-		"utils",
-		"registry",
-		"adapter",
-		"api-reference"
-	]
+  "pages": [
+    "index",
+    "installation",
+    "core",
+    "utils",
+    "registry",
+    "adapter",
+    "api-reference"
+  ]
 }

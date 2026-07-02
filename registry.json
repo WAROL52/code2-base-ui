@@ -1,334 +1,336 @@
 {
-	"$schema": "https://ui.shadcn.com/schema/registry.json",
-	"name": "code2-base-ui",
-	"homepage": "https://github.com/WAROL52/code2-base-ui",
-	"items": [
-		{
-			"name": "project-conventions",
-			"type": "registry:item",
-			"title": "Project Conventions",
-			"description": "Règles, conventions et config d'édition partagées.",
-			"files": [
-				{
-					"path": "AGENTS.md",
-					"type": "registry:file",
-					"target": "~/AGENTS.md"
-				}
-			]
-		},
-		{
-			"name": "json-schema-toolkit",
-			"type": "registry:item",
-			"title": "JSON Schema Toolkit",
-			"description": "Écosystème d'outils copy-paste basé sur JSON Schema avec TypeBox, Standard Schema, FieldRegistry et SchemaAdapter.",
-			"dependencies": ["@sinclair/typebox@^0.34.0", "@standard-schema/spec@^1.1.0"],
-			"files": [
-				{
-					"path": "packages/json-schema-toolkit/src/index.ts",
-					"type": "registry:lib",
-					"target": "~/src/json-schema-toolkit/index.ts"
-				},
-				{
-					"path": "packages/json-schema-toolkit/src/types.ts",
-					"type": "registry:lib",
-					"target": "~/src/json-schema-toolkit/types.ts"
-				},
-				{
-					"path": "packages/json-schema-toolkit/src/core/schema.ts",
-					"type": "registry:lib",
-					"target": "~/src/json-schema-toolkit/schema.ts"
-				},
-				{
-					"path": "packages/json-schema-toolkit/src/utils/flatfields.ts",
-					"type": "registry:lib",
-					"target": "~/src/json-schema-toolkit/flatfields.ts"
-				},
-				{
-					"path": "packages/json-schema-toolkit/src/utils/entries.ts",
-					"type": "registry:lib",
-					"target": "~/src/json-schema-toolkit/entries.ts"
-				},
-				{
-					"path": "packages/json-schema-toolkit/src/utils/from-entries.ts",
-					"type": "registry:lib",
-					"target": "~/src/json-schema-toolkit/from-entries.ts"
-				},
-				{
-					"path": "packages/json-schema-toolkit/src/utils/group-by.ts",
-					"type": "registry:lib",
-					"target": "~/src/json-schema-toolkit/group-by.ts"
-				},
-				{
-					"path": "packages/json-schema-toolkit/src/utils/keys.ts",
-					"type": "registry:lib",
-					"target": "~/src/json-schema-toolkit/keys.ts"
-				},
-				{
-					"path": "packages/json-schema-toolkit/src/utils/validate-schema.ts",
-					"type": "registry:lib",
-					"target": "~/src/json-schema-toolkit/validate-schema.ts"
-				},
-				{
-					"path": "packages/json-schema-toolkit/src/adapter/types.ts",
-					"type": "registry:lib",
-					"target": "~/src/json-schema-toolkit/adapter-types.ts"
-				}
-			]
-		},
-		{
-			"name": "json-schema-toolkit-registry",
-			"type": "registry:item",
-			"title": "JSON Schema Toolkit — FieldRegistry",
-			"description": "Registre React de résolution de composants par sélecteur.",
-			"dependencies": ["react"],
-			"registryDependencies": ["WAROL52/code2-base-ui/json-schema-toolkit"],
-			"files": [
-				{
-					"path": "packages/json-schema-toolkit/src/registry/field-registry.ts",
-					"type": "registry:lib"
-				}
-			]
-		},
-		{
-			"name": "ui-button",
-			"type": "registry:ui",
-			"title": "Button",
-			"description": "Composant bouton shadcn/ui style base-lyra.",
-			"files": [
-				{
-					"path": "packages/ui/src/components/button.tsx",
-					"type": "registry:ui"
-				}
-			]
-		},
-		{
-			"name": "ui-card",
-			"type": "registry:ui",
-			"title": "Card",
-			"description": "Composant carte shadcn/ui style base-lyra.",
-			"files": [
-				{
-					"path": "packages/ui/src/components/card.tsx",
-					"type": "registry:ui"
-				}
-			]
-		},
-		{
-			"name": "ui-input",
-			"type": "registry:ui",
-			"title": "Input",
-			"description": "Composant input shadcn/ui style base-lyra.",
-			"files": [
-				{
-					"path": "packages/ui/src/components/input.tsx",
-					"type": "registry:ui"
-				}
-			]
-		},
-		{
-			"name": "ui-checkbox",
-			"type": "registry:ui",
-			"title": "Checkbox",
-			"description": "Composant checkbox shadcn/ui style base-lyra.",
-			"files": [
-				{
-					"path": "packages/ui/src/components/checkbox.tsx",
-					"type": "registry:ui"
-				}
-			]
-		},
-		{
-			"name": "ui-dropdown-menu",
-			"type": "registry:ui",
-			"title": "Dropdown Menu",
-			"description": "Composant dropdown menu shadcn/ui style base-lyra.",
-			"files": [
-				{
-					"path": "packages/ui/src/components/dropdown-menu.tsx",
-					"type": "registry:ui"
-				}
-			]
-		},
-		{
-			"name": "ui-label",
-			"type": "registry:ui",
-			"title": "Label",
-			"description": "Composant label shadcn/ui style base-lyra.",
-			"files": [
-				{
-					"path": "packages/ui/src/components/label.tsx",
-					"type": "registry:ui"
-				}
-			]
-		},
-		{
-			"name": "ui-skeleton",
-			"type": "registry:ui",
-			"title": "Skeleton",
-			"description": "Composant skeleton shadcn/ui style base-lyra.",
-			"files": [
-				{
-					"path": "packages/ui/src/components/skeleton.tsx",
-					"type": "registry:ui"
-				}
-			]
-		},
-		{
-			"name": "ui-sonner",
-			"type": "registry:ui",
-			"title": "Sonner",
-			"description": "Composant toast sonner shadcn/ui style base-lyra.",
-			"files": [
-				{
-					"path": "packages/ui/src/components/sonner.tsx",
-					"type": "registry:ui"
-				}
-			]
-		},
-		{
-			"name": "ui-field",
-			"type": "registry:ui",
-			"title": "Field",
-			"description": "Composant field shadcn/ui style base-lyra — conteneur label+description+erreur.",
-			"registryDependencies": [
-				"WAROL52/code2-base-ui/ui-label",
-				"WAROL52/code2-base-ui/ui-separator"
-			],
-			"files": [
-				{
-					"path": "packages/ui/src/components/field.tsx",
-					"type": "registry:ui"
-				}
-			]
-		},
-		{
-			"name": "ui-select",
-			"type": "registry:ui",
-			"title": "Select",
-			"description": "Composant select shadcn/ui style base-lyra.",
-			"files": [
-				{
-					"path": "packages/ui/src/components/select.tsx",
-					"type": "registry:ui"
-				}
-			]
-		},
-		{
-			"name": "ui-switch",
-			"type": "registry:ui",
-			"title": "Switch",
-			"description": "Composant switch shadcn/ui style base-lyra.",
-			"files": [
-				{
-					"path": "packages/ui/src/components/switch.tsx",
-					"type": "registry:ui"
-				}
-			]
-		},
-		{
-			"name": "ui-radio-group",
-			"type": "registry:ui",
-			"title": "Radio Group",
-			"description": "Composant radio group shadcn/ui style base-lyra.",
-			"files": [
-				{
-					"path": "packages/ui/src/components/radio-group.tsx",
-					"type": "registry:ui"
-				}
-			]
-		},
-		{
-			"name": "ui-slider",
-			"type": "registry:ui",
-			"title": "Slider",
-			"description": "Composant slider shadcn/ui style base-lyra.",
-			"files": [
-				{
-					"path": "packages/ui/src/components/slider.tsx",
-					"type": "registry:ui"
-				}
-			]
-		},
-		{
-			"name": "ui-textarea",
-			"type": "registry:ui",
-			"title": "Textarea",
-			"description": "Composant textarea shadcn/ui style base-lyra.",
-			"files": [
-				{
-					"path": "packages/ui/src/components/textarea.tsx",
-					"type": "registry:ui"
-				}
-			]
-		},
-		{
-			"name": "ui-date-picker",
-			"type": "registry:ui",
-			"title": "Date Picker",
-			"description": "Composant date picker shadcn/ui style base-lyra.",
-			"dependencies": ["date-fns"],
-			"registryDependencies": [
-				"WAROL52/code2-base-ui/ui-popover",
-				"WAROL52/code2-base-ui/ui-calendar",
-				"WAROL52/code2-base-ui/ui-button"
-			],
-			"files": [
-				{
-					"path": "packages/ui/src/components/date-picker.tsx",
-					"type": "registry:ui"
-				}
-			]
-		},
-		{
-			"name": "ui-input-otp",
-			"type": "registry:ui",
-			"title": "Input OTP",
-			"description": "Composant input OTP shadcn/ui style base-lyra.",
-			"dependencies": ["input-otp"],
-			"files": [
-				{
-					"path": "packages/ui/src/components/input-otp.tsx",
-					"type": "registry:ui"
-				}
-			]
-		},
-		{
-			"name": "ui-popover",
-			"type": "registry:ui",
-			"title": "Popover",
-			"description": "Composant popover shadcn/ui style base-lyra.",
-			"files": [
-				{
-					"path": "packages/ui/src/components/popover.tsx",
-					"type": "registry:ui"
-				}
-			]
-		},
-		{
-			"name": "ui-calendar",
-			"type": "registry:ui",
-			"title": "Calendar",
-			"description": "Composant calendrier shadcn/ui style base-lyra.",
-			"dependencies": ["date-fns", "react-day-picker"],
-			"files": [
-				{
-					"path": "packages/ui/src/components/calendar.tsx",
-					"type": "registry:ui"
-				}
-			]
-		},
-		{
-			"name": "ui-separator",
-			"type": "registry:ui",
-			"title": "Separator",
-			"description": "Composant separator shadcn/ui style base-lyra.",
-			"files": [
-				{
-					"path": "packages/ui/src/components/separator.tsx",
-					"type": "registry:ui"
-				}
-			]
-		},
-
-	]
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "code2-base-ui",
+  "homepage": "https://github.com/WAROL52/code2-base-ui",
+  "items": [
+    {
+      "name": "project-conventions",
+      "type": "registry:item",
+      "title": "Project Conventions",
+      "description": "Règles, conventions et config d'édition partagées.",
+      "files": [
+        {
+          "path": "AGENTS.md",
+          "type": "registry:file",
+          "target": "~/AGENTS.md"
+        }
+      ]
+    },
+    {
+      "name": "json-schema-toolkit",
+      "type": "registry:item",
+      "title": "JSON Schema Toolkit",
+      "description": "Écosystème d'outils copy-paste basé sur JSON Schema avec TypeBox, Standard Schema, FieldRegistry et SchemaAdapter.",
+      "dependencies": [
+        "@sinclair/typebox@^0.34.0",
+        "@standard-schema/spec@^1.1.0"
+      ],
+      "files": [
+        {
+          "path": "packages/json-schema-toolkit/src/index.ts",
+          "type": "registry:lib",
+          "target": "~/src/json-schema-toolkit/index.ts"
+        },
+        {
+          "path": "packages/json-schema-toolkit/src/types.ts",
+          "type": "registry:lib",
+          "target": "~/src/json-schema-toolkit/types.ts"
+        },
+        {
+          "path": "packages/json-schema-toolkit/src/core/schema.ts",
+          "type": "registry:lib",
+          "target": "~/src/json-schema-toolkit/schema.ts"
+        },
+        {
+          "path": "packages/json-schema-toolkit/src/utils/flatfields.ts",
+          "type": "registry:lib",
+          "target": "~/src/json-schema-toolkit/flatfields.ts"
+        },
+        {
+          "path": "packages/json-schema-toolkit/src/utils/entries.ts",
+          "type": "registry:lib",
+          "target": "~/src/json-schema-toolkit/entries.ts"
+        },
+        {
+          "path": "packages/json-schema-toolkit/src/utils/from-entries.ts",
+          "type": "registry:lib",
+          "target": "~/src/json-schema-toolkit/from-entries.ts"
+        },
+        {
+          "path": "packages/json-schema-toolkit/src/utils/group-by.ts",
+          "type": "registry:lib",
+          "target": "~/src/json-schema-toolkit/group-by.ts"
+        },
+        {
+          "path": "packages/json-schema-toolkit/src/utils/keys.ts",
+          "type": "registry:lib",
+          "target": "~/src/json-schema-toolkit/keys.ts"
+        },
+        {
+          "path": "packages/json-schema-toolkit/src/utils/validate-schema.ts",
+          "type": "registry:lib",
+          "target": "~/src/json-schema-toolkit/validate-schema.ts"
+        },
+        {
+          "path": "packages/json-schema-toolkit/src/adapter/types.ts",
+          "type": "registry:lib",
+          "target": "~/src/json-schema-toolkit/adapter-types.ts"
+        }
+      ]
+    },
+    {
+      "name": "json-schema-toolkit-registry",
+      "type": "registry:item",
+      "title": "JSON Schema Toolkit — FieldRegistry",
+      "description": "Registre React de résolution de composants par sélecteur.",
+      "dependencies": ["react"],
+      "registryDependencies": ["WAROL52/code2-base-ui/json-schema-toolkit"],
+      "files": [
+        {
+          "path": "packages/json-schema-toolkit/src/registry/field-registry.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "ui-button",
+      "type": "registry:ui",
+      "title": "Button",
+      "description": "Composant bouton shadcn/ui style base-lyra.",
+      "files": [
+        {
+          "path": "packages/ui/src/components/button.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "ui-card",
+      "type": "registry:ui",
+      "title": "Card",
+      "description": "Composant carte shadcn/ui style base-lyra.",
+      "files": [
+        {
+          "path": "packages/ui/src/components/card.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "ui-input",
+      "type": "registry:ui",
+      "title": "Input",
+      "description": "Composant input shadcn/ui style base-lyra.",
+      "files": [
+        {
+          "path": "packages/ui/src/components/input.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "ui-checkbox",
+      "type": "registry:ui",
+      "title": "Checkbox",
+      "description": "Composant checkbox shadcn/ui style base-lyra.",
+      "files": [
+        {
+          "path": "packages/ui/src/components/checkbox.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "ui-dropdown-menu",
+      "type": "registry:ui",
+      "title": "Dropdown Menu",
+      "description": "Composant dropdown menu shadcn/ui style base-lyra.",
+      "files": [
+        {
+          "path": "packages/ui/src/components/dropdown-menu.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "ui-label",
+      "type": "registry:ui",
+      "title": "Label",
+      "description": "Composant label shadcn/ui style base-lyra.",
+      "files": [
+        {
+          "path": "packages/ui/src/components/label.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "ui-skeleton",
+      "type": "registry:ui",
+      "title": "Skeleton",
+      "description": "Composant skeleton shadcn/ui style base-lyra.",
+      "files": [
+        {
+          "path": "packages/ui/src/components/skeleton.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "ui-sonner",
+      "type": "registry:ui",
+      "title": "Sonner",
+      "description": "Composant toast sonner shadcn/ui style base-lyra.",
+      "files": [
+        {
+          "path": "packages/ui/src/components/sonner.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "ui-field",
+      "type": "registry:ui",
+      "title": "Field",
+      "description": "Composant field shadcn/ui style base-lyra — conteneur label+description+erreur.",
+      "registryDependencies": [
+        "WAROL52/code2-base-ui/ui-label",
+        "WAROL52/code2-base-ui/ui-separator"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/field.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "ui-select",
+      "type": "registry:ui",
+      "title": "Select",
+      "description": "Composant select shadcn/ui style base-lyra.",
+      "files": [
+        {
+          "path": "packages/ui/src/components/select.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "ui-switch",
+      "type": "registry:ui",
+      "title": "Switch",
+      "description": "Composant switch shadcn/ui style base-lyra.",
+      "files": [
+        {
+          "path": "packages/ui/src/components/switch.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "ui-radio-group",
+      "type": "registry:ui",
+      "title": "Radio Group",
+      "description": "Composant radio group shadcn/ui style base-lyra.",
+      "files": [
+        {
+          "path": "packages/ui/src/components/radio-group.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "ui-slider",
+      "type": "registry:ui",
+      "title": "Slider",
+      "description": "Composant slider shadcn/ui style base-lyra.",
+      "files": [
+        {
+          "path": "packages/ui/src/components/slider.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "ui-textarea",
+      "type": "registry:ui",
+      "title": "Textarea",
+      "description": "Composant textarea shadcn/ui style base-lyra.",
+      "files": [
+        {
+          "path": "packages/ui/src/components/textarea.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "ui-date-picker",
+      "type": "registry:ui",
+      "title": "Date Picker",
+      "description": "Composant date picker shadcn/ui style base-lyra.",
+      "dependencies": ["date-fns"],
+      "registryDependencies": [
+        "WAROL52/code2-base-ui/ui-popover",
+        "WAROL52/code2-base-ui/ui-calendar",
+        "WAROL52/code2-base-ui/ui-button"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/date-picker.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "ui-input-otp",
+      "type": "registry:ui",
+      "title": "Input OTP",
+      "description": "Composant input OTP shadcn/ui style base-lyra.",
+      "dependencies": ["input-otp"],
+      "files": [
+        {
+          "path": "packages/ui/src/components/input-otp.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "ui-popover",
+      "type": "registry:ui",
+      "title": "Popover",
+      "description": "Composant popover shadcn/ui style base-lyra.",
+      "files": [
+        {
+          "path": "packages/ui/src/components/popover.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "ui-calendar",
+      "type": "registry:ui",
+      "title": "Calendar",
+      "description": "Composant calendrier shadcn/ui style base-lyra.",
+      "dependencies": ["date-fns", "react-day-picker"],
+      "files": [
+        {
+          "path": "packages/ui/src/components/calendar.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "ui-separator",
+      "type": "registry:ui",
+      "title": "Separator",
+      "description": "Composant separator shadcn/ui style base-lyra.",
+      "files": [
+        {
+          "path": "packages/ui/src/components/separator.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    }
+  ]
 }

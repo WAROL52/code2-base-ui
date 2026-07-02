@@ -1,6 +1,6 @@
-import { describe, it, expect, expectTypeOf } from "vitest";
-import { flatfields } from "../../src/utils/flatfields";
+import { describe, expect, expectTypeOf, it } from "vitest";
 import type { FieldMeta, JsonSchema } from "../../src/types";
+import { flatfields } from "../../src/utils/flatfields";
 
 describe("flatfields types", () => {
 	it("returns FieldMeta array", () => {

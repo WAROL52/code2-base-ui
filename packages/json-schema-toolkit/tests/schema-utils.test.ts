@@ -10,7 +10,6 @@ import {
 	inferTSType,
 	isNullable,
 } from "../src/schema-utils";
-import type { JsonSchema } from "../src/types";
 
 describe("getType", () => {
 	it("returns explicit type", () => {
@@ -24,7 +23,9 @@ describe("getType", () => {
 	});
 
 	it("returns object when type missing but properties present", () => {
-		expect(getType({ properties: { name: { type: "string" } } })).toBe("object");
+		expect(getType({ properties: { name: { type: "string" } } })).toBe(
+			"object"
+		);
 	});
 
 	it("returns array when type missing but items present", () => {
@@ -46,11 +47,15 @@ describe("getType", () => {
 
 describe("getKind", () => {
 	it("returns union for oneOf > 1", () => {
-		expect(getKind({ oneOf: [{ type: "string" }, { type: "number" }] })).toBe("union");
+		expect(getKind({ oneOf: [{ type: "string" }, { type: "number" }] })).toBe(
+			"union"
+		);
 	});
 
 	it("returns union for anyOf > 1", () => {
-		expect(getKind({ anyOf: [{ type: "string" }, { type: "number" }] })).toBe("union");
+		expect(getKind({ anyOf: [{ type: "string" }, { type: "number" }] })).toBe(
+			"union"
+		);
 	});
 
 	it("returns enum for schema with enum", () => {
@@ -73,23 +78,33 @@ describe("getKind", () => {
 
 	it("prefers oneOf over enum", () => {
 		expect(
-			getKind({ enum: ["a", "b"], oneOf: [{ type: "string" }, { type: "number" }] })
+			getKind({
+				enum: ["a", "b"],
+				oneOf: [{ type: "string" }, { type: "number" }],
+			})
 		).toBe("union");
 	});
 });
 
 describe("getLabel", () => {
 	it("returns x-ui-label when present", () => {
-		expect(getLabel({ type: "string", "x-ui-label": "Custom" }, "name")).toBe("Custom");
+		expect(getLabel({ type: "string", "x-ui-label": "Custom" }, "name")).toBe(
+			"Custom"
+		);
 	});
 
 	it("returns title when present", () => {
-		expect(getLabel({ type: "string", title: "Full Name" }, "name")).toBe("Full Name");
+		expect(getLabel({ type: "string", title: "Full Name" }, "name")).toBe(
+			"Full Name"
+		);
 	});
 
 	it("prefers x-ui-label over title", () => {
 		expect(
-			getLabel({ type: "string", title: "Title", "x-ui-label": "Custom" }, "name")
+			getLabel(
+				{ type: "string", title: "Title", "x-ui-label": "Custom" },
+				"name"
+			)
 		).toBe("Custom");
 	});
 
@@ -125,23 +140,46 @@ describe("getDefaultValue", () => {
 
 describe("getConstraints", () => {
 	it("returns string constraints", () => {
-		const constraints = getConstraints({ minLength: 2, maxLength: 10, pattern: "^[a-z]+$" });
-		expect(constraints).toEqual({ minLength: 2, maxLength: 10, pattern: "^[a-z]+$" });
+		const constraints = getConstraints({
+			minLength: 2,
+			maxLength: 10,
+			pattern: "^[a-z]+$",
+		});
+		expect(constraints).toEqual({
+			minLength: 2,
+			maxLength: 10,
+			pattern: "^[a-z]+$",
+		});
 	});
 
 	it("returns number constraints", () => {
-		const constraints = getConstraints({ minimum: 0, maximum: 100, multipleOf: 5 });
+		const constraints = getConstraints({
+			minimum: 0,
+			maximum: 100,
+			multipleOf: 5,
+		});
 		expect(constraints).toEqual({ minimum: 0, maximum: 100, multipleOf: 5 });
 	});
 
 	it("returns exclusive number constraints", () => {
-		const constraints = getConstraints({ exclusiveMinimum: 0, exclusiveMaximum: 100 });
+		const constraints = getConstraints({
+			exclusiveMinimum: 0,
+			exclusiveMaximum: 100,
+		});
 		expect(constraints).toEqual({ exclusiveMinimum: 0, exclusiveMaximum: 100 });
 	});
 
 	it("returns array constraints", () => {
-		const constraints = getConstraints({ minItems: 1, maxItems: 5, uniqueItems: true });
-		expect(constraints).toEqual({ minItems: 1, maxItems: 5, uniqueItems: true });
+		const constraints = getConstraints({
+			minItems: 1,
+			maxItems: 5,
+			uniqueItems: true,
+		});
+		expect(constraints).toEqual({
+			minItems: 1,
+			maxItems: 5,
+			uniqueItems: true,
+		});
 	});
 
 	it("returns undefined when no constraints", () => {
@@ -219,7 +257,9 @@ describe("inferTSType", () => {
 	});
 
 	it("returns typed array", () => {
-		expect(inferTSType({ type: "array", items: { type: "string" } })).toBe("string[]");
+		expect(inferTSType({ type: "array", items: { type: "string" } })).toBe(
+			"string[]"
+		);
 	});
 
 	it("returns unknown[] for array without items", () => {
@@ -241,7 +281,9 @@ describe("isNullable", () => {
 	});
 
 	it("returns true when anyOf includes null", () => {
-		expect(isNullable({ anyOf: [{ type: "string" }, { type: "null" }] })).toBe(true);
+		expect(isNullable({ anyOf: [{ type: "string" }, { type: "null" }] })).toBe(
+			true
+		);
 	});
 
 	it("returns false for plain type", () => {

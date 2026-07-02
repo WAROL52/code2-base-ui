@@ -9,22 +9,23 @@ import { flatfields } from "./flatfields";
  * @returns A record of group key → FieldMeta[]
  */
 export function groupBy(
-  schema: JsonSchema,
-  criteria: GroupCriteria,
+	schema: JsonSchema,
+	criteria: GroupCriteria
 ): Record<string, FieldMeta[]> {
-  const fields = flatfields(schema);
-  const groups: Record<string, FieldMeta[]> = {};
+	const fields = flatfields(schema);
+	const groups: Record<string, FieldMeta[]> = {};
 
-  for (const field of fields) {
-    const key = typeof criteria.by === "function"
-      ? criteria.by(field)
-      : String(field[criteria.by] ?? "undefined");
-    
-    if (!groups[key]) {
-      groups[key] = [];
-    }
-    groups[key]!.push(field);
-  }
+	for (const field of fields) {
+		const key =
+			typeof criteria.by === "function"
+				? criteria.by(field)
+				: String(field[criteria.by] ?? "undefined");
 
-  return groups;
+		if (!groups[key]) {
+			groups[key] = [];
+		}
+		groups[key]!.push(field);
+	}
+
+	return groups;
 }

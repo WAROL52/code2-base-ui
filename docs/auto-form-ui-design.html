@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="fr">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Conception d'AutoFormUi</title>
+		<style>
+		@layer base {
+				  :root {
+				    --bg: #ffffff;
+				    --surface: #f8fafc;
+				    --border: #e2e8f0;
+				    --text: #0f172a;
+				    --text-muted: #64748b;
+				    --primary: #3b82f6;
+				    --primary-fg: #ffffff;
+				    --accent: #8b5cf6;
+				    --green: #22c55e;
+				    --green-bg: #f0fdf4;
+				    --red: #ef4444;
+				    --red-bg: #fef2f2;
+				    --amber: #f59e0b;
+				    --amber-bg: #fffbeb;
+				    --blue: #3b82f6;
+				    --blue-bg: #eff6ff;
+				    --radius: 10px;
+				    --font: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+				    --mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+				  }
+				  @media (prefers-color-scheme: dark) {
+				    :root {
+				      --bg: #0f172a;
+				      --surface: #1e293b;
+				      --border: #334155;
+				      --text: #f1f5f9;
+				      --text-muted: #94a3b8;
+				      --green-bg: #052e16;
+				      --red-bg: #450a0a;
+				      --amber-bg: #451a03;
+				      --blue-bg: #172554;
+				    }
+				  }
+				  * { box-sizing: border-box; margin: 0; }
+				  body {
+				    padding: 2rem 1rem;
+				    font-family: var(--font);
+				    line-height: 1.6;
+				    color: var(--text);
+				    background: var(--bg);
+				  }
+				  .container { max-width: 960px; margin: 0 auto; }
+				  h1 { margin-bottom: 0.25rem; font-size: 2rem; font-weight: 700; letter-spacing: -0.02em; }
+				  .subtitle { margin-bottom: 2.5rem; font-size: 1rem; color: var(--text-muted); }
+				  h2 { padding-bottom: 0.35rem; margin-top: 2.5rem; margin-bottom: 0.75rem; font-size: 1.35rem; font-weight: 600; border-bottom: 2px solid var(--border); }
+				  h3 { margin-top: 1.75rem; margin-bottom: 0.5rem; font-size: 1.1rem; font-weight: 600; }
+				  p, li { color: var(--text); }
+				  .badge {
+				    display: inline-block;
+				    padding: 0.15rem 0.5rem;
+				    font-size: 0.7rem;
+				    font-weight: 600;
+				    vertical-align: middle;
+				    border-radius: 999px;
+				  }
+				  .badge-green { color: var(--green); background: var(--green-bg); }
+				  .badge-red { color: var(--red); background: var(--red-bg); }
+				  .badge-amber { color: var(--amber); background: var(--amber-bg); }
+				  .badge-blue { color: var(--blue); background: var(--blue-bg); }
+				  code, pre {
+				    font-family: var(--mono);
+				    font-size: 0.85rem;
+				  }
+				  pre {
+				    padding: 1rem;
+				    margin: 0.75rem 0;
+				    overflow-x: auto;
+				    line-height: 1.5;
+				    background: var(--surface);
+				    border: 1px solid var(--border);
+				    border-radius: var(--radius);
+				  }
+				  .code-block { position: relative; }
+				  .code-block .lang-tag {
+				    position: absolute;
+				    top: 0.35rem;
+				    right: 0.65rem;
+				    font-size: 0.65rem;
+				    font-weight: 600;
+				    color: var(--text-muted);
+				    text-transform: uppercase;
+				    letter-spacing: 0.05em;
+				  }
+				  .comparison-grid {
+				    display: grid;
+				    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+				    gap: 1rem;
+				    margin: 1rem 0;
+				  }
+				  .card {
+				    padding: 1.25rem;
+				    background: var(--surface);
+				    border: 1px solid var(--border);
+				    border-radius: var(--radius);
+				  }
+				  .card h4 { margin-bottom: 0.5rem; font-size: 1rem; }
+				  .card ul { padding-left: 1.25rem; font-size: 0.9rem; }
+				  .card li { margin-bottom: 0.35rem; }
+				  .table-wrap { margin: 1rem 0; overflow-x: auto; }
+				  table {
+				    width: 100%;
+				    font-size: 0.9rem;
+				    border-collapse: collapse;
+				  }
+				  th, td {
+				    padding: 0.6rem 0.75rem;
+				    vertical-align: top;
+				    text-align: left;
+				    border-bottom: 1px solid var(--border);
+				  }
+				  th { font-weight: 600; background: var(--surface); }
+				  .rec-card {
+				    padding: 1.25rem;
+				    margin: 1.5rem 0;
+				    background: var(--blue-bg);
+				    border: 1px solid var(--blue);
+				    border-radius: var(--radius);
+				  }
+				  .rec-card h3 { margin-top: 0; color: var(--blue); }
+				  .diagram {
+				    display: flex;
+				    flex-direction: column;
+				    align-items: center;
+				    padding: 1.5rem 0;
+				    font-family: var(--mono);
+				    font-size: 0.8rem;
+				  }
+				  .diagram .flow {
+				    display: flex;
+				    flex-wrap: wrap;
+				    gap: 0.5rem;
+				    align-items: center;
+				    justify-content: center;
+				  }
+				  .diagram .box {
+				    padding: 0.5rem 1rem;
+				    text-align: center;
+				    white-space: nowrap;
+				    background: var(--surface);
+				    border: 1.5px solid var(--border);
+				    border-radius: 6px;
+				  }
+				  .diagram .arrow { font-size: 1.2rem; color: var(--text-muted); }
+				  .diagram .label { margin-top: 0.25rem; font-size: 0.7rem; color: var(--text-muted); }
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<h1>AutoFormUi</h1>
+			<p class="subtitle">
+				Conception de l'interface UI unifiée pour <code>auto-form-builder</code>
+			</p>
+
+			<h2>État des lieux</h2>
+			<p>
+				Aujourd'hui, l'UI est répartie sur
+				<strong>2 interfaces + 1 implémentation concrète</strong>
+				:
+			</p>
+
+			<pre>
+<code>FormLayout (layout/types.ts)               FieldRegistry (json-schema-toolkit)
+├─ FieldSet                                  ├─ register(selector, component, priority)
+├─ FieldGroup                                ├─ resolve(fieldMeta) → Component
+├─ FieldLegend                               └─ setFallback(component)
+├─ FieldDescription
+├─ ObjectField                              shadcnLayout (layout/shadcn.tsx)
+├─ ArrayField                                └─ implémente FormLayout avec
+├─ CompositionsField                              @code2-base-ui/ui (FieldSet, Input, Select…)
+└─ SubmitButton
+                                            createShadcnRegistry (fields/index.ts)
+                                             └─ enregistre ShadcnTextField, ShadcnNumberField…
+                                                dans FieldRegistry</code>
+</pre>
+
+			<div class="diagram">
+				<div class="flow">
+					<div class="box">
+						AutoForm<br><span class="label">auto-form.tsx</span>
+					</div>
+					<span class="arrow">→</span>
+					<div class="box">
+						FormLayoutCtx<br><span class="label">layout</span>
+					</div>
+					<span class="arrow">→</span>
+					<div class="box">
+						handlers<br><span class="label">object / array / leaf</span>
+					</div>
+				</div>
+				<div
+					style="margin-top:0.75rem;display:flex;gap:1.5rem;flex-wrap:wrap;justify-content:center"
+				>
+					<span
+						><span class="badge badge-red">✗</span>
+						2 interfaces à fournir</span
+					>
+					<span
+						><span class="badge badge-red">✗</span>
+						layout + registry séparés</span
+					>
+					<span
+						><span class="badge badge-red">✗</span>
+						dépend @code2-base-ui/ui</span
+					>
+				</div>
+			</div>
+
+			<h2>Vision <code>createAutoForm</code></h2>
+			<p>
+				À terme, un factory <code>createAutoForm</code> assemblera toutes les
+				dépendances :
+			</p>
+
+			<pre>
+<code>// Utilisation finale — l'utilisateur ne voit que le schema
+const Form = createAutoForm({
+  adapter: tanstackAdapter,
+  ui: shadcnAutoFormUi,
+})
+
+// Usage
+&lt;Form schema={myJsonSchema} /&gt;</code>
+</pre>
+
+			<p>
+				<code>AutoFormUi</code>
+				est le bloc UI interchangeable. L'utilisateur avancé peut en créer un
+				custom ; l'utilisateur simple reçoit un default.
+			</p>
+
+			<h2>3 approches pour AutoFormUi</h2>
+
+			<div class="comparison-grid">
+				<div class="card">
+					<h4>
+						A — Slots nommés <span class="badge badge-blue">explicite</span>
+					</h4>
+					<ul>
+						<li>TextField, NumberField, BooleanField…</li>
+						<li>dispatch hardcodé dans auto-form-builder</li>
+						<li>Override d'un seul champ sans tout réécrire</li>
+						<li>Moins flexible (types figés)</li>
+					</ul>
+				</div>
+
+				<div class="card">
+					<h4>
+						B — Field unique <span class="badge badge-amber">flexible</span>
+					</h4>
+					<ul>
+						<li>1 seul composant <code>Field</code></li>
+						<li>reçoit <code>fieldMeta</code> pour dispatch interne</li>
+						<li>Flexibilité totale par thème</li>
+						<li>Override = tout réécrire</li>
+					</ul>
+				</div>
+
+				<div class="card">
+					<h4>
+						C — resolveField
+						<span class="badge badge-amber">registry-like</span>
+					</h4>
+					<ul>
+						<li><code>resolveField(fieldMeta) → Component</code></li>
+						<li>Similaire à FieldRegistry aujourd'hui</li>
+						<li>Flexibilité maximale</li>
+						<li>Complexité pour l'utilisateur</li>
+					</ul>
+				</div>
+			</div>
+
+			<h3>Détail — Approche A : Slots nommés</h3>
+
+			<pre>
+<code>interface AutoFormUi {
+  // Structural
+  Root: ComponentType&lt;{
+    children: ReactNode
+    schema: Record&lt;string, unknown&gt;
+    fields: FieldMeta[]
+  }&gt;
+  ObjectField: ComponentType&lt;ObjectFieldProps&gt;
+  ArrayField: ComponentType&lt;ArrayFieldProps&gt;
+  CompositionsField: ComponentType&lt;CompositionsFieldProps&gt;
+
+  // Leaf field — un slot par type
+  TextField: ComponentType&lt;FieldProps&gt;
+  NumberField: ComponentType&lt;FieldProps&gt;
+  BooleanField: ComponentType&lt;FieldProps&gt;
+  EnumField: ComponentType&lt;FieldProps&gt;
+  TextareaField: ComponentType&lt;FieldProps&gt;
+  SwitchField: ComponentType&lt;FieldProps&gt;
+
+  // Submit
+  SubmitButton: ComponentType&lt;SubmitButtonProps&gt;
+}</code>
+</pre>
+
+			<p>Le dispatch est fait par <code>auto-form-builder</code> :</p>
+
+			<pre>
+<code>function resolveField(ui: AutoFormUi, meta: FieldMeta): FieldComponent {
+  if (meta.kind === "enum")        return ui.EnumField
+  if (meta.uiWidget === "textarea") return ui.TextareaField
+  if (meta.uiWidget === "switch")   return ui.SwitchField
+  if (meta.type === "string")       return ui.TextField
+  if (meta.type === "number"
+   || meta.type === "integer")      return ui.NumberField
+  if (meta.type === "boolean")      return ui.BooleanField
+  return ui.TextField
+}</code>
+</pre>
+
+			<div class="table-wrap">
+				<table>
+					<tr>
+						<th>Critère</th>
+						<th>A — Slots</th>
+						<th>B — Field unique</th>
+						<th>C — resolveField</th>
+					</tr>
+					<tr>
+						<td>Override partiel</td>
+						<td><span class="badge badge-green">✓</span> un slot à la fois</td>
+						<td><span class="badge badge-red">✗</span> tout réécrire</td>
+						<td><span class="badge badge-amber">~</span> si helper fourni</td>
+					</tr>
+					<tr>
+						<td>Dispatch personnalisé</td>
+						<td><span class="badge badge-red">✗</span> fixé dans la lib</td>
+						<td><span class="badge badge-green">✓</span> dans le composant</td>
+						<td><span class="badge badge-green">✓</span> fonction publique</td>
+					</tr>
+					<tr>
+						<td>Charge cognitive</td>
+						<td><span class="badge badge-green">✓</span> faible</td>
+						<td><span class="badge badge-amber">~</span> moyenne</td>
+						<td><span class="badge badge-red">✗</span> plus élevée</td>
+					</tr>
+					<tr>
+						<td>Nbre de propriétés</td>
+						<td>11</td>
+						<td>6</td>
+						<td>6</td>
+					</tr>
+					<tr>
+						<td>Extensibilité (types customs)</td>
+						<td><span class="badge badge-red">✗</span> limité</td>
+						<td><span class="badge badge-green">✓</span> totale</td>
+						<td><span class="badge badge-green">✓</span> totale</td>
+					</tr>
+					<tr>
+						<td>Testabilité unitaire</td>
+						<td><span class="badge badge-green">✓</span> triviale</td>
+						<td><span class="badge badge-green">✓</span> bonne</td>
+						<td><span class="badge badge-green">✓</span> bonne</td>
+					</tr>
+				</table>
+			</div>
+
+			<h2>Analyse</h2>
+
+			<h3>Pourquoi A (Slots nommés) semble le meilleur compromis</h3>
+
+			<ol>
+				<li>
+					<strong>Override partiel</strong>
+					— l'utilisateur qui veut juste changer <code>TextField</code> en
+					Textarea ne réécrit rien d'autre. Avec B ou C, il doit soit tout
+					réécrire, soit implémenter un dispatch complet.
+				</li>
+				<li>
+					<strong>Charge cognitive minimale</strong>
+					— le nom du slot dit exactement ce qu'il fait. Pas besoin de
+					comprendre le système de matching du FieldRegistry.
+				</li>
+				<li>
+					<strong>Compatible avec <code>createAutoForm</code></strong>
+					— la factory prend un <code>Partial&lt;AutoFormUi&gt;</code> et
+					complète avec les defaults. L'utilisateur passe juste
+					<code>{ TextField: MyCustomText }</code>.
+				</li>
+				<li>
+					<strong>DX similaire à shadcn/ui</strong>
+					— les composants shadcn s'utilisent individuellement. Même
+					philosophie.
+				</li>
+			</ol>
+
+			<h3>Le compromis : extensibilité</h3>
+			<p>
+				Si plus tard un utilisateur a besoin d'un type complètement nouveau (ex:
+				<code>color-picker</code>, <code>markdown-editor</code>), les slots
+				nommés seuls ne suffisent pas. Solution : ajouter un slot
+				<code
+					>customFieldResolver?: (meta: FieldMeta) =&gt; FieldComponent | null</code
+				>
+				optionnel, appelé <strong>avant</strong> le dispatch par type. Simple,
+				extensible, non-cassant.
+			</p>
+
+			<pre>
+<code>// Version finale avec escape hatch optionnel
+interface AutoFormUi {
+  Root: ComponentType&lt;RootProps&gt;
+  ObjectField: ComponentType&lt;ObjectFieldProps&gt;
+  ArrayField: ComponentType&lt;ArrayFieldProps&gt;
+  CompositionsField: ComponentType&lt;CompositionsFieldProps&gt;
+
+  TextField: ComponentType&lt;FieldProps&gt;
+  NumberField: ComponentType&lt;FieldProps&gt;
+  BooleanField: ComponentType&lt;FieldProps&gt;
+  EnumField: ComponentType&lt;FieldProps&gt;
+  TextareaField: ComponentType&lt;FieldProps&gt;
+  SwitchField: ComponentType&lt;FieldProps&gt;
+
+  SubmitButton: ComponentType&lt;SubmitButtonProps&gt;
+
+  // Escape hatch — optionnel, pour les types customs
+  resolveField?: (meta: FieldMeta) =&gt; FieldComponent | undefined
+}</code>
+</pre>
+
+			<h2>Migration</h2>
+
+			<h3>Suppression de <code>@code2-base-ui/ui</code></h3>
+			<ol>
+				<li>
+					<code>layout/shadcn.tsx</code>
+					+ <code>fields/field-components.tsx</code> +
+					<code>fields/index.ts</code>
+					sont extraits dans un package externe (ou gardés dans l'app)
+				</li>
+				<li>
+					<code>auto-form-builder</code>
+					ne dépend plus que de <code>json-schema-toolkit</code>
+				</li>
+				<li>
+					Un <code>shadcnAutoFormUi</code> par défaut est fourni (dans un
+					nouveau package ou dans l'app)
+				</li>
+				<li>
+					<code>auto-form.tsx</code>
+					utilise <code>AutoFormUi</code> au lieu de
+					<code>FormLayoutCtx</code>
+					+ <code>registry</code>
+				</li>
+			</ol>
+
+			<h3>Nouveau graphe de dépendances</h3>
+
+			<div class="diagram">
+				<div class="flow">
+					<div class="box">auto-form-builder</div>
+					<span class="arrow">←</span>
+					<div class="box">auto-form-adapter-*</div>
+					<span class="arrow">←</span>
+					<div class="box" style="border-color:var(--accent)">AutoFormUi</div>
+				</div>
+				<div style="margin-top:0.5rem">
+					<span class="badge badge-green">✓</span>
+					zéro dépendance UI
+					<span class="badge badge-green">✓</span>
+					1 interface à fournir
+				</div>
+			</div>
+
+			<div class="rec-card">
+				<h3>Recommandation</h3>
+				<p>
+					<strong
+						>Approche A (Slots nommés) + escape hatch
+						<code>resolveField</code>
+						optionnel.</strong
+					>
+				</p>
+				<p>
+					Raisons : override partiel, charge cognitive minimale, compatible avec
+					la vision <code>createAutoForm</code>, extensible sans breaking
+					change.
+				</p>
+				<p>
+					<code>FieldSet</code>, <code>FieldGroup</code>,
+					<code>FieldLegend</code>, <code>FieldDescription</code> disparaissent
+					de l'interface publique — absorbés par <code>Root</code> (pour le
+					wrapper haut niveau) et par <code>ObjectField</code>/<code
+						>ArrayField</code
+					>
+					(pour les wrappers structurels).
+				</p>
+			</div>
+
+			<h2>Questions ouvertes</h2>
+			<ul>
+				<li>
+					<strong>Root vs auto-form.tsx</strong>
+					— <code>Root</code> remplace-t-il complètement le
+					<code>&lt;form&gt;</code>
+					dans auto-form.tsx, ou seulement le
+					FieldSet/FieldGroup/FieldLegend/FieldDescription ?
+				</li>
+				<li>
+					<strong>Nom du package du thème shadcn</strong>
+					— <code>@code2-base-ui/auto-form-ui-shadcn</code> ? Ou dans
+					<code>packages/ui</code>
+					?
+				</li>
+				<li>
+					<strong>Nom du champ integer</strong>
+					— <code>IntegerField</code> séparé ou réutilise
+					<code>NumberField</code>
+					?
+				</li>
+			</ul>
+		</div>
+	</body>
+</html>
