@@ -1,4 +1,3 @@
-export { tanstackAdapter } from "./adapters/tanstack";
 export type {
 	FieldAPI,
 	FieldError,
