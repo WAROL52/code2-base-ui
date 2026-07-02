@@ -21,7 +21,10 @@ Monorepo **Better-T-Stack** orchestré par **Nx** + **pnpm workspaces**.
 - `packages/config` — `tsconfig.base.json` partagé
 - `packages/env` — Validation d'environnement avec `@t3-oss/env` (split `server.ts` / `web.ts`)
 - `packages/json-schema-toolkit` — Outils copy-paste basés sur JSON Schema (Standard Schema, TypeBox, FieldRegistry, SchemaAdapter)
-- `packages/auto-form-builder` — Génération de formulaires par render-prop (FormAdapter pattern, TanStack Form)
+- `packages/auto-form-builder` — Génération de formulaires par render-prop (FormAdapter pattern)
+- `packages/auto-form-adapter-tanstack` — Adaptateur TanStack Form
+- `packages/auto-form-adapter-rhf` — Adaptateur React Hook Form
+- `packages/auto-form-adapter-formisch` — Adaptateur Formisch
 
 ## Commandes essentielles
 
@@ -95,11 +98,8 @@ Package `@code2-base-ui/auto-form-builder` — génération de formulaires par r
 ```
 packages/auto-form-builder/src/
 ├── adapters/
-│   ├── index.ts          # Exports des adapters
-│   ├── types.ts          # FieldAPI, FormAPI, FormAdapter
-│   ├── tanstack.tsx      # tanstackAdapter (TanStack Form)
-│   ├── rhf.tsx           # rhfAdapter (React Hook Form)
-│   └── formisch.tsx      # formischAdapter (Formisch)
+│   ├── index.ts          # Exports des types seulement
+│   └── types.ts          # FieldAPI, FormAPI, FormAdapter interface
 ├── handlers/
 │   ├── object-handler.tsx # Rendu des objets
 │   ├── array-handler.tsx  # Rendu des tableaux
@@ -114,9 +114,11 @@ packages/auto-form-builder/src/
 
 ### FormAdapter pattern
 
+L'interface `FormAdapter` est définie dans `@code2-base-ui/auto-form-builder`. Les implémentations sont dans des packages séparés.
+
 ```ts
 import { AutoForm } from "@code2-base-ui/auto-form-builder"
-import { tanstackAdapter } from "@code2-base-ui/auto-form-builder/adapters"
+import { tanstackAdapter } from "@code2-base-ui/auto-form-adapter-tanstack"
 
 <AutoForm schema={mySchema} adapter={tanstackAdapter} registry={myRegistry} />
 ```
@@ -125,7 +127,11 @@ Interface `FormAdapter` (2 composants React) :
 - **FormProvider** — initialise le form manager, stocke l'instance dans un contexte interne privé
 - **Field** — render-prop standardisé avec `{ value, onChange, onBlur, error, isTouched }`
 
-Ajouter un nouveau form manager = créer 1 fichier `src/adapters/mon-adapter.tsx`.
+**Packages adaptateurs disponibles :**
+- `@code2-base-ui/auto-form-adapter-tanstack` — import { tanstackAdapter }
+- `@code2-base-ui/auto-form-adapter-rhf` — import { rhfAdapter }
+- `@code2-base-ui/auto-form-adapter-formisch` — import { formischAdapter }
+
 Utiliser les skills `.agents/skills/shadcn-rhf/`, `.agents/skills/shadcn-tanstack-form/` ou `.agents/skills/shadcn-formisch/` pour les implémentations guidées.
 
 ### Tests
@@ -137,7 +143,8 @@ pnpm --filter @code2-base-ui/auto-form-builder check
 ```
 
 - vitest + jsdom + @testing-library/react
-- 95 tests (98% statements, 96% branches)
+- 85 tests (découplés de tout form manager via mock adapter)
+- Tests des adaptateurs : `auto-form-adapter-tanstack` (10), `auto-form-adapter-rhf` (10), `auto-form-adapter-formisch` (6)
 
 ## Particularités techniques
 
@@ -151,7 +158,10 @@ pnpm --filter @code2-base-ui/auto-form-builder check
 ## Tests
 
 - `@code2-base-ui/json-schema-toolkit` — vitest (44 tests, types-first avec `expectTypeOf`)
-- `@code2-base-ui/auto-form-builder` — vitest (18 tests, TDD)
+- `@code2-base-ui/auto-form-builder` — vitest (85 tests, TDD)
+- `@code2-base-ui/auto-form-adapter-tanstack` — vitest (10 tests)
+- `@code2-base-ui/auto-form-adapter-rhf` — vitest (10 tests)
+- `@code2-base-ui/auto-form-adapter-formisch` — vitest (6 tests)
 - `pnpm test` — pas de commande racine définie (le hook Husky lance `pnpm test` sans effet)
 
 ## Docker
