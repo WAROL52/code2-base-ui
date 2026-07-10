@@ -1,62 +1,35 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import type { ReactNode } from "react";
 
-const InputFieldStory = dynamic(
-	() =>
-		import("./input-field.story").then((m) => {
-			const StoryComponent = m.story.WithControl;
-			return { default: StoryComponent };
-		}),
-	{ ssr: false }
-);
-
-const SelectFieldStory = dynamic(
-	() =>
-		import("./select-field.story").then((m) => {
-			const StoryComponent = m.story.WithControl;
-			return { default: StoryComponent };
-		}),
-	{ ssr: false }
-);
-
-const CheckboxFieldStory = dynamic(
-	() =>
-		import("./checkbox-field.story").then((m) => {
-			const StoryComponent = m.story.WithControl;
-			return { default: StoryComponent };
-		}),
-	{ ssr: false }
-);
-
-const TextareaFieldStory = dynamic(
-	() =>
-		import("./textarea-field.story").then((m) => {
-			const StoryComponent = m.story.WithControl;
-			return { default: StoryComponent };
-		}),
-	{ ssr: false }
-);
+function PlaceholderStory({ title }: { title: string }): ReactNode {
+	return (
+		<div className="rounded-lg border p-4">
+			<p className="text-fd-muted-foreground text-xs">
+				Story <code>{title}</code> à implémenter.
+			</p>
+		</div>
+	);
+}
 
 export function StoryDemos(): ReactNode {
 	return (
 		<div className="space-y-8">
 			<section>
 				<h3 className="mb-2 font-semibold text-lg">InputField</h3>
-				<InputFieldStory />
+				<PlaceholderStory title="InputField" />
 			</section>
 			<section>
 				<h3 className="mb-2 font-semibold text-lg">SelectField</h3>
-				<SelectFieldStory />
+				<PlaceholderStory title="SelectField" />
 			</section>
 			<section>
 				<h3 className="mb-2 font-semibold text-lg">CheckboxField</h3>
-				<CheckboxFieldStory />
+				<PlaceholderStory title="CheckboxField" />
 			</section>
 			<section>
 				<h3 className="mb-2 font-semibold text-lg">TextareaField</h3>
-				<TextareaFieldStory />
+				<PlaceholderStory title="TextareaField" />
 			</section>
 		</div>
 	);
