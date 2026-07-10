@@ -7,9 +7,13 @@ export type {
 	FormAPI,
 	FormProviderProps,
 } from "./adapters/types";
-export { AutoForm } from "./auto-form";
 export { AutoFormBuilder } from "./auto-form-builder";
 export { AutoFormField } from "./auto-form-field";
+export type {
+	CreateAutoFormConfig,
+	CreatedAutoFormProps,
+} from "./create-auto-form";
+export { createAutoForm } from "./create-auto-form";
 export { createShadcnRegistry } from "./fields";
 export { shadcnLayout } from "./layout/shadcn";
 export type { FormLayout } from "./layout/types";

@@ -1,13 +1,39 @@
 "use client";
 
+import type {
+	FieldMeta,
+	FieldRegistry,
+	JsonSchemaDraft,
+	ResolvedSchema,
+} from "@code2-base-ui/json-schema-toolkit";
+import type { ComponentType, ReactNode } from "react";
 import { useMemo } from "react";
+import type { FormAdapter } from "./adapters/types";
 import { AutoFormBuilder } from "./auto-form-builder";
 import { AutoFormField } from "./auto-form-field";
+import type { AutoFormFieldProps } from "./auto-form-field-types";
 import { FormLayoutCtx } from "./layout/context";
 import { shadcnLayout } from "./layout/shadcn";
-import type { AutoFormProps } from "./types";
+import type { FormLayout } from "./layout/types";
 
-export function AutoForm({
+interface AutoFormProps {
+	adapter: FormAdapter;
+	children?: ReactNode;
+	className?: string;
+	defaultValues?: Record<string, unknown>;
+	layout?: Partial<FormLayout>;
+	onSubmit?: (data: unknown) => void | Promise<void>;
+	registry: FieldRegistry;
+	resolveSchema?: (
+		rawSchema: unknown,
+		draftHint?: JsonSchemaDraft
+	) => ResolvedSchema;
+	schema: Record<string, unknown>;
+	traverseSchema?: (resolved: ResolvedSchema) => FieldMeta[];
+	unionFieldRenderer?: ComponentType<AutoFormFieldProps>;
+}
+
+function AutoForm({
 	schema,
 	adapter,
 	registry,
@@ -75,4 +101,36 @@ export function AutoForm({
 			)}
 		</AutoFormBuilder>
 	);
+}
+
+export interface CreateAutoFormConfig {
+	adapter: FormAdapter;
+	layout?: Partial<FormLayout>;
+	registry: FieldRegistry;
+	resolveSchema?: (
+		rawSchema: unknown,
+		draftHint?: JsonSchemaDraft
+	) => ResolvedSchema;
+	traverseSchema?: (resolved: ResolvedSchema) => FieldMeta[];
+	unionFieldRenderer?: ComponentType<AutoFormFieldProps>;
+}
+
+export interface CreatedAutoFormProps {
+	children?: ReactNode;
+	className?: string;
+	defaultValues?: Record<string, unknown>;
+	onSubmit?: (data: unknown) => void | Promise<void>;
+	schema: Record<string, unknown>;
+}
+
+export function createAutoForm(config: CreateAutoFormConfig) {
+	const { adapter, registry, ...rest } = config;
+
+	function CreatedAutoForm(props: CreatedAutoFormProps) {
+		return (
+			<AutoForm adapter={adapter} registry={registry} {...rest} {...props} />
+		);
+	}
+
+	return CreatedAutoForm;
 }

@@ -4,8 +4,8 @@ import type {
 } from "@code2-base-ui/json-schema-toolkit";
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import { AutoForm } from "../src/auto-form";
 import { AutoFormField } from "../src/auto-form-field";
+import { createAutoForm } from "../src/create-auto-form";
 import { UnionFieldHandler } from "../src/handlers/union-handler";
 import type { FormLayout } from "../src/layout";
 import { FormLayoutCtx } from "../src/layout/context";
@@ -285,7 +285,7 @@ describe("AutoFormField — unionFieldRenderer seam", () => {
 	});
 });
 
-describe("AutoForm — unionFieldRenderer prop", () => {
+describe("createAutoForm — unionFieldRenderer config", () => {
 	it("passes unionFieldRenderer to AutoFormField", () => {
 		const CustomUnion = vi
 			.fn()
@@ -316,14 +316,13 @@ describe("AutoForm — unionFieldRenderer prop", () => {
 			},
 		};
 
-		render(
-			<AutoForm
-				adapter={mockAdapter}
-				registry={{ resolve: mockResolve } as unknown as FieldRegistry}
-				schema={schema}
-				unionFieldRenderer={CustomUnion}
-			/>
-		);
+		const TestForm = createAutoForm({
+			adapter: mockAdapter,
+			registry: { resolve: mockResolve } as unknown as FieldRegistry,
+			unionFieldRenderer: CustomUnion,
+		});
+
+		render(<TestForm schema={schema} />);
 
 		expect(screen.getByTestId("autoform-union")).toBeDefined();
 	});

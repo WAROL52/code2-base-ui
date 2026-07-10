@@ -5,7 +5,7 @@ import type {
 } from "@code2-base-ui/json-schema-toolkit";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import { AutoForm } from "../src/auto-form";
+import { createAutoForm } from "../src/create-auto-form";
 import type { FormLayout } from "../src/layout";
 import { mockAdapter } from "./test-utils";
 
@@ -32,16 +32,14 @@ const mockRegistry = {
 		)),
 } as unknown as FieldRegistry;
 
-describe("AutoForm", () => {
+const TestForm = createAutoForm({
+	adapter: mockAdapter,
+	registry: mockRegistry,
+});
+
+describe("createAutoForm", () => {
 	it("renders form with title and fields", () => {
-		render(
-			<AutoForm
-				adapter={mockAdapter}
-				defaultValues={{ name: "John" }}
-				registry={mockRegistry}
-				schema={testSchema}
-			/>
-		);
+		render(<TestForm defaultValues={{ name: "John" }} schema={testSchema} />);
 		expect(screen.getByText("Test Form")).toBeDefined();
 		expect(screen.getByText("A test form")).toBeDefined();
 		const input = screen.getByTestId("auto-input") as HTMLInputElement;
@@ -49,13 +47,7 @@ describe("AutoForm", () => {
 	});
 
 	it("renders submit button when no children", () => {
-		render(
-			<AutoForm
-				adapter={mockAdapter}
-				registry={mockRegistry}
-				schema={testSchema}
-			/>
-		);
+		render(<TestForm schema={testSchema} />);
 		expect(screen.getByText("Envoyer")).toBeDefined();
 	});
 
@@ -80,14 +72,13 @@ describe("AutoForm", () => {
 			),
 		};
 
-		render(
-			<AutoForm
-				adapter={mockAdapter}
-				layout={customLayout}
-				registry={mockRegistry}
-				schema={testSchema}
-			/>
-		);
+		const CustomForm = createAutoForm({
+			adapter: mockAdapter,
+			layout: customLayout,
+			registry: mockRegistry,
+		});
+
+		render(<CustomForm schema={testSchema} />);
 
 		expect(screen.getByTestId("custom-fieldset")).toBeDefined();
 		expect(screen.getByTestId("custom-legend")).toBeDefined();
@@ -96,7 +87,7 @@ describe("AutoForm", () => {
 		expect(screen.getByTestId("custom-submit")).toBeDefined();
 	});
 
-	it("passes resolveSchema and traverseSchema to AutoFormBuilder", () => {
+	it("passes resolveSchema to AutoFormBuilder", () => {
 		const customResolve = vi.fn(
 			(_raw: unknown): ResolvedSchema => ({
 				definitions: {},
@@ -110,14 +101,13 @@ describe("AutoForm", () => {
 			})
 		);
 
-		render(
-			<AutoForm
-				adapter={mockAdapter}
-				registry={mockRegistry}
-				resolveSchema={customResolve}
-				schema={testSchema}
-			/>
-		);
+		const ResolveForm = createAutoForm({
+			adapter: mockAdapter,
+			registry: mockRegistry,
+			resolveSchema: customResolve,
+		});
+
+		render(<ResolveForm schema={testSchema} />);
 
 		expect(customResolve).toHaveBeenCalledTimes(1);
 	});
@@ -125,11 +115,9 @@ describe("AutoForm", () => {
 	it("calls handleSubmit on form submission", async () => {
 		const onSubmit = vi.fn();
 		const { container } = render(
-			<AutoForm
-				adapter={mockAdapter}
+			<TestForm
 				defaultValues={{ name: "John" }}
 				onSubmit={onSubmit}
-				registry={mockRegistry}
 				schema={testSchema}
 			/>
 		);
