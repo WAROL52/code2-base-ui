@@ -39,29 +39,45 @@ function resolveRef(
 	return name ? (definitions[name] ?? null) : null;
 }
 
+function resolveRefBlock(
+	schema: JsonSchema,
+	definitions: Record<string, JsonSchema>,
+	resolving: Set<string>
+): { handled: true; result: JsonSchema } | { handled: false } {
+	if (!schema.$ref) {
+		return { handled: false };
+	}
+
+	const ref = schema.$ref;
+
+	if (resolving.has(ref)) {
+		return {
+			handled: true,
+			result: { type: "object", title: `[Circular: ${ref}]` },
+		};
+	}
+
+	const resolved = resolveRef(ref, definitions);
+	if (resolved) {
+		resolving.add(ref);
+		const result = resolveRefs(deepClone(resolved), definitions, resolving);
+		resolving.delete(ref);
+
+		const { $ref: _, ...rest } = schema;
+		return { handled: true, result: { ...result, ...rest } };
+	}
+
+	return { handled: true, result: schema };
+}
+
 function resolveRefs(
 	schema: JsonSchema,
 	definitions: Record<string, JsonSchema>,
 	resolving: Set<string> = new Set()
 ): JsonSchema {
-	if (schema.$ref) {
-		const ref = schema.$ref;
-
-		if (resolving.has(ref)) {
-			return { type: "object", title: `[Circular: ${ref}]` };
-		}
-
-		const resolved = resolveRef(ref, definitions);
-		if (resolved) {
-			resolving.add(ref);
-			const result = resolveRefs(deepClone(resolved), definitions, resolving);
-			resolving.delete(ref);
-
-			const { $ref: _, ...rest } = schema;
-			return { ...result, ...rest };
-		}
-
-		return schema;
+	const refResult = resolveRefBlock(schema, definitions, resolving);
+	if (refResult.handled) {
+		return refResult.result;
 	}
 
 	const resolved: JsonSchema = { ...schema };

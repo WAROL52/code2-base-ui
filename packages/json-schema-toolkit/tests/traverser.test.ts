@@ -29,10 +29,10 @@ describe("traverseSchema — object", () => {
 			},
 		});
 		const fields = traverseSchema(resolved);
-		const name = fields.find((f) => f.path === "name")!;
-		const age = fields.find((f) => f.path === "age")!;
-		expect(name.required).toBe(true);
-		expect(age.required).toBe(false);
+		const name = fields.find((f) => f.path === "name");
+		const age = fields.find((f) => f.path === "age");
+		expect(name?.required).toBe(true);
+		expect(age?.required).toBe(false);
 	});
 });
 
@@ -54,21 +54,21 @@ describe("traverseSchema — union / oneOf", () => {
 		});
 		const fields = traverseSchema(resolved);
 		expect(fields).toHaveLength(1);
-		const union = fields[0]!;
-		expect(union.kind).toBe("union");
-		expect(union.variants).toBeDefined();
-		expect(union.variants).toHaveLength(2);
+		const union = fields[0];
+		expect(union?.kind).toBe("union");
+		expect(union?.variants).toBeDefined();
+		expect(union?.variants).toHaveLength(2);
 
-		const v0 = union.variants![0]!;
-		expect(v0.label).toBe("Human");
-		expect(v0.children).toHaveLength(1);
-		expect(v0.children[0]?.path).toBe("name");
-		expect(v0.meta.kind).toBe("object");
+		const v0 = union?.variants?.[0];
+		expect(v0?.label).toBe("Human");
+		expect(v0?.children).toHaveLength(1);
+		expect(v0?.children[0]?.path).toBe("name");
+		expect(v0?.meta.kind).toBe("object");
 
-		const v1 = union.variants![1]!;
-		expect(v1.label).toBe("Robot");
-		expect(v1.children).toHaveLength(1);
-		expect(v1.children[0]?.path).toBe("model");
+		const v1 = union?.variants?.[1];
+		expect(v1?.label).toBe("Robot");
+		expect(v1?.children).toHaveLength(1);
+		expect(v1?.children[0]?.path).toBe("model");
 	});
 
 	it("BUG FIX: oneOf with scalar variants keeps variant meta", () => {
@@ -80,21 +80,21 @@ describe("traverseSchema — union / oneOf", () => {
 		});
 		const fields = traverseSchema(resolved);
 		expect(fields).toHaveLength(1);
-		const union = fields[0]!;
-		expect(union.kind).toBe("union");
-		expect(union.variants).toHaveLength(2);
+		const union = fields[0];
+		expect(union?.kind).toBe("union");
+		expect(union?.variants).toHaveLength(2);
 
-		const v0 = union.variants![0]!;
-		expect(v0.label).toBe("Text");
-		expect(v0.meta.kind).toBe("primitive");
-		expect(v0.meta.type).toBe("string");
-		expect(v0.children).toEqual([]);
+		const v0 = union?.variants?.[0];
+		expect(v0?.label).toBe("Text");
+		expect(v0?.meta.kind).toBe("primitive");
+		expect(v0?.meta.type).toBe("string");
+		expect(v0?.children).toEqual([]);
 
-		const v1 = union.variants![1]!;
-		expect(v1.label).toBe("Number");
-		expect(v1.meta.kind).toBe("primitive");
-		expect(v1.meta.type).toBe("number");
-		expect(v1.children).toEqual([]);
+		const v1 = union?.variants?.[1];
+		expect(v1?.label).toBe("Number");
+		expect(v1?.meta.kind).toBe("primitive");
+		expect(v1?.meta.type).toBe("number");
+		expect(v1?.children).toEqual([]);
 	});
 
 	it("BUG FIX: oneOf with mixed object + scalar variants", () => {
@@ -110,22 +110,22 @@ describe("traverseSchema — union / oneOf", () => {
 		});
 		const fields = traverseSchema(resolved);
 		expect(fields).toHaveLength(1);
-		const union = fields[0]!;
-		expect(union.kind).toBe("union");
-		expect(union.variants).toHaveLength(2);
+		const union = fields[0];
+		expect(union?.kind).toBe("union");
+		expect(union?.variants).toHaveLength(2);
 
 		// Object variant: has children
-		const objectVar = union.variants![0]!;
-		expect(objectVar.label).toBe("Address");
-		expect(objectVar.meta.kind).toBe("object");
-		expect(objectVar.children).toHaveLength(1);
+		const objectVar = union?.variants?.[0];
+		expect(objectVar?.label).toBe("Address");
+		expect(objectVar?.meta.kind).toBe("object");
+		expect(objectVar?.children).toHaveLength(1);
 
 		// Scalar variant: has meta but no children
-		const scalarVar = union.variants![1]!;
-		expect(scalarVar.label).toBe("Note");
-		expect(scalarVar.meta.kind).toBe("primitive");
-		expect(scalarVar.meta.type).toBe("string");
-		expect(scalarVar.children).toEqual([]);
+		const scalarVar = union?.variants?.[1];
+		expect(scalarVar?.label).toBe("Note");
+		expect(scalarVar?.meta.kind).toBe("primitive");
+		expect(scalarVar?.meta.type).toBe("string");
+		expect(scalarVar?.children).toEqual([]);
 	});
 
 	it("detects discriminant key for oneOf", () => {
@@ -229,10 +229,10 @@ describe("traverseSchema — object nesting", () => {
 		});
 		const fields = traverseSchema(resolved);
 		expect(fields).toHaveLength(1);
-		const address = fields[0]!;
-		expect(address.kind).toBe("object");
-		expect(address.children).toHaveLength(2);
-		expect(address.children?.[0]?.path).toBe("address.street");
+		const address = fields[0];
+		expect(address?.kind).toBe("object");
+		expect(address?.children).toHaveLength(2);
+		expect(address?.children?.[0]?.path).toBe("address.street");
 	});
 
 	it("sorts children by uiOrder", () => {

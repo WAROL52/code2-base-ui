@@ -1,5 +1,46 @@
 import type { JsonSchema, JsonSchemaType, ValidationResult } from "../types";
 
+function checkRequiredFields(
+	schema: JsonSchema,
+	dataObj: Record<string, unknown>
+): ValidationResult | null {
+	if (!Array.isArray(schema.required)) {
+		return null;
+	}
+	for (const requiredField of schema.required) {
+		if (!(requiredField in dataObj)) {
+			return {
+				success: false,
+				errors: [{ path: requiredField, message: "Missing required field" }],
+			};
+		}
+	}
+	return null;
+}
+
+function validatePropType(
+	_key: string,
+	value: unknown,
+	type: JsonSchemaType | JsonSchemaType[] | undefined
+): string | null {
+	if (type === "string" && typeof value !== "string") {
+		return `Expected string, got ${typeof value}`;
+	}
+	if (type === "number" && typeof value !== "number") {
+		return `Expected number, got ${typeof value}`;
+	}
+	if (type === "boolean" && typeof value !== "boolean") {
+		return `Expected boolean, got ${typeof value}`;
+	}
+	if (type === "object" && typeof value !== "object") {
+		return `Expected object, got ${typeof value}`;
+	}
+	if (Array.isArray(type) && !type.includes(typeof value as JsonSchemaType)) {
+		return `Expected one of ${type.join(", ")}, got ${typeof value}`;
+	}
+	return null;
+}
+
 /**
  * Validates data against a raw JSON Schema.
  *
@@ -17,17 +58,9 @@ export function validateSchema(
 	try {
 		const dataObj = data as Record<string, unknown>;
 
-		if (Array.isArray(schema.required)) {
-			for (const requiredField of schema.required) {
-				if (!(dataObj && requiredField in dataObj)) {
-					return {
-						success: false,
-						errors: [
-							{ path: requiredField, message: "Missing required field" },
-						],
-					};
-				}
-			}
+		const requiredResult = checkRequiredFields(schema, dataObj);
+		if (requiredResult) {
+			return requiredResult;
 		}
 
 		const properties = schema.properties || {};
@@ -41,37 +74,9 @@ export function validateSchema(
 				typeof propSchema === "object"
 			) {
 				const value = dataObj[key];
-				const type = propSchema.type;
-
-				if (type === "string" && typeof value !== "string") {
-					errors.push({
-						path: key,
-						message: "Expected string, got " + typeof value,
-					});
-				} else if (type === "number" && typeof value !== "number") {
-					errors.push({
-						path: key,
-						message: "Expected number, got " + typeof value,
-					});
-				} else if (type === "boolean" && typeof value !== "boolean") {
-					errors.push({
-						path: key,
-						message: "Expected boolean, got " + typeof value,
-					});
-				} else if (type === "object" && typeof value !== "object") {
-					errors.push({
-						path: key,
-						message: "Expected object, got " + typeof value,
-					});
-				} else if (
-					Array.isArray(type) &&
-					!type.includes(typeof value as JsonSchemaType)
-				) {
-					errors.push({
-						path: key,
-						message:
-							"Expected one of " + type.join(", ") + ", got " + typeof value,
-					});
+				const error = validatePropType(key, value, propSchema.type);
+				if (error) {
+					errors.push({ path: key, message: error });
 				}
 			}
 		}

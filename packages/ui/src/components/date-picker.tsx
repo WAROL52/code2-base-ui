@@ -11,7 +11,7 @@ import {
 import { cn } from "@code2-base-ui/ui/lib/utils";
 import { format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
-import * as React from "react";
+import { useState } from "react";
 import type { DateRange } from "react-day-picker";
 
 function DatePicker({
@@ -25,7 +25,7 @@ function DatePicker({
 	placeholder?: string;
 	className?: string;
 }) {
-	const [open, setOpen] = React.useState(false);
+	const [open, setOpen] = useState(false);
 
 	return (
 		<Popover onOpenChange={setOpen} open={open}>
@@ -65,7 +65,22 @@ function DateRangePicker({
 	onSelect?: (range: DateRange | undefined) => void;
 	className?: string;
 }) {
-	const [open, setOpen] = React.useState(false);
+	const [open, setOpen] = useState(false);
+
+	const rangeLabel = () => {
+		if (!dateRange?.from) {
+			return <span>Pick a date range</span>;
+		}
+		if (!dateRange.to) {
+			return format(dateRange.from, "LLL dd, y");
+		}
+		return (
+			<>
+				{format(dateRange.from, "LLL dd, y")} -{" "}
+				{format(dateRange.to, "LLL dd, y")}
+			</>
+		);
+	};
 
 	return (
 		<Popover onOpenChange={setOpen} open={open}>
@@ -79,18 +94,7 @@ function DateRangePicker({
 					variant="outline"
 				>
 					<CalendarIcon />
-					{dateRange?.from ? (
-						dateRange.to ? (
-							<>
-								{format(dateRange.from, "LLL dd, y")} -{" "}
-								{format(dateRange.to, "LLL dd, y")}
-							</>
-						) : (
-							format(dateRange.from, "LLL dd, y")
-						)
-					) : (
-						<span>Pick a date range</span>
-					)}
+					{rangeLabel()}
 				</Button>
 			</PopoverTrigger>
 			<PopoverContent className="w-auto p-0">

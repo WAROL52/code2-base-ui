@@ -48,7 +48,7 @@ export class FieldRegistry {
 						if (!this.db.has(key)) {
 							this.db.set(key, []);
 						}
-						this.db.get(key)!.push({ selector, component, priority });
+						this.db.get(key)?.push({ selector, component, priority });
 					}
 				}
 			}
@@ -109,7 +109,10 @@ export class FieldRegistry {
 		for (const key of exactKeys) {
 			const entries = this.db.get(key);
 			if (entries && entries.length > 0) {
-				return entries[0]!.component;
+				const entry = entries[0];
+				if (entry) {
+					return entry.component;
+				}
 			}
 		}
 
@@ -124,7 +127,10 @@ export class FieldRegistry {
 			for (const key of fallbackKeys) {
 				const entries = this.db.get(key);
 				if (entries && entries.length > 0) {
-					return entries[0]!.component;
+					const entry = entries[0];
+					if (entry) {
+						return entry.component;
+					}
 				}
 			}
 		}

@@ -135,7 +135,7 @@ export interface RegistrySelector {
 	widget?: string;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: Dynamic field props
 export type FieldComponent<TProps = Record<string, any>> =
 	React.ComponentType<TProps>;
 

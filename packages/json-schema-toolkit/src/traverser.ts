@@ -153,6 +153,25 @@ export function getFieldMeta(
 	return findByPath(fields, path);
 }
 
+function findInVariants(
+	variants: FieldMeta["variants"],
+	path: string
+): FieldMeta | null {
+	if (!variants) {
+		return null;
+	}
+	for (const variant of variants) {
+		const found = findByPath(variant.children, path);
+		if (found) {
+			return found;
+		}
+		if (variant.meta.path === path) {
+			return variant.meta;
+		}
+	}
+	return null;
+}
+
 function findByPath(fields: FieldMeta[], path: string): FieldMeta | null {
 	for (const field of fields) {
 		if (field.path === path) {
@@ -166,16 +185,9 @@ function findByPath(fields: FieldMeta[], path: string): FieldMeta | null {
 			}
 		}
 
-		if (field.variants) {
-			for (const variant of field.variants) {
-				const foundInChildren = findByPath(variant.children, path);
-				if (foundInChildren) {
-					return foundInChildren;
-				}
-				if (variant.meta.path === path) {
-					return variant.meta;
-				}
-			}
+		const foundInVariants = findInVariants(field.variants, path);
+		if (foundInVariants) {
+			return foundInVariants;
 		}
 	}
 	return null;

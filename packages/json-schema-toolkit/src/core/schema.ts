@@ -61,10 +61,10 @@ function toJsonSchema(schema: TStandardSchema): JsonSchema {
 	return rawJson as JsonSchema;
 }
 
-type ValidateResult = {
-	value?: unknown;
+interface ValidateResult {
 	issues?: Array<{ message: string; path: Array<{ key: string } | string> }>;
-};
+	value?: unknown;
+}
 
 function validateSchema(
 	schema: TStandardSchema,

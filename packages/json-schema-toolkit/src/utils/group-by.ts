@@ -24,7 +24,7 @@ export function groupBy(
 		if (!groups[key]) {
 			groups[key] = [];
 		}
-		groups[key]!.push(field);
+		groups[key]?.push(field);
 	}
 
 	return groups;
