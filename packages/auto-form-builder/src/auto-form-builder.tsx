@@ -10,6 +10,8 @@ import {
 import { useMemo, useRef } from "react";
 import type { FormAdapter, FormAPI } from "./adapters/types";
 
+const PATH_SEPARATOR_RE = /[.[\]]+/;
+
 export interface AutoFormBuilderChildrenProps {
 	fields: FieldMeta[];
 	form: FormAPI;
@@ -50,9 +52,26 @@ export function AutoFormBuilder({
 		() => traverseRef.current(resolvedSchema),
 		[resolvedSchema]
 	);
+	const completeDefaults = useMemo(() => {
+		const result: Record<string, unknown> = { ...defaultValues };
+		for (const field of fields) {
+			if (!field.path) {
+				continue;
+			}
+			const parts = field.path.split(PATH_SEPARATOR_RE).filter(Boolean);
+			if (parts.length !== 1) {
+				continue;
+			}
+			const key = parts[0];
+			if (key && !(key in result)) {
+				result[key] = field.defaultValue ?? "";
+			}
+		}
+		return result;
+	}, [defaultValues, fields]);
 
 	return (
-		<adapter.FormProvider defaultValues={defaultValues} onSubmit={onSubmit}>
+		<adapter.FormProvider defaultValues={completeDefaults} onSubmit={onSubmit}>
 			{(formAPI) => children({ form: formAPI, fields, resolvedSchema })}
 		</adapter.FormProvider>
 	);
