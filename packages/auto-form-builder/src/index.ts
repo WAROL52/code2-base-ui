@@ -14,6 +14,10 @@ export type {
 	CreatedAutoFormProps,
 } from "./create-auto-form";
 export { createAutoForm } from "./create-auto-form";
-export { createShadcnRegistry } from "./fields";
+export {
+	createShadcnRegistry,
+	ShadcnDateField,
+	ShadcnPasswordField,
+} from "./fields";
 export { shadcnLayout } from "./layout/shadcn";
 export type { FormLayout } from "./layout/types";

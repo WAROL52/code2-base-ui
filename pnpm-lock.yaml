@@ -206,9 +206,15 @@ importers:
       '@code2-base-ui/api':
         specifier: workspace:*
         version: link:../../packages/api
+      '@code2-base-ui/auto-form-builder':
+        specifier: workspace:*
+        version: link:../../packages/auto-form-builder
       '@code2-base-ui/env':
         specifier: workspace:*
         version: link:../../packages/env
+      '@code2-base-ui/json-schema-toolkit':
+        specifier: workspace:*
+        version: link:../../packages/json-schema-toolkit
       '@code2-base-ui/ui':
         specifier: workspace:*
         version: link:../../packages/ui
@@ -331,6 +337,9 @@ importers:
       '@code2-base-ui/ui':
         specifier: workspace:*
         version: link:../ui
+      lucide-react:
+        specifier: 'catalog:'
+        version: 0.546.0(react@19.2.7)
       react:
         specifier: ^19.2.6
         version: 19.2.7

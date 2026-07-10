@@ -2,8 +2,10 @@ import { FieldRegistry } from "@code2-base-ui/json-schema-toolkit";
 
 import {
 	ShadcnBooleanField,
+	ShadcnDateField,
 	ShadcnEnumField,
 	ShadcnNumberField,
+	ShadcnPasswordField,
 	ShadcnSwitchField,
 	ShadcnTextareaField,
 	ShadcnTextField,
@@ -12,8 +14,10 @@ import {
 export type { FieldComponentProps } from "./field-components";
 export {
 	ShadcnBooleanField,
+	ShadcnDateField,
 	ShadcnEnumField,
 	ShadcnNumberField,
+	ShadcnPasswordField,
 	ShadcnSwitchField,
 	ShadcnTextareaField,
 	ShadcnTextField,
@@ -33,6 +37,12 @@ export function createShadcnRegistry(): FieldRegistry {
 		ShadcnSwitchField,
 		10
 	);
+	registry.register(
+		{ type: "string", widget: "password" },
+		ShadcnPasswordField,
+		10
+	);
+	registry.register({ type: "string", format: "date" }, ShadcnDateField, 10);
 	registry.register({ type: "string", kind: "primitive" }, ShadcnTextField, 0);
 	registry.register({ type: "number" }, ShadcnNumberField, 0);
 	registry.register({ type: "integer" }, ShadcnNumberField, 0);

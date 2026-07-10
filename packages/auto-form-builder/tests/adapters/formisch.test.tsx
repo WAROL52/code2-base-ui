@@ -1,7 +1,6 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { formischAdapter } from "../../src/adapters/formisch";
-import type { FormAPI } from "../../src/adapters/types";
 
 describe("formischAdapter", () => {
 	it("has name 'formisch'", () => {
@@ -9,32 +8,26 @@ describe("formischAdapter", () => {
 	});
 
 	it("FormProvider provides formAPI to children", () => {
-		let capturedForm: FormAPI | null = null;
 		render(
 			<formischAdapter.FormProvider defaultValues={{ name: "" }}>
 				{(formAPI) => {
-					capturedForm = formAPI;
+					expect(typeof formAPI.handleSubmit).toBe("function");
+					expect(typeof formAPI.reset).toBe("function");
 					return <div data-testid="form">{JSON.stringify(formAPI.values)}</div>;
 				}}
 			</formischAdapter.FormProvider>
 		);
-		expect(capturedForm).not.toBeNull();
-		const form = capturedForm as unknown as FormAPI;
-		expect(typeof form.handleSubmit).toBe("function");
-		expect(typeof form.reset).toBe("function");
 	});
 
 	it("isSubmitting is initially false", () => {
-		let capturedForm: FormAPI | null = null;
 		render(
 			<formischAdapter.FormProvider defaultValues={{ name: "" }}>
 				{(formAPI) => {
-					capturedForm = formAPI;
+					expect(formAPI.isSubmitting).toBe(false);
 					return null;
 				}}
 			</formischAdapter.FormProvider>
 		);
-		expect((capturedForm as unknown as FormAPI).isSubmitting).toBe(false);
 	});
 
 	it("handleSubmit calls onSubmit with form values", async () => {

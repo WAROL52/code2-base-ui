@@ -1,7 +1,6 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { tanstackAdapter } from "../../src/adapters/tanstack";
-import type { FormAPI } from "../../src/adapters/types";
 
 describe("tanstackAdapter", () => {
 	it("has name 'tanstack'", () => {
@@ -9,20 +8,16 @@ describe("tanstackAdapter", () => {
 	});
 
 	it("FormProvider provides formAPI to children", () => {
-		let capturedForm: FormAPI | null = null;
 		render(
 			<tanstackAdapter.FormProvider defaultValues={{ name: "" }}>
 				{(formAPI) => {
-					capturedForm = formAPI;
+					expect(typeof formAPI.handleSubmit).toBe("function");
+					expect(typeof formAPI.reset).toBe("function");
+					expect(formAPI.isSubmitting).toBe(false);
 					return <div data-testid="form">{JSON.stringify(formAPI.values)}</div>;
 				}}
 			</tanstackAdapter.FormProvider>
 		);
-		expect(capturedForm).not.toBeNull();
-		const form = capturedForm as unknown as FormAPI;
-		expect(typeof form.handleSubmit).toBe("function");
-		expect(typeof form.reset).toBe("function");
-		expect(form.isSubmitting).toBe(false);
 	});
 
 	it("handleSubmit calls tanstack form.handleSubmit", async () => {

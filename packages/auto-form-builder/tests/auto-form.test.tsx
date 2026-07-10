@@ -1,7 +1,6 @@
-import type {
-	FieldMeta,
+import {
 	FieldRegistry,
-	ResolvedSchema,
+	type ResolvedSchema,
 } from "@code2-base-ui/json-schema-toolkit";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
@@ -18,23 +17,21 @@ const testSchema: Record<string, unknown> = {
 	},
 };
 
-const mockRegistry = {
-	resolve: vi
-		.fn<
-			(fieldMeta: FieldMeta) => React.ComponentType<Record<string, unknown>>
-		>()
-		.mockReturnValue(({ value, onChange }: Record<string, unknown>) => (
+const registry = new FieldRegistry();
+vi.spyOn(registry, "resolve").mockImplementation(
+	(_field) =>
+		(({ value, onChange }: Record<string, unknown>) => (
 			<input
 				data-testid="auto-input"
 				onChange={(e) => (onChange as (v: string) => void)(e.target.value)}
 				value={(value as string) ?? ""}
 			/>
-		)),
-} as unknown as FieldRegistry;
+		)) as React.ComponentType<Record<string, unknown>>
+);
 
 const TestForm = createAutoForm({
 	adapter: mockAdapter,
-	registry: mockRegistry,
+	registry,
 });
 
 describe("createAutoForm", () => {
@@ -75,7 +72,7 @@ describe("createAutoForm", () => {
 		const CustomForm = createAutoForm({
 			adapter: mockAdapter,
 			layout: customLayout,
-			registry: mockRegistry,
+			registry,
 		});
 
 		render(<CustomForm schema={testSchema} />);
@@ -103,7 +100,7 @@ describe("createAutoForm", () => {
 
 		const ResolveForm = createAutoForm({
 			adapter: mockAdapter,
-			registry: mockRegistry,
+			registry,
 			resolveSchema: customResolve,
 		});
 

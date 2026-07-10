@@ -12,7 +12,9 @@
     "@ai-sdk/google": "^3.0.1",
     "@ai-sdk/react": "^3.0.3",
     "@code2-base-ui/api": "workspace:*",
+    "@code2-base-ui/auto-form-builder": "workspace:*",
     "@code2-base-ui/env": "workspace:*",
+    "@code2-base-ui/json-schema-toolkit": "workspace:*",
     "@code2-base-ui/ui": "workspace:*",
 
     "@orpc/client": "catalog:",

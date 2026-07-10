@@ -1,7 +1,6 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { rhfAdapter } from "../../src/adapters/rhf";
-import type { FormAPI } from "../../src/adapters/types";
 
 describe("rhfAdapter", () => {
 	it("has name 'rhf'", () => {
@@ -9,20 +8,16 @@ describe("rhfAdapter", () => {
 	});
 
 	it("FormProvider provides formAPI to children", () => {
-		let capturedForm: FormAPI | null = null;
 		render(
 			<rhfAdapter.FormProvider defaultValues={{ name: "" }}>
 				{(formAPI) => {
-					capturedForm = formAPI;
+					expect(typeof formAPI.handleSubmit).toBe("function");
+					expect(typeof formAPI.reset).toBe("function");
+					expect(formAPI.isSubmitting).toBe(false);
 					return <div data-testid="form">{JSON.stringify(formAPI.values)}</div>;
 				}}
 			</rhfAdapter.FormProvider>
 		);
-		expect(capturedForm).not.toBeNull();
-		const form = capturedForm as unknown as FormAPI;
-		expect(typeof form.handleSubmit).toBe("function");
-		expect(typeof form.reset).toBe("function");
-		expect(form.isSubmitting).toBe(false);
 	});
 
 	it("handleSubmit calls onSubmit with form values", async () => {

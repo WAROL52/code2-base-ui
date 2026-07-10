@@ -6,7 +6,6 @@ import type {
 	FormAdapter,
 	FormAPI,
 } from "../../src/adapters/types";
-import { toErrorString } from "../../src/adapters/types";
 
 describe("FormAdapter types", () => {
 	it("module can be loaded at runtime", async () => {
@@ -124,23 +123,6 @@ describe("FormAPI runtime behavior", () => {
 		expect(typeof form.appendFieldValue).toBe("function");
 		expect(typeof form.removeFieldValue).toBe("function");
 		expect(form.isSubmitting).toBe(false);
-	});
-});
-
-describe("toErrorString", () => {
-	it("returns the message from a structured FieldError", () => {
-		const result = toErrorString({ message: "Invalid email", type: "format" });
-		expect(result).toBe("Invalid email");
-	});
-
-	it("returns undefined when error is undefined", () => {
-		const result = toErrorString(undefined);
-		expect(result).toBeUndefined();
-	});
-
-	it("returns the string when error is a string", () => {
-		const result = toErrorString("Required");
-		expect(result).toBe("Required");
 	});
 });
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, type UseFormReturn, useForm } from "react-hook-form";
 import type {
 	FieldProps,
 	FormAdapter,
@@ -9,18 +9,7 @@ import type {
 	FormProviderProps,
 } from "./types";
 
-interface RHFContextValue {
-	control: object;
-	formState: { isSubmitting: boolean };
-	getValues: (name?: string) => unknown;
-	handleSubmit: (
-		onValid: (data: unknown) => void
-	) => (e?: React.BaseSyntheticEvent) => void;
-	reset: (values?: Record<string, unknown>) => void;
-	setValue: (name: string, value: unknown) => void;
-}
-
-const RHFContext = createContext<RHFContextValue | null>(null);
+const RHFContext = createContext<UseFormReturn | null>(null);
 
 export const rhfAdapter: FormAdapter = {
 	name: "rhf",
@@ -55,7 +44,7 @@ export const rhfAdapter: FormAdapter = {
 		};
 
 		return (
-			<RHFContext.Provider value={form as unknown as RHFContextValue}>
+			<RHFContext.Provider value={form}>
 				{children(formAPI)}
 			</RHFContext.Provider>
 		);
@@ -69,7 +58,7 @@ export const rhfAdapter: FormAdapter = {
 
 		return (
 			<Controller
-				control={ctrl.control as never}
+				control={ctrl.control}
 				name={name}
 				render={({ field, fieldState }) =>
 					children({

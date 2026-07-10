@@ -1,5 +1,5 @@
-import type {
-	FieldMeta,
+import {
+	type FieldMeta,
 	FieldRegistry,
 } from "@code2-base-ui/json-schema-toolkit";
 import { fireEvent, render, screen } from "@testing-library/react";
@@ -30,6 +30,20 @@ const mockResolve = vi
 		)
 	);
 
+const mockForm: FormAPI = {
+	values: {},
+	isSubmitting: false,
+	handleSubmit: vi.fn(),
+	reset: vi.fn(),
+	appendFieldValue: vi.fn(),
+	removeFieldValue: vi.fn(),
+};
+
+const registry = new FieldRegistry();
+vi.spyOn(registry, "resolve").mockImplementation(
+	(field) => mockResolve(field) as React.ComponentType<Record<string, unknown>>
+);
+
 const textFieldMeta: FieldMeta = {
 	path: "name",
 	type: "string",
@@ -46,7 +60,8 @@ describe("AutoFormField", () => {
 						<AutoFormField
 							adapter={mockAdapter}
 							fieldMeta={textFieldMeta}
-							registry={{ resolve: mockResolve } as unknown as FieldRegistry}
+							form={mockForm}
+							registry={registry}
 						/>
 					)}
 				</mockAdapter.FormProvider>
@@ -70,7 +85,8 @@ describe("AutoFormField", () => {
 						<AutoFormField
 							adapter={mockAdapter}
 							fieldMeta={hiddenField}
-							registry={{ resolve: mockResolve } as unknown as FieldRegistry}
+							form={mockForm}
+							registry={registry}
 						/>
 					)}
 				</mockAdapter.FormProvider>
@@ -91,7 +107,8 @@ describe("AutoFormField", () => {
 						<AutoFormField
 							adapter={mockAdapter}
 							fieldMeta={readonlyField}
-							registry={{ resolve: mockResolve } as unknown as FieldRegistry}
+							form={mockForm}
+							registry={registry}
 						/>
 					)}
 				</mockAdapter.FormProvider>
@@ -149,7 +166,7 @@ describe("AutoFormField", () => {
 					adapter={mockAdapter}
 					fieldMeta={arrayField}
 					form={formWithSpies}
-					registry={{ resolve: mockResolve } as unknown as FieldRegistry}
+					registry={registry}
 				/>
 			</FormLayoutCtx.Provider>
 		);
@@ -196,7 +213,8 @@ describe("AutoFormField", () => {
 						<AutoFormField
 							adapter={mockAdapter}
 							fieldMeta={objectFieldMeta}
-							registry={{ resolve: mockResolve } as unknown as FieldRegistry}
+							form={mockForm}
+							registry={registry}
 						/>
 					)}
 				</mockAdapter.FormProvider>
@@ -239,7 +257,7 @@ describe("AutoFormField", () => {
 							adapter={mockAdapter}
 							fieldMeta={arrayField}
 							form={formAPI}
-							registry={{ resolve: mockResolve } as unknown as FieldRegistry}
+							registry={registry}
 						/>
 					)}
 				</mockAdapter.FormProvider>
@@ -288,7 +306,7 @@ describe("AutoFormField", () => {
 						reset: vi.fn(),
 						values: { items: [] },
 					}}
-					registry={{ resolve: mockResolve } as unknown as FieldRegistry}
+					registry={registry}
 				/>
 			</FormLayoutCtx.Provider>
 		);
@@ -332,7 +350,7 @@ describe("AutoFormField", () => {
 						reset: vi.fn(),
 						values: { nums: [] },
 					}}
-					registry={{ resolve: mockResolve } as unknown as FieldRegistry}
+					registry={registry}
 				/>
 			</FormLayoutCtx.Provider>
 		);
@@ -376,7 +394,7 @@ describe("AutoFormField", () => {
 						reset: vi.fn(),
 						values: { flags: [] },
 					}}
-					registry={{ resolve: mockResolve } as unknown as FieldRegistry}
+					registry={registry}
 				/>
 			</FormLayoutCtx.Provider>
 		);
@@ -420,7 +438,7 @@ describe("AutoFormField", () => {
 						reset: vi.fn(),
 						values: { objs: [] },
 					}}
-					registry={{ resolve: mockResolve } as unknown as FieldRegistry}
+					registry={registry}
 				/>
 			</FormLayoutCtx.Provider>
 		);
@@ -464,7 +482,7 @@ describe("AutoFormField", () => {
 						reset: vi.fn(),
 						values: { arrs: [] },
 					}}
-					registry={{ resolve: mockResolve } as unknown as FieldRegistry}
+					registry={registry}
 				/>
 			</FormLayoutCtx.Provider>
 		);
@@ -507,7 +525,7 @@ describe("AutoFormField", () => {
 							adapter={mockAdapter}
 							fieldMeta={unionField}
 							form={formAPI}
-							registry={{ resolve: mockResolve } as unknown as FieldRegistry}
+							registry={registry}
 						/>
 					)}
 				</mockAdapter.FormProvider>
@@ -516,7 +534,7 @@ describe("AutoFormField", () => {
 		expect(screen.getByText("Email")).toBeTruthy();
 	});
 
-	it("renders array field without form prop", () => {
+	it("renders array field with form prop", () => {
 		const field: FieldMeta = {
 			path: "items",
 			type: "array",
@@ -541,8 +559,8 @@ describe("AutoFormField", () => {
 				<AutoFormField
 					adapter={mockAdapter}
 					fieldMeta={field}
-					// no form prop!
-					registry={{ resolve: mockResolve } as unknown as FieldRegistry}
+					form={mockForm}
+					registry={registry}
 				/>
 			</FormLayoutCtx.Provider>
 		);

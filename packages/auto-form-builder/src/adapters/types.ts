@@ -4,16 +4,6 @@ export type FieldError =
 	| string
 	| { message: string; type?: string; path?: string[] };
 
-export function toErrorString(error?: FieldError): string | undefined {
-	if (!error) {
-		return;
-	}
-	if (typeof error === "string") {
-		return error;
-	}
-	return error.message;
-}
-
 export interface FieldAPI {
 	error?: FieldError;
 	isTouched: boolean;

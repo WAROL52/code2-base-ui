@@ -3,6 +3,7 @@
 import type { FieldMeta } from "@code2-base-ui/json-schema-toolkit";
 
 import { Checkbox } from "@code2-base-ui/ui/components/checkbox";
+import { DatePicker } from "@code2-base-ui/ui/components/date-picker";
 import {
 	Field,
 	FieldContent,
@@ -19,7 +20,9 @@ import {
 } from "@code2-base-ui/ui/components/select";
 import { Switch } from "@code2-base-ui/ui/components/switch";
 import { Textarea } from "@code2-base-ui/ui/components/textarea";
-import { toErrorString } from "../adapters/types";
+import { Eye, EyeOff } from "lucide-react";
+import { useState } from "react";
+import { toErrorString } from "../utils";
 
 export interface FieldComponentProps {
 	className?: string;
@@ -157,6 +160,76 @@ export function ShadcnTextField({
 				placeholder={placeholder}
 				type="text"
 				value={(value as string) ?? ""}
+			/>
+		</FieldWrapper>
+	);
+}
+
+export function ShadcnPasswordField({
+	className,
+	disabled,
+	error,
+	id,
+	label,
+	onChange,
+	placeholder,
+	value,
+}: FieldComponentProps) {
+	const [show, setShow] = useState(false);
+	return (
+		<FieldWrapper
+			className={className}
+			error={error}
+			htmlFor={id}
+			label={label}
+		>
+			<div className="relative">
+				<Input
+					aria-invalid={!!error || undefined}
+					disabled={disabled}
+					id={id}
+					onChange={(e) => onChange?.(e.target.value)}
+					placeholder={placeholder}
+					type={show ? "text" : "password"}
+					value={(value as string) ?? ""}
+				/>
+				<button
+					aria-label={
+						show ? "Cacher le mot de passe" : "Afficher le mot de passe"
+					}
+					className="absolute inset-y-0 right-0 flex items-center px-2 text-muted-foreground"
+					onClick={() => setShow((s) => !s)}
+					tabIndex={-1}
+					type="button"
+				>
+					{show ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+				</button>
+			</div>
+		</FieldWrapper>
+	);
+}
+
+export function ShadcnDateField({
+	className,
+	disabled: _disabled,
+	error,
+	id,
+	label,
+	onChange,
+	placeholder,
+	value,
+}: FieldComponentProps) {
+	return (
+		<FieldWrapper
+			className={className}
+			error={error}
+			htmlFor={id}
+			label={label}
+		>
+			<DatePicker
+				date={value ? new Date(value as string) : undefined}
+				onSelect={(d) => onChange?.(d?.toISOString().split("T")[0] ?? "")}
+				placeholder={placeholder}
 			/>
 		</FieldWrapper>
 	);

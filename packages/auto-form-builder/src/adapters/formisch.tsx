@@ -3,6 +3,7 @@
 import {
 	Form,
 	Field as FormischField,
+	type FormStore,
 	remove as formischRemove,
 	reset as formischReset,
 	submit as formischSubmit,
@@ -34,9 +35,8 @@ import type {
 	FormProviderProps,
 } from "./types";
 
-type FormischStore = Record<string, never>;
 interface FormischCtxValue {
-	form: FormischStore;
+	form: FormStore;
 	setTouched: (name: string) => void;
 	touched: Record<string, boolean>;
 }
@@ -122,9 +122,7 @@ export const formischAdapter: FormAdapter = {
 		};
 
 		return (
-			<FormischCtx.Provider
-				value={{ form: form as unknown as FormischStore, touched, setTouched }}
-			>
+			<FormischCtx.Provider value={{ form, touched, setTouched }}>
 				<Form of={form} onSubmit={(output: unknown) => onSubmit?.(output)}>
 					{children(formAPI)}
 				</Form>
@@ -139,7 +137,7 @@ export const formischAdapter: FormAdapter = {
 		}
 
 		return (
-			<FormischField of={ctx.form as never} path={toPath(name) as never}>
+			<FormischField of={ctx.form} path={toPath(name) as never}>
 				{(field) =>
 					children({
 						value: field.input,

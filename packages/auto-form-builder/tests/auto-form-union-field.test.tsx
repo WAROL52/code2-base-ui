@@ -1,16 +1,25 @@
-import type {
-	FieldMeta,
+import {
+	type FieldMeta,
 	FieldRegistry,
 } from "@code2-base-ui/json-schema-toolkit";
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
+import type { FormAPI } from "../src/adapters/types";
 import { AutoFormField } from "../src/auto-form-field";
 import { createAutoForm } from "../src/create-auto-form";
-import { UnionFieldHandler } from "../src/handlers/union-handler";
 import type { FormLayout } from "../src/layout";
 import { FormLayoutCtx } from "../src/layout/context";
 import { shadcnLayout } from "../src/layout/shadcn";
 import { mockAdapter } from "./test-utils";
+
+const mockForm: FormAPI = {
+	values: {},
+	isSubmitting: false,
+	handleSubmit: vi.fn(),
+	reset: vi.fn(),
+	appendFieldValue: vi.fn(),
+	removeFieldValue: vi.fn(),
+};
 
 const mockResolve = vi
 	.fn<(fieldMeta: FieldMeta) => React.ComponentType<Record<string, unknown>>>()
@@ -26,6 +35,11 @@ const mockResolve = vi
 			</label>
 		</div>
 	));
+
+const registry = new FieldRegistry();
+vi.spyOn(registry, "resolve").mockImplementation(
+	(field) => mockResolve(field) as React.ComponentType<Record<string, unknown>>
+);
 
 const unionFieldMeta: FieldMeta = {
 	path: "contact",
@@ -65,7 +79,7 @@ const unionFieldMeta: FieldMeta = {
 	],
 };
 
-describe("UnionFieldHandler", () => {
+describe("AutoFormField — union", () => {
 	it("renders CompositionsField with variant options", () => {
 		const onSelectSpy = vi.fn();
 		const captureLayout: FormLayout = {
@@ -87,9 +101,11 @@ describe("UnionFieldHandler", () => {
 			<FormLayoutCtx.Provider value={captureLayout}>
 				<mockAdapter.FormProvider defaultValues={{}}>
 					{(_formAPI) => (
-						<UnionFieldHandler
+						<AutoFormField
+							adapter={mockAdapter}
 							fieldMeta={unionFieldMeta}
-							renderField={vi.fn()}
+							form={mockForm}
+							registry={registry}
 						/>
 					)}
 				</mockAdapter.FormProvider>
@@ -110,9 +126,11 @@ describe("UnionFieldHandler", () => {
 			<FormLayoutCtx.Provider value={shadcnLayout}>
 				<mockAdapter.FormProvider defaultValues={{}}>
 					{(_formAPI) => (
-						<UnionFieldHandler
+						<AutoFormField
+							adapter={mockAdapter}
 							fieldMeta={unionFieldMeta}
-							renderField={(child) => <div key={child.path}>{child.label}</div>}
+							form={mockForm}
+							registry={registry}
 						/>
 					)}
 				</mockAdapter.FormProvider>
@@ -135,9 +153,11 @@ describe("UnionFieldHandler", () => {
 			<FormLayoutCtx.Provider value={shadcnLayout}>
 				<mockAdapter.FormProvider defaultValues={{}}>
 					{(_formAPI) => (
-						<UnionFieldHandler
+						<AutoFormField
+							adapter={mockAdapter}
 							fieldMeta={emptyVariants}
-							renderField={vi.fn()}
+							form={mockForm}
+							registry={registry}
 						/>
 					)}
 				</mockAdapter.FormProvider>
@@ -147,33 +167,7 @@ describe("UnionFieldHandler", () => {
 		expect(container.textContent).toBe("");
 	});
 
-	it("returns null when variants is undefined", () => {
-		const noVariants: FieldMeta = {
-			path: "plain",
-			type: "string",
-			label: "Plain",
-			kind: "primitive",
-		};
-
-		const { container } = render(
-			<FormLayoutCtx.Provider value={shadcnLayout}>
-				<mockAdapter.FormProvider defaultValues={{}}>
-					{(_formAPI) => (
-						<UnionFieldHandler fieldMeta={noVariants} renderField={vi.fn()} />
-					)}
-				</mockAdapter.FormProvider>
-			</FormLayoutCtx.Provider>
-		);
-
-		expect(container.textContent).toBe("");
-	});
-
 	it("renders with default selectedIndex of 0", () => {
-		// NOTE: The clamping branch (auto-form-union-field.tsx:25) is not directly tested here
-		// because selectedIndex is managed as internal state. It would require:
-		// 1. Select variant via onSelect --> internal setSelectedIndex
-		// 2. Change fieldMeta to have fewer variants while preserving component state
-		// This is a defensive branch — safeIndex always clamps to valid range.
 		const layoutWithSpy: FormLayout = {
 			...shadcnLayout,
 			CompositionsField: ({ selectedIndex, options }) => (
@@ -190,7 +184,8 @@ describe("UnionFieldHandler", () => {
 			<FormLayoutCtx.Provider value={layoutWithSpy}>
 				<mockAdapter.FormProvider defaultValues={{}}>
 					{(_formAPI) => (
-						<UnionFieldHandler
+						<AutoFormField
+							adapter={mockAdapter}
 							fieldMeta={{
 								path: "test",
 								type: "object",
@@ -210,15 +205,14 @@ describe("UnionFieldHandler", () => {
 									},
 								],
 							}}
-							renderField={vi.fn()}
+							form={mockForm}
+							registry={registry}
 						/>
 					)}
 				</mockAdapter.FormProvider>
 			</FormLayoutCtx.Provider>
 		);
 
-		// After mount, useEffect resets selectedIndex to 0.
-		// If selectedIndex was somehow > variants.length, it clamps to variants.length - 1.
 		expect(screen.getByTestId("selected").textContent).toBe("0");
 	});
 });
@@ -236,7 +230,8 @@ describe("AutoFormField — unionFieldRenderer seam", () => {
 						<AutoFormField
 							adapter={mockAdapter}
 							fieldMeta={unionFieldMeta}
-							registry={{ resolve: mockResolve } as unknown as FieldRegistry}
+							form={mockForm}
+							registry={registry}
 							unionFieldRenderer={CustomUnion}
 						/>
 					)}
@@ -273,7 +268,8 @@ describe("AutoFormField — unionFieldRenderer seam", () => {
 						<AutoFormField
 							adapter={mockAdapter}
 							fieldMeta={nestedUnion}
-							registry={{ resolve: mockResolve } as unknown as FieldRegistry}
+							form={mockForm}
+							registry={registry}
 							unionFieldRenderer={CustomUnion}
 						/>
 					)}
@@ -318,7 +314,7 @@ describe("createAutoForm — unionFieldRenderer config", () => {
 
 		const TestForm = createAutoForm({
 			adapter: mockAdapter,
-			registry: { resolve: mockResolve } as unknown as FieldRegistry,
+			registry,
 			unionFieldRenderer: CustomUnion,
 		});
 

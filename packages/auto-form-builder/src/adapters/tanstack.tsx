@@ -9,7 +9,7 @@ import type {
 	FormProviderProps,
 } from "./types";
 
-interface TanStackField {
+interface TanStackFieldValue {
 	handleBlur: () => void;
 	handleChange: (val: unknown) => void;
 	state: {
@@ -24,7 +24,7 @@ interface TanStackField {
 interface TanStackFormValue {
 	Field: React.ComponentType<{
 		name: string;
-		children: (field: TanStackField) => React.ReactNode;
+		children: (field: TanStackFieldValue) => React.ReactNode;
 	}>;
 	handleSubmit: () => void;
 	pushFieldValue: (name: string, value: unknown) => void;
@@ -48,21 +48,36 @@ export const tanstackAdapter: FormAdapter = {
 			onSubmit: ({ value }) => onSubmit?.(value),
 		});
 
+		const ctxValue: TanStackFormValue = {
+			Field: form.Field as React.ComponentType<{
+				name: string;
+				children: (field: TanStackFieldValue) => React.ReactNode;
+			}>,
+			state: form.state as {
+				values: Record<string, unknown>;
+				isSubmitting: boolean;
+			},
+			handleSubmit: form.handleSubmit as () => void,
+			reset: form.reset as () => void,
+			pushFieldValue: form.pushFieldValue as (...args: unknown[]) => void,
+			removeFieldValue: form.removeFieldValue as (...args: unknown[]) => void,
+		};
+
 		const formAPI: FormAPI = {
 			get values() {
-				return form.state.values as Record<string, unknown>;
+				return ctxValue.state.values;
 			},
-			isSubmitting: form.state.isSubmitting,
-			handleSubmit: () => form.handleSubmit(),
-			reset: () => form.reset(),
-			appendFieldValue: (name, value) =>
-				(form as unknown as TanStackFormValue).pushFieldValue(name, value),
-			removeFieldValue: (name, index) =>
-				(form as unknown as TanStackFormValue).removeFieldValue(name, index),
+			get isSubmitting() {
+				return ctxValue.state.isSubmitting;
+			},
+			handleSubmit: () => ctxValue.handleSubmit(),
+			reset: () => ctxValue.reset(),
+			appendFieldValue: (name, value) => ctxValue.pushFieldValue(name, value),
+			removeFieldValue: (name, index) => ctxValue.removeFieldValue(name, index),
 		};
 
 		return (
-			<TanStackCtx.Provider value={form as unknown as TanStackFormValue}>
+			<TanStackCtx.Provider value={ctxValue}>
 				{children(formAPI)}
 			</TanStackCtx.Provider>
 		);
