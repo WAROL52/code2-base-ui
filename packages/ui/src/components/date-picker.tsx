@@ -29,7 +29,7 @@ function DatePicker({
 
 	return (
 		<Popover onOpenChange={setOpen} open={open}>
-			<PopoverTrigger render={<div />}>
+			<PopoverTrigger nativeButton={false}>
 				<Button
 					className={cn(
 						"w-[280px] justify-start text-left font-normal data-[empty=true]:text-muted-foreground",
@@ -84,7 +84,7 @@ function DateRangePicker({
 
 	return (
 		<Popover onOpenChange={setOpen} open={open}>
-			<PopoverTrigger render={<div />}>
+			<PopoverTrigger nativeButton={false}>
 				<Button
 					className={cn(
 						"w-[280px] justify-start text-left font-normal data-[empty=true]:text-muted-foreground",
