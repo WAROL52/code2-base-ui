@@ -6,10 +6,15 @@
   "exports": {
     ".": "./src/index.ts",
     "./adapters": "./src/adapters/index.ts",
+    "./adapters/tanstack": "./src/adapters/tanstack.tsx",
+    "./adapters/rhf": "./src/adapters/rhf.tsx",
+    "./adapters/formisch": "./src/adapters/formisch.tsx",
     "./layout": "./src/layout/index.ts",
-    "./fields": "./src/fields/index.ts"
+    "./fields": "./src/fields/index.ts",
+    "./testing": "./src/testing.tsx"
   },
   "scripts": {
+    "test": "vitest run",
     "check-types": "tsc --noEmit",
     "check": "biome check src/ tests/",
     "fix": "biome check --write src/ tests/"
@@ -20,15 +25,35 @@
   },
   "peerDependencies": {
     "react": "^19.2.6",
-    "react-dom": "^19.2.6"
+    "react-dom": "^19.2.6",
+    "@tanstack/react-form": "^1.33.0",
+    "react-hook-form": "^7.80.0"
+  },
+  "peerDependenciesMeta": {
+    "@tanstack/react-form": {
+      "optional": true
+    },
+    "react-hook-form": {
+      "optional": true
+    },
+    "@formisch/react": {
+      "optional": true
+    },
+    "valibot": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@code2-base-ui/config": "workspace:*",
+    "@formisch/react": "catalog:",
+    "@tanstack/react-form": "catalog:",
     "@testing-library/react": "^16.3.2",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "jsdom": "^29.1.1",
+    "react-hook-form": "catalog:",
     "typescript": "catalog:",
+    "valibot": "catalog:",
     "vitest": "^3.1.0"
   }
 }

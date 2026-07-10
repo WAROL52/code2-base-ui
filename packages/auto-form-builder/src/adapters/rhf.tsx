@@ -1,20 +1,16 @@
 "use client";
 
+import { createContext, useContext } from "react";
+import { Controller, useForm } from "react-hook-form";
 import type {
 	FieldProps,
 	FormAdapter,
 	FormAPI,
 	FormProviderProps,
-} from "@code2-base-ui/auto-form-builder";
-import { createContext, useContext } from "react";
-import { Controller, useForm } from "react-hook-form";
+} from "./types";
 
-interface RHFControl {
+interface RHFContextValue {
 	control: object;
-	getValues: () => Record<string, unknown>;
-}
-
-interface RHFForm extends RHFControl {
 	formState: { isSubmitting: boolean };
 	getValues: (name?: string) => unknown;
 	handleSubmit: (
@@ -24,7 +20,7 @@ interface RHFForm extends RHFControl {
 	setValue: (name: string, value: unknown) => void;
 }
 
-const RHFContext = createContext<RHFControl | null>(null);
+const RHFContext = createContext<RHFContextValue | null>(null);
 
 export const rhfAdapter: FormAdapter = {
 	name: "rhf",
@@ -59,7 +55,7 @@ export const rhfAdapter: FormAdapter = {
 		};
 
 		return (
-			<RHFContext.Provider value={form as unknown as RHFControl}>
+			<RHFContext.Provider value={form as unknown as RHFContextValue}>
 				{children(formAPI)}
 			</RHFContext.Provider>
 		);
@@ -82,7 +78,7 @@ export const rhfAdapter: FormAdapter = {
 						onBlur: () => field.onBlur(),
 						error: fieldState.error?.message,
 						isTouched: fieldState.isTouched,
-					})
+					}) as React.ReactElement
 				}
 			/>
 		);

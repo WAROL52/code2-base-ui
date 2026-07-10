@@ -1,7 +1,7 @@
-import type { FormAPI } from "@code2-base-ui/auto-form-builder";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import { rhfAdapter } from "../src/rhf";
+import { rhfAdapter } from "../../src/adapters/rhf";
+import type { FormAPI } from "../../src/adapters/types";
 
 describe("rhfAdapter", () => {
 	it("has name 'rhf'", () => {

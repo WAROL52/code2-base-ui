@@ -60,13 +60,7 @@ describe("AutoForm", () => {
 	});
 
 	it("renders with custom layout", () => {
-		const customLayout: FormLayout = {
-			ArrayField: ({ children }) => (
-				<div data-testid="custom-arrayfield">{children}</div>
-			),
-			CompositionsField: ({ children }) => (
-				<div data-testid="custom-compositions">{children}</div>
-			),
+		const customLayout: Partial<FormLayout> = {
 			FieldSet: ({ children }) => (
 				<div data-testid="custom-fieldset">{children}</div>
 			),
@@ -78,9 +72,6 @@ describe("AutoForm", () => {
 			),
 			FieldDescription: ({ children }) => (
 				<div data-testid="custom-desc">{children}</div>
-			),
-			ObjectField: ({ children }) => (
-				<div data-testid="custom-objectfield">{children}</div>
 			),
 			SubmitButton: () => (
 				<button data-testid="custom-submit" type="submit">

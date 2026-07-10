@@ -1,3 +1,4 @@
+export { formischAdapter, rhfAdapter, tanstackAdapter } from "./adapters";
 export type {
 	FieldAPI,
 	FieldError,

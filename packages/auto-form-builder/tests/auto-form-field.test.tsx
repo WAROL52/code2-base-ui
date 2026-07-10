@@ -162,24 +162,7 @@ describe("AutoFormField", () => {
 
 	it("renders object field with custom ObjectField from context", () => {
 		const customLayout: FormLayout = {
-			ArrayField: ({ children }) => (
-				<div data-testid="ctx-arrayfield">{children}</div>
-			),
-			CompositionsField: ({ children }) => (
-				<div data-testid="ctx-compositions">{children}</div>
-			),
-			FieldSet: ({ children }) => (
-				<div data-testid="ctx-fieldset">{children}</div>
-			),
-			FieldGroup: ({ children }) => (
-				<div data-testid="ctx-group">{children}</div>
-			),
-			FieldLegend: ({ children }) => (
-				<div data-testid="ctx-legend">{children}</div>
-			),
-			FieldDescription: ({ children }) => (
-				<div data-testid="ctx-desc">{children}</div>
-			),
+			...shadcnLayout,
 			ObjectField: ({ fieldMeta, children }) => (
 				<div data-testid="ctx-objectfield">
 					{fieldMeta.label && (
@@ -188,7 +171,6 @@ describe("AutoFormField", () => {
 					{children}
 				</div>
 			),
-			SubmitButton: () => null,
 		};
 
 		const objectFieldMeta: FieldMeta = {

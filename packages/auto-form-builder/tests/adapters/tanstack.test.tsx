@@ -1,7 +1,7 @@
-import type { FormAPI } from "@code2-base-ui/auto-form-builder";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import { tanstackAdapter } from "../src/tanstack";
+import { tanstackAdapter } from "../../src/adapters/tanstack";
+import type { FormAPI } from "../../src/adapters/types";
 
 describe("tanstackAdapter", () => {
 	it("has name 'tanstack'", () => {

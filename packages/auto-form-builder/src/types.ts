@@ -14,7 +14,7 @@ export interface AutoFormProps {
 	children?: ReactNode;
 	className?: string;
 	defaultValues?: Record<string, unknown>;
-	layout?: FormLayout;
+	layout?: Partial<FormLayout>;
 	onSubmit?: (data: unknown) => void | Promise<void>;
 	registry: FieldRegistry;
 	resolveSchema?: (

@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import { AutoFormBuilder } from "./auto-form-builder";
 import { AutoFormField } from "./auto-form-field";
 import { FormLayoutCtx } from "./layout/context";
@@ -14,11 +15,16 @@ export function AutoForm({
 	onSubmit,
 	className,
 	children,
-	layout = shadcnLayout,
+	layout,
 	resolveSchema,
 	traverseSchema,
 	unionFieldRenderer,
 }: AutoFormProps) {
+	const mergedLayout = useMemo(
+		() => ({ ...shadcnLayout, ...layout }),
+		[layout]
+	);
+
 	return (
 		<AutoFormBuilder
 			adapter={adapter}
@@ -29,7 +35,7 @@ export function AutoForm({
 			traverseSchema={traverseSchema}
 		>
 			{({ fields, form }) => (
-				<FormLayoutCtx.Provider value={layout}>
+				<FormLayoutCtx.Provider value={mergedLayout}>
 					<form
 						className={className}
 						onSubmit={(e) => {
@@ -38,19 +44,19 @@ export function AutoForm({
 							form.handleSubmit();
 						}}
 					>
-						<layout.FieldSet>
+						<mergedLayout.FieldSet>
 							{"title" in schema && typeof schema.title === "string" && (
-								<layout.FieldLegend className="mb-2">
+								<mergedLayout.FieldLegend className="mb-2">
 									{schema.title}
-								</layout.FieldLegend>
+								</mergedLayout.FieldLegend>
 							)}
 							{"description" in schema &&
 								typeof schema.description === "string" && (
-									<layout.FieldDescription>
+									<mergedLayout.FieldDescription>
 										{schema.description}
-									</layout.FieldDescription>
+									</mergedLayout.FieldDescription>
 								)}
-							<layout.FieldGroup>
+							<mergedLayout.FieldGroup>
 								{fields.map((field) => (
 									<AutoFormField
 										adapter={adapter}
@@ -61,9 +67,9 @@ export function AutoForm({
 										unionFieldRenderer={unionFieldRenderer}
 									/>
 								))}
-							</layout.FieldGroup>
-						</layout.FieldSet>
-						{children ?? <layout.SubmitButton />}
+							</mergedLayout.FieldGroup>
+						</mergedLayout.FieldSet>
+						{children ?? <mergedLayout.SubmitButton />}
 					</form>
 				</FormLayoutCtx.Provider>
 			)}
