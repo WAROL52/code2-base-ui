@@ -2,11 +2,23 @@
 
 import {
 	FieldDescription,
+	FieldError,
 	FieldGroup,
 	FieldLegend,
 	FieldSet,
 } from "@code2-base-ui/ui/components/field";
+import type { FieldAPI } from "../adapters/types";
 import type { FormLayout } from "./types";
+
+function toErrorString(error?: FieldAPI["error"]): string | undefined {
+	if (!error) {
+		return;
+	}
+	if (typeof error === "string") {
+		return error;
+	}
+	return error.message;
+}
 
 export const shadcnLayout: FormLayout = {
 	FieldSet,
@@ -24,7 +36,7 @@ export const shadcnLayout: FormLayout = {
 			<FieldGroup>{children}</FieldGroup>
 		</FieldSet>
 	),
-	ArrayField: ({ fieldMeta, children, onAdd, onRemove }) => (
+	ArrayField: ({ error, fieldMeta, children, onAdd, onRemove }) => (
 		<FieldSet className="border-l pl-4">
 			{fieldMeta.label && (
 				<FieldLegend className="mb-2">{fieldMeta.label}</FieldLegend>
@@ -54,6 +66,7 @@ export const shadcnLayout: FormLayout = {
 			>
 				Ajouter
 			</button>
+			{error && <FieldError>{toErrorString(error)}</FieldError>}
 		</FieldSet>
 	),
 	CompositionsField: ({

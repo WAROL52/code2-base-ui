@@ -162,12 +162,16 @@ describe("AutoFormField", () => {
 		};
 		render(
 			<FormLayoutCtx.Provider value={customLayout}>
-				<AutoFormField
-					adapter={mockAdapter}
-					fieldMeta={arrayField}
-					form={formWithSpies}
-					registry={registry}
-				/>
+				<mockAdapter.FormProvider defaultValues={{ tags: [] }}>
+					{(_formAPI) => (
+						<AutoFormField
+							adapter={mockAdapter}
+							fieldMeta={arrayField}
+							form={formWithSpies}
+							registry={registry}
+						/>
+					)}
+				</mockAdapter.FormProvider>
 			</FormLayoutCtx.Provider>
 		);
 		expect(screen.getByTestId("ctx-arrayfield")).toBeDefined();
@@ -293,21 +297,26 @@ describe("AutoFormField", () => {
 				</div>
 			),
 		};
+		const mockForm = {
+			appendFieldValue: onAppend,
+			handleSubmit: vi.fn(),
+			isSubmitting: false,
+			removeFieldValue: vi.fn(),
+			reset: vi.fn(),
+			values: { items: [] },
+		};
 		render(
 			<FormLayoutCtx.Provider value={customLayout}>
-				<AutoFormField
-					adapter={mockAdapter}
-					fieldMeta={arrayField}
-					form={{
-						appendFieldValue: onAppend,
-						handleSubmit: vi.fn(),
-						isSubmitting: false,
-						removeFieldValue: vi.fn(),
-						reset: vi.fn(),
-						values: { items: [] },
-					}}
-					registry={registry}
-				/>
+				<mockAdapter.FormProvider defaultValues={{ items: [] }}>
+					{(_formAPI) => (
+						<AutoFormField
+							adapter={mockAdapter}
+							fieldMeta={arrayField}
+							form={mockForm}
+							registry={registry}
+						/>
+					)}
+				</mockAdapter.FormProvider>
 			</FormLayoutCtx.Provider>
 		);
 		fireEvent.click(screen.getByTestId("add-btn"));
@@ -337,21 +346,26 @@ describe("AutoFormField", () => {
 				</button>
 			),
 		};
+		const mockForm = {
+			appendFieldValue: onAppend,
+			handleSubmit: vi.fn(),
+			isSubmitting: false,
+			removeFieldValue: vi.fn(),
+			reset: vi.fn(),
+			values: { nums: [] },
+		};
 		render(
 			<FormLayoutCtx.Provider value={layout}>
-				<AutoFormField
-					adapter={mockAdapter}
-					fieldMeta={field}
-					form={{
-						appendFieldValue: onAppend,
-						handleSubmit: vi.fn(),
-						isSubmitting: false,
-						removeFieldValue: vi.fn(),
-						reset: vi.fn(),
-						values: { nums: [] },
-					}}
-					registry={registry}
-				/>
+				<mockAdapter.FormProvider defaultValues={{ nums: [] }}>
+					{(_formAPI) => (
+						<AutoFormField
+							adapter={mockAdapter}
+							fieldMeta={field}
+							form={mockForm}
+							registry={registry}
+						/>
+					)}
+				</mockAdapter.FormProvider>
 			</FormLayoutCtx.Provider>
 		);
 		fireEvent.click(screen.getByTestId("add-btn"));
@@ -381,21 +395,26 @@ describe("AutoFormField", () => {
 				</button>
 			),
 		};
+		const mockForm = {
+			appendFieldValue: onAppend,
+			handleSubmit: vi.fn(),
+			isSubmitting: false,
+			removeFieldValue: vi.fn(),
+			reset: vi.fn(),
+			values: { flags: [] },
+		};
 		render(
 			<FormLayoutCtx.Provider value={layout}>
-				<AutoFormField
-					adapter={mockAdapter}
-					fieldMeta={field}
-					form={{
-						appendFieldValue: onAppend,
-						handleSubmit: vi.fn(),
-						isSubmitting: false,
-						removeFieldValue: vi.fn(),
-						reset: vi.fn(),
-						values: { flags: [] },
-					}}
-					registry={registry}
-				/>
+				<mockAdapter.FormProvider defaultValues={{ flags: [] }}>
+					{(_formAPI) => (
+						<AutoFormField
+							adapter={mockAdapter}
+							fieldMeta={field}
+							form={mockForm}
+							registry={registry}
+						/>
+					)}
+				</mockAdapter.FormProvider>
 			</FormLayoutCtx.Provider>
 		);
 		fireEvent.click(screen.getByTestId("add-btn2"));
@@ -425,21 +444,26 @@ describe("AutoFormField", () => {
 				</button>
 			),
 		};
+		const mockForm = {
+			appendFieldValue: onAppend,
+			handleSubmit: vi.fn(),
+			isSubmitting: false,
+			removeFieldValue: vi.fn(),
+			reset: vi.fn(),
+			values: { objs: [] },
+		};
 		render(
 			<FormLayoutCtx.Provider value={layout}>
-				<AutoFormField
-					adapter={mockAdapter}
-					fieldMeta={field}
-					form={{
-						appendFieldValue: onAppend,
-						handleSubmit: vi.fn(),
-						isSubmitting: false,
-						removeFieldValue: vi.fn(),
-						reset: vi.fn(),
-						values: { objs: [] },
-					}}
-					registry={registry}
-				/>
+				<mockAdapter.FormProvider defaultValues={{ objs: [] }}>
+					{(_formAPI) => (
+						<AutoFormField
+							adapter={mockAdapter}
+							fieldMeta={field}
+							form={mockForm}
+							registry={registry}
+						/>
+					)}
+				</mockAdapter.FormProvider>
 			</FormLayoutCtx.Provider>
 		);
 		fireEvent.click(screen.getByTestId("add-btn3"));
@@ -469,21 +493,26 @@ describe("AutoFormField", () => {
 				</button>
 			),
 		};
+		const mockForm = {
+			appendFieldValue: onAppend,
+			handleSubmit: vi.fn(),
+			isSubmitting: false,
+			removeFieldValue: vi.fn(),
+			reset: vi.fn(),
+			values: { arrs: [] },
+		};
 		render(
 			<FormLayoutCtx.Provider value={layout}>
-				<AutoFormField
-					adapter={mockAdapter}
-					fieldMeta={field}
-					form={{
-						appendFieldValue: onAppend,
-						handleSubmit: vi.fn(),
-						isSubmitting: false,
-						removeFieldValue: vi.fn(),
-						reset: vi.fn(),
-						values: { arrs: [] },
-					}}
-					registry={registry}
-				/>
+				<mockAdapter.FormProvider defaultValues={{ arrs: [] }}>
+					{(_formAPI) => (
+						<AutoFormField
+							adapter={mockAdapter}
+							fieldMeta={field}
+							form={mockForm}
+							registry={registry}
+						/>
+					)}
+				</mockAdapter.FormProvider>
 			</FormLayoutCtx.Provider>
 		);
 		fireEvent.click(screen.getByTestId("add-btn4"));
@@ -556,12 +585,16 @@ describe("AutoFormField", () => {
 		};
 		render(
 			<FormLayoutCtx.Provider value={layout}>
-				<AutoFormField
-					adapter={mockAdapter}
-					fieldMeta={field}
-					form={mockForm}
-					registry={registry}
-				/>
+				<mockAdapter.FormProvider defaultValues={{}}>
+					{(_formAPI) => (
+						<AutoFormField
+							adapter={mockAdapter}
+							fieldMeta={field}
+							form={mockForm}
+							registry={registry}
+						/>
+					)}
+				</mockAdapter.FormProvider>
 			</FormLayoutCtx.Provider>
 		);
 		expect(screen.getByTestId("noform-array")).toBeDefined();

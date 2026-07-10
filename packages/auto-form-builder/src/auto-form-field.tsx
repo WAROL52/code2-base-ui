@@ -83,15 +83,20 @@ export function AutoFormField({
 		});
 
 		return (
-			<layout.ArrayField
-				fieldMeta={fieldMeta}
-				onAdd={() =>
-					form.appendFieldValue(path, getDefaultForType(itemMeta.type))
-				}
-				onRemove={(index) => form.removeFieldValue(path, index)}
-			>
-				{items}
-			</layout.ArrayField>
+			<adapter.Field name={path}>
+				{(field) => (
+					<layout.ArrayField
+						error={field.error}
+						fieldMeta={fieldMeta}
+						onAdd={() =>
+							form.appendFieldValue(path, getDefaultForType(itemMeta.type))
+						}
+						onRemove={(index) => form.removeFieldValue(path, index)}
+					>
+						{items}
+					</layout.ArrayField>
+				)}
+			</adapter.Field>
 		);
 	}
 

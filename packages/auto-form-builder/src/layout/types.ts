@@ -1,5 +1,6 @@
 import type { FieldMeta } from "@code2-base-ui/json-schema-toolkit";
 import type { ComponentType, ReactNode } from "react";
+import type { FieldError } from "../adapters/types";
 
 export interface ObjectFieldProps {
 	children: ReactNode;
@@ -8,6 +9,7 @@ export interface ObjectFieldProps {
 
 export interface ArrayFieldProps {
 	children: ReactNode[];
+	error?: FieldError;
 	fieldMeta: FieldMeta;
 	onAdd: () => void;
 	onRemove: (index: number) => void;

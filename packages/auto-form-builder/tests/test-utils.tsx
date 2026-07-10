@@ -1,1 +1,4 @@
-export { mockAdapter } from "../src/testing";
+export {
+	createMockAdapterWithValidation,
+	mockAdapter,
+} from "../src/testing";
