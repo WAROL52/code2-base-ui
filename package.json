@@ -13,6 +13,7 @@
     "check-types": "nx run-many -t check-types",
     "dev:web": "nx run-many -t dev --projects=web",
     "dev:tui": "nx run-many -t dev --projects=tui",
+    "dev:docs": "nx run-many -t dev --projects=fumadocs",
     "docker:build": "docker compose build",
     "docker:up": "docker compose up -d --build",
     "docker:down": "docker compose down",
