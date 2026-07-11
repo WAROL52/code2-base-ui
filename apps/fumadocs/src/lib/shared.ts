@@ -8,3 +8,21 @@ export const gitConfig = {
 	repo: "code2-base-ui",
 	branch: "master",
 };
+
+export function getPageImage(page: { slugs: string[] }) {
+	const segments = [...page.slugs, "image.png"];
+
+	return {
+		segments,
+		url: `${docsImageRoute}/${segments.join("/")}`,
+	};
+}
+
+export function getPageMarkdownUrl(page: { slugs: string[] }) {
+	const segments = [...page.slugs, "content.md"];
+
+	return {
+		segments,
+		url: `${docsContentRoute}/${segments.join("/")}`,
+	};
+}

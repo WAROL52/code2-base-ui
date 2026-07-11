@@ -3,7 +3,7 @@ import { loader } from "fumadocs-core/source";
 import { lucideIconsPlugin } from "fumadocs-core/source/lucide-icons";
 import { notFound } from "next/navigation";
 
-import { docsContentRoute, docsImageRoute, docsRoute } from "./shared";
+import { docsRoute } from "./shared";
 
 // See https://fumadocs.dev/docs/headless/source-api for more info
 export const source = loader({
@@ -11,24 +11,6 @@ export const source = loader({
 	source: docs.toFumadocsSource(),
 	plugins: [lucideIconsPlugin()],
 });
-
-export function getPageImage(page: (typeof source)["$inferPage"]) {
-	const segments = [...page.slugs, "image.png"];
-
-	return {
-		segments,
-		url: `${docsImageRoute}/${segments.join("/")}`,
-	};
-}
-
-export function getPageMarkdownUrl(page: (typeof source)["$inferPage"]) {
-	const segments = [...page.slugs, "content.md"];
-
-	return {
-		segments,
-		url: `${docsContentRoute}/${segments.join("/")}`,
-	};
-}
 
 export function getPageOr404(slug: string[] | undefined) {
 	const page = source.getPage(slug);

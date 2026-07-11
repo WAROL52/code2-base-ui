@@ -1,9 +1,5 @@
-import {
-	getLLMText,
-	getPageMarkdownUrl,
-	getPageOr404,
-	source,
-} from "@/lib/source";
+import { getPageMarkdownUrl } from "@/lib/shared";
+import { getLLMText, getPageOr404, source } from "@/lib/source";
 
 export const revalidate = false;
 

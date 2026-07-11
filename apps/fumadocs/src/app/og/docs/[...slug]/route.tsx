@@ -1,8 +1,8 @@
 import { generate as DefaultImage } from "fumadocs-ui/og";
 import { ImageResponse } from "next/og";
 
-import { appName } from "@/lib/shared";
-import { getPageImage, getPageOr404, source } from "@/lib/source";
+import { appName, getPageImage } from "@/lib/shared";
+import { getPageOr404, source } from "@/lib/source";
 
 export const revalidate = false;
 
