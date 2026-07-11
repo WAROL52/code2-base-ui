@@ -1,3 +1,9 @@
 {
-  "pages": ["index", "json-schema-toolkit", "auto-form", "test"]
+  "pages": [
+    "index",
+    "json-schema-toolkit",
+    "auto-form",
+    "auto-table-builder",
+    "test"
+  ]
 }

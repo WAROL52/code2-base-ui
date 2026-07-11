@@ -1,0 +1,11 @@
+{
+  "pages": [
+    "index",
+    "installation",
+    "getting-started",
+    "features",
+    "column-registry",
+    "cell-components",
+    "api-reference"
+  ]
+}

@@ -1,0 +1,37 @@
+---
+title: Installation
+description: Installer et configurer auto-table-builder
+---
+
+```bash
+pnpm add @code2-base-ui/auto-table-builder
+```
+
+## Dépendances
+
+`@tanstack/react-table` est une dépendance directe — installée automatiquement.
+
+## Sous-chemins d'import
+
+```ts
+// Principal
+import { AutoTable, AutoTableBuilder, useAutoTable, buildColumns } from "@code2-base-ui/auto-table-builder"
+
+// Registre
+import { createColumnRegistry } from "@code2-base-ui/auto-table-builder/registry"
+
+// Composants de cellule
+import { CellText, CellEmail, CellUrl, CellDate, CellNumber, CellBoolean, CellBadge, CellArray, CellObject } from "@code2-base-ui/auto-table-builder/cell-components"
+```
+
+## Configuration TypeScript
+
+```json
+{
+	"compilerOptions": {
+		"verbatimModuleSyntax": true,
+		"moduleResolution": "bundler",
+		"module": "preserve"
+	}
+}
+```

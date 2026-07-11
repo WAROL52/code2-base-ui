@@ -22,6 +22,7 @@ Monorepo **Better-T-Stack** orchestré par **Nx** + **pnpm workspaces**.
 - `packages/env` — Validation d'environnement avec `@t3-oss/env` (split `server.ts` / `web.ts`)
 - `packages/json-schema-toolkit` — Outils copy-paste basés sur JSON Schema (Standard Schema, TypeBox, FieldRegistry, SchemaAdapter)
 - `packages/auto-form-builder` — Génération de formulaires par render-prop (FormAdapter pattern). Adaptateurs intégrés : tanstackAdapter, rhfAdapter, formischAdapter
+- `packages/auto-table-builder` — Génération de tableaux basée sur `@tanstack/react-table` avec feature system, ColumnRegistry, et deux niveaux d'API (hook + composant)
 
 ## Commandes essentielles
 
@@ -143,6 +144,79 @@ pnpm --filter @code2-base-ui/auto-form-builder check
 - vitest + jsdom + @testing-library/react
 - 115 tests (découplés de tout form manager via mock adapter)
 - Tests des adaptateurs intégrés : tanstack (10), rhf (10), formisch (10)
+
+## auto-table-builder
+
+Package `@code2-base-ui/auto-table-builder` — génération de tableaux basée sur
+`@tanstack/react-table` avec feature system, ColumnRegistry, et deux niveaux
+d'API (hook + composant).
+
+### Architecture
+
+```
+packages/auto-table-builder/src/
+├── index.ts                    # Exports principaux
+├── auto-table.tsx              # Composant AutoTable clé en main
+├── auto-table-builder.tsx      # Render-prop builder
+├── use-auto-table.ts           # Hook (setup colonnes + état)
+├── build-columns.tsx           # buildColumns (pure function)
+├── features/                   # Feature system
+│   ├── types.ts                # FeatureContract, options types
+│   ├── sorting.tsx
+│   ├── pagination.tsx
+│   ├── row-selection.tsx
+│   ├── column-visibility.tsx
+│   ├── column-resizing.tsx
+│   ├── column-pinning.tsx
+│   ├── expand.tsx
+│   └── index.ts
+├── registry/
+│   └── index.ts                # ColumnRegistry (createColumnRegistry)
+└── cell-components/
+    ├── index.ts
+    ├── cell-text.tsx
+    ├── cell-email.tsx
+    ├── cell-url.tsx
+    ├── cell-date.tsx
+    ├── cell-number.tsx
+    ├── cell-boolean.tsx
+    ├── cell-badge.tsx
+    ├── cell-array.tsx
+    └── cell-object.tsx
+```
+
+### Feature system
+
+Chaque feature suit le pattern `true | false | FeatureOptions` :
+```tsx
+<AutoTable schema={schema} data={data} registry={registry} sorting pagination />
+<AutoTable schema={schema} data={data} registry={registry}
+  sorting={{ state, onSortingChange }} pagination={{ pageCount: 10 }} />
+```
+
+Features disponibles : sorting, pagination, rowSelection, columnVisibility,
+columnResizing, columnPinning, expand.
+
+### Sous-chemins d'import
+
+```ts
+import { ... } from "@code2-base-ui/auto-table-builder"          // principal
+import { ... } from "@code2-base-ui/auto-table-builder/registry"  // ColumnRegistry
+import { ... } from "@code2-base-ui/auto-table-builder/cell-components" // cell components
+import { ... } from "@code2-base-ui/auto-table-builder/testing"  // testing (future)
+```
+
+### Tests
+
+```bash
+pnpm --filter @code2-base-ui/auto-table-builder test
+pnpm --filter @code2-base-ui/auto-table-builder check-types
+pnpm --filter @code2-base-ui/auto-table-builder check
+```
+
+- vitest + jsdom + @testing-library/react
+- 65 tests (buildColumns, ColumnRegistry, cell-components, features, useAutoTable,
+  AutoTableBuilder, AutoTable, utility-components)
 
 ## Particularités techniques
 

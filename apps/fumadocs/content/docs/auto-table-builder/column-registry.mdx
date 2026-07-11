@@ -1,0 +1,85 @@
+---
+title: ColumnRegistry
+description: Enregistrer et résoudre des composants de cellule
+---
+
+`ColumnRegistry` est un registre centralisé qui associe des composants
+React à des sélecteurs de type JSON Schema.
+
+## Création
+
+```ts
+import { createColumnRegistry } from "@code2-base-ui/auto-table-builder/registry"
+
+const registry = createColumnRegistry()
+```
+
+## Enregistrement
+
+```ts
+registry.register({ type: "string" }, CellText)
+registry.register({ type: "string", format: "email" }, CellEmail, 10)
+```
+
+Le troisième paramètre est la priorité (défaut : 0). La résolution se
+fait par priorité décroissante : un match `{ type: "string", format: "email" }`
+avec priorité 10 l'emporte sur `{ type: "string" }` avec priorité 0.
+
+## Résolution
+
+```ts
+const component = registry.resolve({
+  path: "email",
+  type: "string",
+  format: "email",
+})
+// Retourne CellEmail (priorité 10 > 0)
+```
+
+## Fallback
+
+```ts
+registry.setFallback(CellText)
+```
+
+Si aucun composant n'est trouvé et qu'aucun fallback n'est défini,
+une exception est levée :
+
+```ts
+registry.resolve({ path: "x", type: "unknown" })
+// Throw: Aucun composant enregistré pour le champ "x"
+```
+
+## Sélecteurs
+
+Les clés de sélection sont générées selon le pattern `[type, format]` :
+
+- `{ type: "string" }` → match pour tous les champs `string`
+- `{ format: "email" }` → match pour tous les champs ayant le format `email`
+- `{ type: "string", format: "email" }` → match le plus spécifique
+
+## Registre complet pour production
+
+```ts
+import { createColumnRegistry } from "@code2-base-ui/auto-table-builder/registry"
+import {
+  CellText, CellEmail, CellUrl, CellDate,
+  CellNumber, CellBoolean, CellBadge,
+  CellArray, CellObject,
+} from "@code2-base-ui/auto-table-builder/cell-components"
+
+const registry = createColumnRegistry()
+
+registry.register({ type: "string" }, CellText)
+registry.register({ type: "string", format: "email" }, CellEmail)
+registry.register({ type: "string", format: "uri" }, CellUrl)
+registry.register({ type: "string", format: "date" }, CellDate)
+registry.register({ type: "number" }, CellNumber)
+registry.register({ type: "integer" }, CellNumber)
+registry.register({ type: "boolean" }, CellBoolean)
+registry.register({ type: "string", format: "badge" }, CellBadge)
+registry.register({ type: "array" }, CellArray)
+registry.register({ type: "object" }, CellObject)
+
+registry.setFallback(CellText)
+```

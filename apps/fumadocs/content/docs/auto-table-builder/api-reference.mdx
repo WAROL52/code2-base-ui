@@ -1,0 +1,254 @@
+---
+title: API Reference
+description: Référence complète des types, fonctions et composants
+---
+
+## Types
+
+### ColumnRegistry
+
+```ts
+interface ColumnRegistry {
+  register(selector: RegistrySelector, component: CellComponent, priority?: number): void
+  resolve(meta: CellMeta): CellComponent
+  setFallback(component: CellComponent): void
+}
+
+interface RegistrySelector {
+  type?: string
+  format?: string
+}
+
+interface CellMeta {
+  path: string
+  type: string
+  format?: string
+  properties?: Record<string, CellMeta>
+}
+```
+
+### FeatureContract
+
+```ts
+type TableSlot = "toolbar" | "header" | "pagination" | "selection-info" | "body"
+
+interface FeatureContract<TData, TOptions = Record<string, never>> {
+  Component: ComponentType<{ table: Table<TData>; options: TOptions }>
+  getTableOptions: (options: TOptions) => Record<string, unknown>
+  key: string
+  slot: TableSlot
+}
+
+type FeatureValue<TOptions> = true | false | TOptions
+```
+
+### FeatureOptions
+
+```ts
+interface SortingOptions {
+  enable?: boolean
+  enableMultiSort?: boolean
+  onSortingChange?: OnChangeFn<SortingState>
+  state?: SortingState
+}
+
+interface PaginationOptions {
+  enable?: boolean
+  manualPagination?: boolean
+  onPaginationChange?: OnChangeFn<PaginationState>
+  pageCount?: number
+  state?: PaginationState
+}
+
+interface RowSelectionOptions {
+  enable?: boolean
+  enableMultiRowSelection?: boolean
+  onRowSelectionChange?: OnChangeFn<RowSelectionState>
+  state?: RowSelectionState
+}
+
+interface ColumnVisibilityOptions {
+  enable?: boolean
+  initialState?: VisibilityState
+  onColumnVisibilityChange?: OnChangeFn<VisibilityState>
+  state?: VisibilityState
+}
+
+interface ColumnResizingOptions {
+  enable?: boolean
+  onColumnSizingChange?: OnChangeFn<ColumnSizingState>
+  resizeMode?: "onChange" | "onEnd"
+  state?: ColumnSizingState
+}
+
+interface ColumnPinningOptions {
+  enable?: boolean
+  onColumnPinningChange?: OnChangeFn<ColumnPinningState>
+  state?: ColumnPinningState
+}
+
+interface ExpandOptions {
+  enable?: boolean
+  onExpandedChange?: OnChangeFn<ExpandedState>
+  state?: ExpandedState
+}
+```
+
+---
+
+## Composants
+
+### AutoTable
+
+Composant clé en main. Props principales :
+
+```ts
+interface AutoTableProps<TData> {
+  columns?: ColumnDef<TData>[]
+  columnOverrides?: Record<string, Partial<ColumnDef<TData>>>
+  data: TData[]
+  emptyMessage?: string
+  registry: ColumnRegistry
+  schema: JsonSchema
+  toolbar?: ReactNode
+
+  // Features (optionnelles)
+  sorting?: FeatureValue<SortingOptions>
+  pagination?: FeatureValue<PaginationOptions>
+  rowSelection?: FeatureValue<RowSelectionOptions>
+  columnVisibility?: FeatureValue<ColumnVisibilityOptions>
+  columnResizing?: FeatureValue<ColumnResizingOptions>
+  columnPinning?: FeatureValue<ColumnPinningOptions>
+  expand?: FeatureValue<ExpandOptions>
+}
+```
+
+### AutoTableBuilder
+
+Render-prop builder :
+
+```ts
+interface AutoTableBuilderProps<TData> {
+  columns?: ColumnDef<TData>[]
+  columnOverrides?: Record<string, Partial<ColumnDef<TData>>>
+  data: TData[]
+  registry: ColumnRegistry
+  schema: JsonSchema
+
+  // Features
+  sorting?: FeatureValue<SortingOptions>
+  pagination?: FeatureValue<PaginationOptions>
+  rowSelection?: FeatureValue<RowSelectionOptions>
+  columnVisibility?: FeatureValue<ColumnVisibilityOptions>
+  columnResizing?: FeatureValue<ColumnResizingOptions>
+  columnPinning?: FeatureValue<ColumnPinningOptions>
+  expand?: FeatureValue<ExpandOptions>
+
+  children: (props: { table: Table<TData>; columns: ColumnDef<TData>[] }) => ReactNode
+}
+```
+
+---
+
+## Fonctions
+
+### buildColumns
+
+```ts
+function buildColumns<TData>(
+  schema: JsonSchema,
+  registry: ColumnRegistry,
+  options?: {
+    columns?: ColumnDef<TData>[]
+    columnOverrides?: Record<string, Partial<ColumnDef<TData>>>
+  },
+): ColumnDef<TData>[]
+```
+
+Transforme un JSON Schema en `ColumnDef[]` pour TanStack Table.
+
+### useAutoTable
+
+```ts
+function useAutoTable<TData>(config: {
+  columns?: ColumnDef<TData>[]
+  columnOverrides?: Record<string, Partial<ColumnDef<TData>>>
+  data: TData[]
+  registry: ColumnRegistry
+  schema: JsonSchema
+  sorting?: FeatureValue<SortingOptions>
+  pagination?: FeatureValue<PaginationOptions>
+  rowSelection?: FeatureValue<RowSelectionOptions>
+  columnVisibility?: FeatureValue<ColumnVisibilityOptions>
+  columnResizing?: FeatureValue<ColumnResizingOptions>
+  columnPinning?: FeatureValue<ColumnPinningOptions>
+  expand?: FeatureValue<ExpandOptions>
+}): Table<TData>
+```
+
+### createColumnRegistry
+
+```ts
+function createColumnRegistry(): ColumnRegistry
+```
+
+Crée une instance de `ColumnRegistry`.
+
+---
+
+## Composants de cellule
+
+Tous exportés depuis `@code2-base-ui/auto-table-builder/cell-components` :
+
+```ts
+interface CellComponent {
+  (props: { value: unknown }): ReactNode
+}
+```
+
+| Composant | Usage |
+|---|---|
+| `CellText` | Texte brut |
+| `CellEmail` | Lien `mailto:` |
+| `CellUrl` | Lien externe |
+| `CellDate` | Date formatée |
+| `CellNumber` | Nombre formaté |
+| `CellBoolean` | Icône check/x |
+| `CellBadge` | Badge coloré |
+| `CellArray` | Badges multiples |
+| `CellObject` | Aperçu d'objet |
+
+---
+
+## Composants utilitaires
+
+### AutoTablePagination
+
+```ts
+interface AutoTablePaginationProps<TData> {
+  table: Table<TData>
+}
+```
+
+Affiche les contrôles Previous / Next avec indicateur de page.
+
+### AutoTableToolbar
+
+```ts
+interface AutoTableToolbarProps {
+  children: ReactNode
+}
+```
+
+Wrapper pour la barre d'outils du tableau.
+
+### AutoTableViewOptions
+
+```ts
+interface AutoTableViewOptionsProps {
+  getAllColumns: () => Column<TData>[]
+  getIsVisible: (column: Column<TData>) => boolean
+}
+```
+
+Menu de bascule d'affichage des colonnes.

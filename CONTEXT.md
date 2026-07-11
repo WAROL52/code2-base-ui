@@ -128,6 +128,41 @@ Défini dans `registry.json` à la racine. **Ne pas confondre avec FieldRegistry
 > React de *composants* résolus par sélecteur. Le `GitHub Registry` est un mécanisme
 > de *distribution* de fichiers. Même mot, concepts différents.
 
+### auto-table-builder
+
+Package `@code2-base-ui/auto-table-builder` (en conception) — génération automatique
+de tableaux basée sur `@tanstack/react-table`, calquée sur le pattern de
+`auto-form-builder` mais sans FormAdapter (intègre TanStack Table directement).
+
+**Architecture :**
+- Pas de TableAdapter — TanStack Table directement
+- Deux niveaux d'API : `useAutoTable` (hook) + `AutoTable` (composant)
+- `buildColumns` — fonction pure exportée à côté
+- `AutoColumn` — dispatcher récursif (column, pas field)
+- `ColumnRegistry` — nouveau set de composants dédiés aux cellules
+- handlers miroir de auto-form-builder : `object-handler`, `array-handler`,
+  `union-handler`, `leaf-handler`
+
+**Design :**
+- **Data** : `data` prop indépendante, schema = structure des colonnes uniquement
+- **Customisation** : `columns` (prefix) + `columnOverrides` (merge par id)
+- **Features** : pattern `true | false | FeatureOptions` par présence du prop
+- **Feature System** : chaque feature suit un `FeatureContract<TData, TOptions>`
+  avec slot de rendu (toolbar, header, pagination, selection-info). Implémentation
+  par défaut fournie pour chaque feature. Customisable via les options.
+- **8 features** : sorting, pagination, filtering, rowSelection, columnVisibility,
+  columnResizing, columnPinning, expand
+- **Feature Filters** : module de filtrage externalisé basé sur shadcn Filters
+  (createFilter, FilterFieldConfig, FilterOperator). Intègre un contract de rendu
+  pour testabilité et customisation.
+- **Paginations :** client-side par défaut, server-side détecté si `pageCount`
+  est passé
+- **Cellules registry :** CellText, CellEmail, CellUrl, CellDate, CellNumber,
+  CellBoolean, CellBadge, CellArray, CellObject
+- **Composants utilitaires :** `AutoTablePagination`, `AutoTableViewOptions`,
+  `AutoTableToolbar`
+- **Sous-chemins export :** `.`, `./registry`, `./cell-components`, `./testing`
+
 ### Package Creation Workflow
 Processus standard pour créer un nouveau package : design (brainstorming → spec → plan)
 → implémentation TDD (tests d'abord) → documentation Fumadocs en parallèle

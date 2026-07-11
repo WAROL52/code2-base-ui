@@ -1,0 +1,116 @@
+---
+title: Cell Components
+description: Composants de cellule prêts à l'emploi
+---
+
+9 composants de cellule sont fournis, tous accessibles depuis le
+sous-chemin `cell-components` :
+
+```ts
+import {
+  CellText, CellEmail, CellUrl, CellDate,
+  CellNumber, CellBoolean, CellBadge,
+  CellArray, CellObject,
+} from "@code2-base-ui/auto-table-builder/cell-components"
+```
+
+Chaque composant accepte `{ value: unknown }` et gère le cas `null`
+(affichage d'un tiret `—`).
+
+## CellText
+
+Affiche la valeur en tant que texte, avec troncature optionnelle.
+
+```tsx
+<CellText value="John Doe" />
+<CellText value={null} /> {/* → — */}
+```
+
+## CellEmail
+
+Affiche l'email sous forme de lien `mailto:`.
+
+```tsx
+<CellEmail value="alice@example.com" />
+// → <a href="mailto:alice@example.com">alice@example.com</a>
+```
+
+## CellUrl
+
+Affiche l'URL sous forme de lien avec ouverture dans un nouvel onglet.
+
+```tsx
+<CellUrl value="https://example.com" />
+// → <a href="https://example.com" target="_blank" rel="noopener noreferrer">example.com</a>
+```
+
+## CellDate
+
+Formate une date selon la locale du navigateur.
+
+```tsx
+<CellDate value="2024-01-15" />
+<CellDate value={new Date("2024-06-15")} />
+```
+
+Affiche la valeur brute si la date est invalide.
+
+## CellNumber
+
+Formate un nombre avec `Number.toLocaleString()`.
+
+```tsx
+<CellNumber value={1234} />   {/* → 1 234 */}
+<CellNumber value={3.14} />   {/* → 3,14 */}
+<CellNumber value={null} />   {/* → — */}
+```
+
+## CellBoolean
+
+Affiche une icône `check` (true) ou `x` (false).
+
+```tsx
+<CellBoolean value={true} />   {/* → ✓ */}
+<CellBoolean value={false} />  {/* → ✗ */}
+<CellBoolean value={null} />   {/* → — */}
+```
+
+## CellBadge
+
+Affiche une valeur sous forme de badge coloré.
+
+```tsx
+<CellBadge value="active" />
+{/* → <span class="badge green">active</span> */}
+```
+
+Couleurs automatiques pour les statuts courants : `active` (vert),
+`inactive` (gris), `pending` (jaune), `error` (rouge).
+
+## CellArray
+
+Affiche un tableau sous forme de badges. Si plus de 3 éléments,
+affiche les 2 premiers et un indicateur `+N more`.
+
+```tsx
+<CellArray value={["a", "b", "c"]} />
+{/* → [a] [b] [c] */}
+
+<CellArray value={[1, 2, 3, 4, 5]} />
+{/* → [1] [2] +3 more */}
+```
+
+## CellObject
+
+Affiche un aperçu du contenu d'un objet.
+
+```tsx
+<CellObject value={{ name: "test", age: 42 }} />
+{/* → {name, age, …} */}
+
+<CellObject value={{}} />
+{/* → {} */}
+
+<CellObject value={null} />
+{/* → — */}
+```

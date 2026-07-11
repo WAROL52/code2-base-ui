@@ -1,0 +1,91 @@
+---
+title: auto-table-builder
+description: Générateur de tableaux automatiques basé sur @tanstack/react-table avec feature system enfichable
+---
+
+**auto-table-builder** génère des tableaux React complets à partir d'un
+JSON Schema et d'un tableau de données. Il est basé sur
+`@tanstack/react-table` et propose un **feature system** enfichable
+pour activer/désactiver des fonctionnalités (tri, pagination, sélection...).
+
+```tsx
+import { AutoTable, createColumnRegistry } from "@code2-base-ui/auto-table-builder"
+
+const registry = createColumnRegistry()
+registry.register({ type: "string" }, CellText)
+registry.register({ type: "string", format: "email" }, CellEmail)
+
+const data = [
+  { name: "Alice", email: "alice@example.com" },
+  { name: "Bob", email: "bob@example.com" },
+]
+
+<AutoTable
+  schema={{ type: "object", properties: { name: { type: "string" }, email: { type: "string", format: "email" } } }}
+  data={data}
+  registry={registry}
+  sorting
+  pagination={{ pageSize: 10 }}
+/>
+```
+
+## Architecture
+
+Le package s'articule autour de 4 concepts :
+
+| Concept | Rôle |
+|---|---|
+| **buildColumns** | Transforme un JSON Schema en `ColumnDef[]` TanStack |
+| **ColumnRegistry** | Résout chaque colonne en composant React |
+| **Feature system** | Active tri, pagination, sélection, etc. par simple prop |
+| **AutoTable / AutoTableBuilder** | Points d'entrée composant et render-prop |
+
+### buildColumns
+
+Fonction pure qui convertit un JSON Schema en tableau de `ColumnDef`
+pour `@tanstack/react-table`. Supporte le préfixe de colonnes via
+`columns` et la surcharge via `columnOverrides`.
+
+### ColumnRegistry
+
+Registre de composants React pour l'affichage des cellules. 9 composants
+prêts à l'emploi : Text, Email, Url, Date, Number, Boolean, Badge,
+Array, Object.
+
+### Feature system
+
+Chaque feature suit le pattern `true | false | FeatureOptions` :
+
+```tsx
+<AutoTable schema={schema} data={data} registry={registry} sorting pagination />
+<AutoTable schema={schema} data={data} registry={registry}
+  sorting={{ state, onSortingChange }} pagination={{ pageCount: 10 }} />
+```
+
+8 features disponibles : `sorting`, `pagination`, `rowSelection`,
+`columnVisibility`, `columnResizing`, `columnPinning`, `expand`.
+
+### Points d'entrée
+
+- **AutoTable** — composant clé en main
+- **AutoTableBuilder** — render-prop builder pour contrôle total
+- **useAutoTable** — hook pour intégration manuelle
+
+## Sous-chemins d'import
+
+```ts
+import { AutoTable } from "@code2-base-ui/auto-table-builder"
+import { createColumnRegistry } from "@code2-base-ui/auto-table-builder/registry"
+import { CellText, CellEmail } from "@code2-base-ui/auto-table-builder/cell-components"
+```
+
+## Fonctionnalités
+
+- Génération automatique des colonnes depuis JSON Schema
+- 9 composants de cellule prêts à l'emploi
+- Feature system enfichable (tri, pagination, sélection...)
+- Deux niveaux d'API : composant clé en main ou render-prop
+- Hook `useAutoTable` pour intégration manuelle
+- Composants utilitaires : pagination, toolbar, view-options
+- Personnalisation fine via `columns` / `columnOverrides`
+- Basé sur `@tanstack/react-table` v8

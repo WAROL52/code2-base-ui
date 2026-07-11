@@ -1,0 +1,154 @@
+---
+title: Getting Started
+description: Premiers pas avec auto-table-builder
+---
+
+## 1. Créer un registre
+
+Le registre associe chaque type de champ JSON Schema à un composant React :
+
+```tsx
+import { createColumnRegistry } from "@code2-base-ui/auto-table-builder/registry"
+import { CellText, CellEmail, CellNumber, CellBadge, CellDate } from "@code2-base-ui/auto-table-builder/cell-components"
+
+const registry = createColumnRegistry()
+
+registry.register({ type: "string" }, CellText)
+registry.register({ type: "string", format: "email" }, CellEmail)
+registry.register({ type: "number" }, CellNumber)
+registry.register({ type: "integer" }, CellNumber)
+registry.register({ type: "string", format: "date" }, CellDate)
+```
+
+## 2. Définir un schéma et des données
+
+```tsx
+const schema = {
+  type: "object",
+  properties: {
+    name: { type: "string", title: "Nom" },
+    email: { type: "string", format: "email", title: "Email" },
+    role: { type: "string", title: "Rôle", enum: ["admin", "user"] },
+    age: { type: "integer", title: "Âge" },
+    active: { type: "boolean", title: "Actif" },
+    joinedAt: { type: "string", format: "date", title: "Date d'inscription" },
+  },
+}
+
+const data = [
+  { name: "Alice", email: "alice@example.com", role: "admin", age: 32, active: true, joinedAt: "2024-01-15" },
+  { name: "Bob", email: "bob@example.com", role: "user", age: 28, active: false, joinedAt: "2024-03-20" },
+]
+```
+
+## 3. Afficher le tableau
+
+```tsx
+import { AutoTable } from "@code2-base-ui/auto-table-builder"
+
+function UsersTable() {
+  return (
+    <AutoTable
+      schema={schema}
+      data={data}
+      registry={registry}
+      sorting
+      pagination
+    />
+  )
+}
+```
+
+## 4. Personnaliser les colonnes
+
+### Préfixe de colonnes
+
+Ajoute des colonnes avant les colonnes générées automatiquement :
+
+```tsx
+<AutoTable
+  schema={schema}
+  data={data}
+  registry={registry}
+  columns={[
+    {
+      id: "actions",
+      header: "Actions",
+      cell: () => <button type="button">Éditer</button>,
+    },
+  ]}
+/>
+```
+
+### Surcharge de colonnes
+
+Remplace une colonne générée par une définition personnalisée :
+
+```tsx
+<AutoTable
+  schema={schema}
+  data={data}
+  registry={registry}
+  columnOverrides={{
+    name: {
+      header: "Nom complet",
+      cell: ({ row }) => <strong>{row.original.name}</strong>,
+    },
+  }}
+/>
+```
+
+## Mode render-prop — `AutoTableBuilder`
+
+Pour un contrôle total du rendu :
+
+```tsx
+import { AutoTableBuilder } from "@code2-base-ui/auto-table-builder"
+
+function CustomTable() {
+  return (
+    <AutoTableBuilder
+      schema={schema}
+      data={data}
+      registry={registry}
+      sorting
+    >
+      {({ table, columns }) => (
+        <div>
+          <div className="mb-4">
+            <input
+              placeholder="Rechercher..."
+              value={table.getState().globalFilter ?? ""}
+              onChange={(e) => table.setGlobalFilter(e.target.value)}
+            />
+          </div>
+          <table>
+            <thead>
+              {table.getHeaderGroups().map((group) => (
+                <tr key={group.id}>
+                  {group.headers.map((header) => (
+                    <th key={header.id}>
+                      {header.column.columnDef.header as string}
+                    </th>
+                  ))}
+                </tr>
+              ))}
+            </thead>
+            <tbody>
+              {table.getRowModel().rows.map((row) => (
+                <tr key={row.id}>
+                  {row.getVisibleCells().map((cell) => (
+                    <td key={cell.id}>
+                      {cell.column.columnDef.cell?.(cell.getContext())}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </AutoTableBuilder>
+  )
+}
+```

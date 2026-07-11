@@ -1,0 +1,145 @@
+---
+title: Feature System
+description: Activer et configurer les fonctionnalités du tableau
+---
+
+Chaque feature suit le pattern `true | false | FeatureOptions` :
+
+```tsx
+// Activée avec les valeurs par défaut
+<AutoTable schema={schema} data={data} registry={registry} sorting />
+
+// Désactivée
+<AutoTable schema={schema} data={data} registry={registry} sorting={false} />
+
+// Configurée
+<AutoTable schema={schema} data={data} registry={registry}
+  sorting={{ state: [{ id: "name", desc: false }] }} />
+```
+
+## Features disponibles
+
+### sorting
+
+Tri des colonnes (click sur l'en-tête).
+
+```ts
+interface SortingOptions {
+  enable?: boolean
+  enableMultiSort?: boolean
+  onSortingChange?: OnChangeFn<SortingState>
+  state?: SortingState
+}
+```
+
+### pagination
+
+Contrôles de pagination (composant `AutoTablePagination`).
+
+```ts
+interface PaginationOptions {
+  enable?: boolean
+  manualPagination?: boolean
+  onPaginationChange?: OnChangeFn<PaginationState>
+  pageCount?: number
+  state?: PaginationState
+}
+```
+
+### rowSelection
+
+Sélection de lignes par checkbox.
+
+```ts
+interface RowSelectionOptions {
+  enable?: boolean
+  enableMultiRowSelection?: boolean
+  onRowSelectionChange?: OnChangeFn<RowSelectionState>
+  state?: RowSelectionState
+}
+```
+
+### columnVisibility
+
+Masquage/affichage des colonnes (composant `AutoTableViewOptions`).
+
+```ts
+interface ColumnVisibilityOptions {
+  enable?: boolean
+  initialState?: VisibilityState
+  onColumnVisibilityChange?: OnChangeFn<VisibilityState>
+  state?: VisibilityState
+}
+```
+
+### columnResizing
+
+Redimensionnement des colonnes par drag.
+
+```ts
+interface ColumnResizingOptions {
+  enable?: boolean
+  onColumnSizingChange?: OnChangeFn<ColumnSizingState>
+  resizeMode?: "onChange" | "onEnd"
+  state?: ColumnSizingState
+}
+```
+
+### columnPinning
+
+Épinglage de colonnes (fixe à gauche/droite).
+
+```ts
+interface ColumnPinningOptions {
+  enable?: boolean
+  onColumnPinningChange?: OnChangeFn<ColumnPinningState>
+  state?: ColumnPinningState
+}
+```
+
+### expand
+
+Expansion de lignes (sous-détails).
+
+```ts
+interface ExpandOptions {
+  enable?: boolean
+  onExpandedChange?: OnChangeFn<ExpandedState>
+  state?: ExpandedState
+}
+```
+
+## FeatureContract
+
+Chaque feature implémente l'interface `FeatureContract` :
+
+```ts
+interface FeatureContract<TData, TOptions = Record<string, never>> {
+  Component: ComponentType<{ table: Table<TData>; options: TOptions }>
+  getTableOptions: (options: TOptions) => Record<string, unknown>
+  key: string
+  slot: TableSlot
+}
+```
+
+Les `slots` disponibles : `toolbar`, `header`, `pagination`, `selection-info`, `body`.
+
+Le `Component` de chaque feature est rendu automatiquement dans le slot
+correspondant du tableau.
+
+## Utilisation avancée
+
+```tsx
+<AutoTable
+  schema={schema}
+  data={data}
+  registry={registry}
+  sorting={{ enableMultiSort: true }}
+  pagination={{ pageSize: 20 }}
+  rowSelection={{ enableMultiRowSelection: true }}
+  columnVisibility
+  columnResizing={{ resizeMode: "onChange" }}
+  columnPinning
+  expand
+/>
+```
