@@ -10,7 +10,13 @@ import {
 	FieldError,
 	FieldLabel,
 } from "@code2-base-ui/ui/components/field";
-import { Input } from "@code2-base-ui/ui/components/input";
+import {
+	InputGroup,
+	InputGroupAddon,
+	InputGroupButton,
+	InputGroupInput,
+	InputGroupTextarea,
+} from "@code2-base-ui/ui/components/input-group";
 import {
 	Select,
 	SelectContent,
@@ -19,7 +25,6 @@ import {
 	SelectValue,
 } from "@code2-base-ui/ui/components/select";
 import { Switch } from "@code2-base-ui/ui/components/switch";
-import { Textarea } from "@code2-base-ui/ui/components/textarea";
 import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { toErrorString } from "../utils";
@@ -124,13 +129,16 @@ export function ShadcnTextareaField({
 			htmlFor={id}
 			label={label}
 		>
-			<Textarea
-				disabled={disabled}
-				id={id}
-				onChange={(e) => onChange?.(e.target.value)}
-				placeholder={placeholder}
-				value={(value as string) ?? ""}
-			/>
+			<InputGroup>
+				<InputGroupTextarea
+					aria-invalid={!!error || undefined}
+					disabled={disabled}
+					id={id}
+					onChange={(e) => onChange?.(e.target.value)}
+					placeholder={placeholder}
+					value={(value as string) ?? ""}
+				/>
+			</InputGroup>
 		</FieldWrapper>
 	);
 }
@@ -152,15 +160,17 @@ export function ShadcnTextField({
 			htmlFor={id}
 			label={label}
 		>
-			<Input
-				aria-invalid={!!error || undefined}
-				disabled={disabled}
-				id={id}
-				onChange={(e) => onChange?.(e.target.value)}
-				placeholder={placeholder}
-				type="text"
-				value={(value as string) ?? ""}
-			/>
+			<InputGroup>
+				<InputGroupInput
+					aria-invalid={!!error || undefined}
+					disabled={disabled}
+					id={id}
+					onChange={(e) => onChange?.(e.target.value)}
+					placeholder={placeholder}
+					type="text"
+					value={(value as string) ?? ""}
+				/>
+			</InputGroup>
 		</FieldWrapper>
 	);
 }
@@ -183,8 +193,8 @@ export function ShadcnPasswordField({
 			htmlFor={id}
 			label={label}
 		>
-			<div className="relative">
-				<Input
+			<InputGroup>
+				<InputGroupInput
 					aria-invalid={!!error || undefined}
 					disabled={disabled}
 					id={id}
@@ -193,18 +203,19 @@ export function ShadcnPasswordField({
 					type={show ? "text" : "password"}
 					value={(value as string) ?? ""}
 				/>
-				<button
-					aria-label={
-						show ? "Cacher le mot de passe" : "Afficher le mot de passe"
-					}
-					className="absolute inset-y-0 right-0 flex items-center px-2 text-muted-foreground"
-					onClick={() => setShow((s) => !s)}
-					tabIndex={-1}
-					type="button"
-				>
-					{show ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
-				</button>
-			</div>
+				<InputGroupAddon align="inline-end">
+					<InputGroupButton
+						aria-label={
+							show ? "Cacher le mot de passe" : "Afficher le mot de passe"
+						}
+						onClick={() => setShow((s) => !s)}
+						size="icon-xs"
+						type="button"
+					>
+						{show ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+					</InputGroupButton>
+				</InputGroupAddon>
+			</InputGroup>
 		</FieldWrapper>
 	);
 }
@@ -253,18 +264,20 @@ export function ShadcnNumberField({
 			htmlFor={id}
 			label={label}
 		>
-			<Input
-				aria-invalid={!!error || undefined}
-				disabled={disabled}
-				id={id}
-				onChange={(e) => {
-					const v = e.target.value;
-					onChange?.(v === "" ? undefined : Number(v));
-				}}
-				placeholder={placeholder}
-				type="number"
-				value={(value as number | string) ?? ""}
-			/>
+			<InputGroup>
+				<InputGroupInput
+					aria-invalid={!!error || undefined}
+					disabled={disabled}
+					id={id}
+					onChange={(e) => {
+						const v = e.target.value;
+						onChange?.(v === "" ? undefined : Number(v));
+					}}
+					placeholder={placeholder}
+					type="number"
+					value={(value as number | string) ?? ""}
+				/>
+			</InputGroup>
 		</FieldWrapper>
 	);
 }
