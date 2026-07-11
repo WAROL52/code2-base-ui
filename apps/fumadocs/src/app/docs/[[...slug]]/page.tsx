@@ -8,18 +8,19 @@ import {
 } from "fumadocs-ui/layouts/docs/page";
 import { createRelativeLink } from "fumadocs-ui/mdx";
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
 
 import { getMDXComponents } from "@/components/mdx";
 import { gitConfig } from "@/lib/shared";
-import { getPageImage, getPageMarkdownUrl, source } from "@/lib/source";
+import {
+	getPageImage,
+	getPageMarkdownUrl,
+	getPageOr404,
+	source,
+} from "@/lib/source";
 
 export default async function Page(props: PageProps<"/docs/[[...slug]]">) {
 	const params = await props.params;
-	const page = source.getPage(params.slug);
-	if (!page) {
-		notFound();
-	}
+	const page = getPageOr404(params.slug);
 
 	const MDX = page.data.body;
 	const markdownUrl = getPageMarkdownUrl(page).url;
@@ -57,10 +58,7 @@ export async function generateMetadata(
 	props: PageProps<"/docs/[[...slug]]">
 ): Promise<Metadata> {
 	const params = await props.params;
-	const page = source.getPage(params.slug);
-	if (!page) {
-		notFound();
-	}
+	const page = getPageOr404(params.slug);
 
 	return {
 		title: page.data.title,

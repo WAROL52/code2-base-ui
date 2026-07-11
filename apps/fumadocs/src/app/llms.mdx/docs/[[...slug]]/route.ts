@@ -1,6 +1,9 @@
-import { notFound } from "next/navigation";
-
-import { getLLMText, getPageMarkdownUrl, source } from "@/lib/source";
+import {
+	getLLMText,
+	getPageMarkdownUrl,
+	getPageOr404,
+	source,
+} from "@/lib/source";
 
 export const revalidate = false;
 
@@ -9,10 +12,7 @@ export async function GET(
 	{ params }: RouteContext<"/llms.mdx/docs/[[...slug]]">
 ) {
 	const { slug } = await params;
-	const page = source.getPage(slug?.slice(0, -1));
-	if (!page) {
-		notFound();
-	}
+	const page = getPageOr404(slug?.slice(0, -1));
 
 	return new Response(await getLLMText(page), {
 		headers: {
