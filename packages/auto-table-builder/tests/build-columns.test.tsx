@@ -28,6 +28,7 @@ const mockRegistry: ColumnRegistry = {
 		return TextCell;
 	},
 	register: () => undefined,
+	setFallback: () => undefined,
 };
 
 describe("buildColumns", () => {

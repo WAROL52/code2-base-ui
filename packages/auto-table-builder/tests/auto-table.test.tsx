@@ -10,6 +10,7 @@ const TestCell: any = ({ value }: { value: unknown }) => (
 const mockRegistry: ColumnRegistry = {
 	resolve: () => TestCell,
 	register: () => undefined,
+	setFallback: () => undefined,
 };
 
 interface TestData {
