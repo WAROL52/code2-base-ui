@@ -331,6 +331,133 @@
           "type": "registry:ui"
         }
       ]
+    },
+    {
+      "name": "ui-input-group",
+      "type": "registry:ui",
+      "title": "Input Group",
+      "description": "Composant input group shadcn/ui style base-lyra — addons, boutons, icônes.",
+      "registryDependencies": [
+        "WAROL52/code2-base-ui/ui-button",
+        "WAROL52/code2-base-ui/ui-input",
+        "WAROL52/code2-base-ui/ui-textarea"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/input-group.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "auto-form-builder",
+      "type": "registry:item",
+      "title": "AutoForm Builder",
+      "description": "Générateur de formulaires automatiques à partir de JSON Schema — multi-adaptateur (TanStack Form, React Hook Form, Formisch).",
+      "dependencies": [
+        "react",
+        "react-dom",
+        "@tanstack/react-form",
+        "react-hook-form",
+        "@formisch/react",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "WAROL52/code2-base-ui/json-schema-toolkit",
+        "WAROL52/code2-base-ui/ui-checkbox",
+        "WAROL52/code2-base-ui/ui-date-picker",
+        "WAROL52/code2-base-ui/ui-field",
+        "WAROL52/code2-base-ui/ui-input-group",
+        "WAROL52/code2-base-ui/ui-select",
+        "WAROL52/code2-base-ui/ui-switch"
+      ],
+      "files": [
+        {
+          "path": "packages/auto-form-builder/src/index.ts",
+          "type": "registry:lib",
+          "target": "~/src/auto-form-builder/index.ts"
+        },
+        {
+          "path": "packages/auto-form-builder/src/auto-form-builder.tsx",
+          "type": "registry:lib",
+          "target": "~/src/auto-form-builder/auto-form-builder.tsx"
+        },
+        {
+          "path": "packages/auto-form-builder/src/auto-form-field.tsx",
+          "type": "registry:lib",
+          "target": "~/src/auto-form-builder/auto-form-field.tsx"
+        },
+        {
+          "path": "packages/auto-form-builder/src/create-auto-form.tsx",
+          "type": "registry:lib",
+          "target": "~/src/auto-form-builder/create-auto-form.tsx"
+        },
+        {
+          "path": "packages/auto-form-builder/src/validate.ts",
+          "type": "registry:lib",
+          "target": "~/src/auto-form-builder/validate.ts"
+        },
+        {
+          "path": "packages/auto-form-builder/src/testing.tsx",
+          "type": "registry:lib",
+          "target": "~/src/auto-form-builder/testing.tsx"
+        },
+        {
+          "path": "packages/auto-form-builder/src/adapters/index.ts",
+          "type": "registry:lib",
+          "target": "~/src/auto-form-builder/adapters/index.ts"
+        },
+        {
+          "path": "packages/auto-form-builder/src/adapters/types.ts",
+          "type": "registry:lib",
+          "target": "~/src/auto-form-builder/adapters/types.ts"
+        },
+        {
+          "path": "packages/auto-form-builder/src/adapters/tanstack.tsx",
+          "type": "registry:lib",
+          "target": "~/src/auto-form-builder/adapters/tanstack.tsx"
+        },
+        {
+          "path": "packages/auto-form-builder/src/adapters/rhf.tsx",
+          "type": "registry:lib",
+          "target": "~/src/auto-form-builder/adapters/rhf.tsx"
+        },
+        {
+          "path": "packages/auto-form-builder/src/adapters/formisch.tsx",
+          "type": "registry:lib",
+          "target": "~/src/auto-form-builder/adapters/formisch.tsx"
+        },
+        {
+          "path": "packages/auto-form-builder/src/fields/index.ts",
+          "type": "registry:lib",
+          "target": "~/src/auto-form-builder/fields/index.ts"
+        },
+        {
+          "path": "packages/auto-form-builder/src/fields/field-components.tsx",
+          "type": "registry:lib",
+          "target": "~/src/auto-form-builder/fields/field-components.tsx"
+        },
+        {
+          "path": "packages/auto-form-builder/src/layout/index.ts",
+          "type": "registry:lib",
+          "target": "~/src/auto-form-builder/layout/index.ts"
+        },
+        {
+          "path": "packages/auto-form-builder/src/layout/types.ts",
+          "type": "registry:lib",
+          "target": "~/src/auto-form-builder/layout/types.ts"
+        },
+        {
+          "path": "packages/auto-form-builder/src/layout/shadcn.tsx",
+          "type": "registry:lib",
+          "target": "~/src/auto-form-builder/layout/shadcn.tsx"
+        },
+        {
+          "path": "packages/auto-form-builder/src/layout/context.tsx",
+          "type": "registry:lib",
+          "target": "~/src/auto-form-builder/layout/context.tsx"
+        }
+      ]
     }
   ]
 }

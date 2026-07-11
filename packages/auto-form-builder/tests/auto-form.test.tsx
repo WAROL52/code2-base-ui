@@ -622,7 +622,9 @@ describe("error display", () => {
 			);
 			fireEvent.submit(getForm(container));
 			await waitFor(() => {
-				expect(screen.getByText("username is required")).toBeTruthy();
+				expect(
+					screen.getAllByText("This field is required").length
+				).toBeGreaterThanOrEqual(1);
 				expect(onSubmit).not.toHaveBeenCalled();
 			});
 		});
@@ -638,9 +640,7 @@ describe("error display", () => {
 			);
 			fireEvent.submit(getForm(container));
 			await waitFor(() => {
-				expect(
-					screen.getByText("username must be at least 3 characters")
-				).toBeTruthy();
+				expect(screen.getByText("Must be at least 3 characters")).toBeTruthy();
 				expect(onSubmit).not.toHaveBeenCalled();
 			});
 		});
@@ -660,9 +660,7 @@ describe("error display", () => {
 			);
 			fireEvent.submit(getForm(container));
 			await waitFor(() => {
-				expect(
-					screen.getByText("bio must be at most 200 characters")
-				).toBeTruthy();
+				expect(screen.getByText("Must be at most 200 characters")).toBeTruthy();
 				expect(onSubmit).not.toHaveBeenCalled();
 			});
 		});
@@ -678,7 +676,7 @@ describe("error display", () => {
 			);
 			fireEvent.submit(getForm(container));
 			await waitFor(() => {
-				expect(screen.getByText("zipCode does not match pattern")).toBeTruthy();
+				expect(screen.getByText("Must match pattern: ^[0-9]{5}$")).toBeTruthy();
 				expect(onSubmit).not.toHaveBeenCalled();
 			});
 		});
@@ -694,7 +692,7 @@ describe("error display", () => {
 			);
 			fireEvent.submit(getForm(container));
 			await waitFor(() => {
-				expect(screen.getByText("email must be a valid email")).toBeTruthy();
+				expect(screen.getByText("Invalid format: email")).toBeTruthy();
 				expect(onSubmit).not.toHaveBeenCalled();
 			});
 		});
@@ -710,9 +708,7 @@ describe("error display", () => {
 			);
 			fireEvent.submit(getForm(container));
 			await waitFor(() => {
-				expect(
-					screen.getByText("username must be at least 3 characters")
-				).toBeTruthy();
+				expect(screen.getByText("Must be at least 3 characters")).toBeTruthy();
 			});
 			const inputs = screen.getAllByTestId("auto-input");
 			const input = inputs[0];
@@ -751,7 +747,9 @@ describe("error display", () => {
 			);
 			fireEvent.submit(getForm(container));
 			await waitFor(() => {
-				expect(screen.getByText("age must be at least 0")).toBeTruthy();
+				expect(
+					screen.getByText("Must be greater than or equal to 0")
+				).toBeTruthy();
 				expect(onSubmit).not.toHaveBeenCalled();
 			});
 		});
@@ -772,7 +770,7 @@ describe("error display", () => {
 			);
 			fireEvent.submit(getForm(container));
 			await waitFor(() => {
-				expect(screen.getByText("price must be a number")).toBeTruthy();
+				expect(screen.getByText("Expected type: number")).toBeTruthy();
 				expect(onSubmit).not.toHaveBeenCalled();
 			});
 		});
@@ -788,7 +786,9 @@ describe("error display", () => {
 			);
 			fireEvent.submit(getForm(container));
 			await waitFor(() => {
-				expect(screen.getByText("price must be greater than 0")).toBeTruthy();
+				expect(
+					screen.getByText("Must be strictly greater than 0")
+				).toBeTruthy();
 				expect(onSubmit).not.toHaveBeenCalled();
 			});
 		});
@@ -804,9 +804,7 @@ describe("error display", () => {
 			);
 			fireEvent.submit(getForm(container));
 			await waitFor(() => {
-				expect(
-					screen.getByText("score must be a multiple of 0.5")
-				).toBeTruthy();
+				expect(screen.getByText("Must be a multiple of 0.5")).toBeTruthy();
 				expect(onSubmit).not.toHaveBeenCalled();
 			});
 		});
@@ -827,7 +825,7 @@ describe("error display", () => {
 			fireEvent.submit(getForm(container));
 			await waitFor(() => {
 				expect(
-					screen.getByText("role must be one of: admin, user, moderator")
+					screen.getByText("Must be one of: admin, user, moderator")
 				).toBeTruthy();
 				expect(onSubmit).not.toHaveBeenCalled();
 			});
@@ -848,9 +846,7 @@ describe("error display", () => {
 			);
 			fireEvent.submit(getForm(container));
 			await waitFor(() => {
-				expect(
-					screen.getByText("password must be at least 8 characters")
-				).toBeTruthy();
+				expect(screen.getByText("Must be at least 8 characters")).toBeTruthy();
 				expect(onSubmit).not.toHaveBeenCalled();
 			});
 		});
@@ -870,9 +866,7 @@ describe("error display", () => {
 			);
 			fireEvent.submit(getForm(container));
 			await waitFor(() => {
-				expect(
-					screen.getByText("tags must have at least 1 item(s)")
-				).toBeTruthy();
+				expect(screen.getByText("Must have at least 1 item(s)")).toBeTruthy();
 				expect(onSubmit).not.toHaveBeenCalled();
 			});
 		});
@@ -888,9 +882,7 @@ describe("error display", () => {
 			);
 			fireEvent.submit(getForm(container));
 			await waitFor(() => {
-				expect(
-					screen.getByText("tags must have at most 5 item(s)")
-				).toBeTruthy();
+				expect(screen.getByText("Must have at most 5 item(s)")).toBeTruthy();
 				expect(onSubmit).not.toHaveBeenCalled();
 			});
 		});
@@ -906,7 +898,7 @@ describe("error display", () => {
 			);
 			fireEvent.submit(getForm(container));
 			await waitFor(() => {
-				expect(screen.getByText("nums items must be unique")).toBeTruthy();
+				expect(screen.getByText("All items must be unique")).toBeTruthy();
 				expect(onSubmit).not.toHaveBeenCalled();
 			});
 		});
@@ -932,18 +924,14 @@ describe("error display", () => {
 			);
 			fireEvent.submit(getForm(container));
 			await waitFor(() => {
+				expect(screen.getByText("Must be at least 2 characters")).toBeTruthy();
+				expect(screen.getByText("Invalid format: email")).toBeTruthy();
 				expect(
-					screen.getByText("name must be at least 2 characters")
+					screen.getByText("Must be greater than or equal to 18")
 				).toBeTruthy();
-				expect(screen.getByText("email must be a valid email")).toBeTruthy();
-				expect(screen.getByText("age must be at least 18")).toBeTruthy();
-				expect(
-					screen.getByText("role must be one of: admin, user")
-				).toBeTruthy();
-				expect(
-					screen.getByText("tags must have at least 1 item(s)")
-				).toBeTruthy();
-				expect(screen.getByText("agree is required")).toBeTruthy();
+				expect(screen.getByText("Must be one of: admin, user")).toBeTruthy();
+				expect(screen.getByText("Must have at least 1 item(s)")).toBeTruthy();
+				expect(screen.getByText("This field is required")).toBeTruthy();
 				expect(onSubmit).not.toHaveBeenCalled();
 			});
 		});

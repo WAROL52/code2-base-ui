@@ -7,18 +7,8 @@ import {
 	FieldLegend,
 	FieldSet,
 } from "@code2-base-ui/ui/components/field";
-import type { FieldAPI } from "../adapters/types";
+import { toErrorString } from "../utils";
 import type { FormLayout } from "./types";
-
-function toErrorString(error?: FieldAPI["error"]): string | undefined {
-	if (!error) {
-		return;
-	}
-	if (typeof error === "string") {
-		return error;
-	}
-	return error.message;
-}
 
 export const shadcnLayout: FormLayout = {
 	FieldSet,

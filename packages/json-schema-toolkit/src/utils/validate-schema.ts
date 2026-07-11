@@ -1,91 +1,75 @@
-import type { JsonSchema, JsonSchemaType, ValidationResult } from "../types";
+import { type TSchema, Type } from "@sinclair/typebox";
+import { Value } from "@sinclair/typebox/value";
+import type { JsonSchema, ValidationResult } from "../types";
 
-function checkRequiredFields(
-	schema: JsonSchema,
-	dataObj: Record<string, unknown>
-): ValidationResult | null {
-	if (!Array.isArray(schema.required)) {
-		return null;
-	}
-	for (const requiredField of schema.required) {
-		if (!(requiredField in dataObj)) {
-			return {
-				success: false,
-				errors: [{ path: requiredField, message: "Missing required field" }],
-			};
+const PATH_CLEANER = /^\//;
+const PATH_SEPARATOR = /\//g;
+
+function toTypeBox(schema: JsonSchema): TSchema {
+	const properties = schema.properties ?? {};
+	const tbProps: Record<string, TSchema> = {};
+
+	for (const [key, prop] of Object.entries(properties)) {
+		const propSchema = prop as JsonSchema;
+		switch (propSchema.type) {
+			case "string":
+				tbProps[key] = Type.String();
+				break;
+			case "number":
+			case "integer":
+				tbProps[key] = Type.Number();
+				break;
+			case "boolean":
+				tbProps[key] = Type.Boolean();
+				break;
+			case "array":
+				tbProps[key] = Type.Array(Type.Unknown());
+				break;
+			case "object":
+				tbProps[key] = Type.Record(Type.String(), Type.Unknown());
+				break;
+			default:
+				tbProps[key] = Type.Unknown();
 		}
 	}
-	return null;
-}
 
-function validatePropType(
-	_key: string,
-	value: unknown,
-	type: JsonSchemaType | JsonSchemaType[] | undefined
-): string | null {
-	if (type === "string" && typeof value !== "string") {
-		return `Expected string, got ${typeof value}`;
+	const required = schema.required as string[] | undefined;
+	if (required) {
+		return Type.Object(tbProps, { required });
 	}
-	if (type === "number" && typeof value !== "number") {
-		return `Expected number, got ${typeof value}`;
-	}
-	if (type === "boolean" && typeof value !== "boolean") {
-		return `Expected boolean, got ${typeof value}`;
-	}
-	if (type === "object" && typeof value !== "object") {
-		return `Expected object, got ${typeof value}`;
-	}
-	if (Array.isArray(type) && !type.includes(typeof value as JsonSchemaType)) {
-		return `Expected one of ${type.join(", ")}, got ${typeof value}`;
-	}
-	return null;
+	return Type.Object(tbProps);
 }
 
 /**
- * Validates data against a raw JSON Schema.
+ * Validates data against a JSON Schema using TypeBox.
  *
- * For simplicity, this implementation extracts required fields from the schema
- * and checks if the data contains those fields (basic validation).
+ * @deprecated Use `validateSchema` from `@code2-base-ui/json-schema-toolkit/core`
+ * instead. This function is kept for backward compatibility.
  *
  * @param schema - The JSON Schema to validate against
  * @param data - The data to validate
  * @returns A ValidationResult
  */
-export function validateSchema(
+export function validateJsonSchema(
 	schema: JsonSchema,
 	data: unknown
 ): ValidationResult {
 	try {
-		const dataObj = data as Record<string, unknown>;
+		const tbSchema = toTypeBox(schema);
 
-		const requiredResult = checkRequiredFields(schema, dataObj);
-		if (requiredResult) {
-			return requiredResult;
+		if (Value.Check(tbSchema, data)) {
+			return { success: true, errors: [] };
 		}
 
-		const properties = schema.properties || {};
 		const errors: Array<{ path: string; message: string }> = [];
-
-		for (const [key, propSchema] of Object.entries(properties)) {
-			if (
-				dataObj &&
-				key in dataObj &&
-				propSchema &&
-				typeof propSchema === "object"
-			) {
-				const value = dataObj[key];
-				const error = validatePropType(key, value, propSchema.type);
-				if (error) {
-					errors.push({ path: key, message: error });
-				}
-			}
+		for (const error of Value.Errors(tbSchema, data)) {
+			errors.push({
+				path: error.path.replace(PATH_CLEANER, "").replace(PATH_SEPARATOR, "."),
+				message: error.message,
+			});
 		}
 
-		if (errors.length > 0) {
-			return { success: false, errors };
-		}
-
-		return { success: true, errors: [] };
+		return { success: false, errors };
 	} catch {
 		return {
 			success: false,

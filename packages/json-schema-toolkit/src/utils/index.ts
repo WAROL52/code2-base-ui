@@ -4,4 +4,4 @@ export { fromEntries } from "./from-entries";
 export { groupBy } from "./group-by";
 export { humanizePath } from "./humanize-path";
 export { keys } from "./keys";
-export { validateSchema } from "./validate-schema";
+export { validateJsonSchema } from "./validate-schema";

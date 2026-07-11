@@ -149,45 +149,85 @@ export function getFieldMeta(
 	resolved: ResolvedSchema,
 	path: string
 ): FieldMeta | null {
-	const fields = traverseSchema(resolved);
-	return findByPath(fields, path);
+	const { root } = resolved;
+
+	if (!path || path === "root") {
+		const fields = traverseSchema(resolved);
+		return (
+			(path === "" ? fields[0] : fields.find((f) => f.path === path)) ?? null
+		);
+	}
+
+	return walkSchemaByPath(root, path.split("."), "");
 }
 
-function findInVariants(
-	variants: FieldMeta["variants"],
-	path: string
+function walkSchemaByPath(
+	schema: JsonSchema,
+	segments: string[],
+	parentPath: string
 ): FieldMeta | null {
-	if (!variants) {
+	if (segments.length === 0) {
 		return null;
 	}
-	for (const variant of variants) {
-		const found = findByPath(variant.children, path);
-		if (found) {
-			return found;
-		}
-		if (variant.meta.path === path) {
-			return variant.meta;
-		}
+
+	const [first, ...rest] = segments;
+	if (!first) {
+		return null;
 	}
+	const head = first;
+	const kind = getKind(schema);
+
+	if (kind === "object" && schema.properties) {
+		const props = schema.properties as Record<string, JsonSchema>;
+		const childSchema = props[head];
+		if (!childSchema) {
+			return null;
+		}
+
+		const childPath = parentPath ? `${parentPath}.${head}` : head;
+		const childRequired = schema.required?.includes(head) ?? false;
+
+		if (rest.length === 0) {
+			return schemaToFieldMeta(childSchema, head, childPath, childRequired);
+		}
+
+		const innerKind = getKind(childSchema);
+		if (innerKind === "object") {
+			return walkSchemaByPath(childSchema, rest, childPath);
+		}
+		if (innerKind === "union") {
+			return walkUnionVariants(childSchema, rest, childPath);
+		}
+		return null;
+	}
+
+	if (kind === "union") {
+		return walkUnionVariants(schema, segments, parentPath);
+	}
+
+	if (kind === "array") {
+		const itemSchema = (schema.items ?? schema.prefixItems?.[0]) as
+			| JsonSchema
+			| undefined;
+		if (!itemSchema) {
+			return null;
+		}
+		return walkSchemaByPath(itemSchema, segments, parentPath);
+	}
+
 	return null;
 }
 
-function findByPath(fields: FieldMeta[], path: string): FieldMeta | null {
-	for (const field of fields) {
-		if (field.path === path) {
-			return field;
-		}
-
-		if (field.children) {
-			const found = findByPath(field.children, path);
-			if (found) {
-				return found;
-			}
-		}
-
-		const foundInVariants = findInVariants(field.variants, path);
-		if (foundInVariants) {
-			return foundInVariants;
+function walkUnionVariants(
+	schema: JsonSchema,
+	segments: string[],
+	parentPath: string
+): FieldMeta | null {
+	const variants = getUnionVariants(schema);
+	for (const variant of variants) {
+		const found = walkSchemaByPath(variant, segments, parentPath);
+		if (found) {
+			return found;
 		}
 	}
 	return null;

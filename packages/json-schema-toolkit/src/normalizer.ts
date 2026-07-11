@@ -86,11 +86,11 @@ export function isUnionSchema(schema: JsonSchema): boolean {
 }
 
 export function getUnionVariants(schema: JsonSchema): JsonSchema[] {
+	if (!isUnionSchema(schema)) {
+		return [];
+	}
 	if (Array.isArray(schema.oneOf) && schema.oneOf.length > 1) {
 		return schema.oneOf as JsonSchema[];
 	}
-	if (Array.isArray(schema.anyOf) && schema.anyOf.length > 1) {
-		return schema.anyOf as JsonSchema[];
-	}
-	return [];
+	return (schema.anyOf ?? []) as JsonSchema[];
 }

@@ -1,4 +1,5 @@
 export type { SchemaAdapter } from "./adapter/types";
+export { isEmpty, validateConstraint } from "./constraint-validator";
 export {
 	createStandardSchema,
 	numberSchema,
@@ -6,10 +7,19 @@ export {
 	type StandardSchema,
 	stringSchema,
 	toJsonSchema,
+	validateSchema,
 } from "./core/schema";
 export * from "./core/standard-schema-v1";
 // Schema traversal & resolution
-export { FieldGuard } from "./guards";
+export {
+	assertFieldMeta,
+	isFieldArray,
+	isFieldEnum,
+	isFieldObject,
+	isFieldPrimitive,
+	isFieldUnion,
+	isJsonSchema,
+} from "./guards";
 export {
 	enMessages,
 	frMessages,
@@ -64,4 +74,4 @@ export {
 	groupBy,
 	keys,
 } from "./utils/index";
-export { validateSchema } from "./utils/validate-schema";
+export { validateJsonSchema } from "./utils/validate-schema";

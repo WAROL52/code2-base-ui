@@ -63,8 +63,10 @@ export interface JsonSchema {
 export type FieldKind = "primitive" | "object" | "array" | "enum" | "union";
 
 export interface FieldConstraints {
+	enum?: unknown[];
 	exclusiveMaximum?: number;
 	exclusiveMinimum?: number;
+	format?: string;
 	maxItems?: number;
 	maximum?: number;
 	maxLength?: number;
@@ -73,6 +75,7 @@ export interface FieldConstraints {
 	minLength?: number;
 	multipleOf?: number;
 	pattern?: string;
+	type?: string;
 	uniqueItems?: boolean;
 }
 

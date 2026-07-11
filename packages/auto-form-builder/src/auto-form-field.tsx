@@ -5,26 +5,13 @@ import type {
 	FieldRegistry,
 } from "@code2-base-ui/json-schema-toolkit";
 import type { ComponentType, ReactNode } from "react";
-import { useState } from "react";
 import type { FormAdapter, FormAPI } from "./adapters/types";
+import { ArrayHandler } from "./handlers/array-handler";
+import { LeafHandler } from "./handlers/leaf-handler";
+import { ObjectHandler } from "./handlers/object-handler";
+import type { HandlerProps } from "./handlers/types";
+import { UnionHandler } from "./handlers/union-handler";
 import { useFormLayout } from "./layout/context";
-
-function getDefaultForType(type?: string): unknown {
-	switch (type) {
-		case "string":
-			return "";
-		case "number":
-			return 0;
-		case "boolean":
-			return false;
-		case "object":
-			return {};
-		case "array":
-			return [];
-		default:
-			return "";
-	}
-}
 
 export interface AutoFormFieldProps {
 	adapter: FormAdapter;
@@ -35,6 +22,16 @@ export interface AutoFormFieldProps {
 	unionFieldRenderer?: ComponentType<AutoFormFieldProps>;
 }
 
+type HandlerComponent = ComponentType<HandlerProps>;
+
+const handlerMap: Record<string, HandlerComponent> = {
+	array: ArrayHandler,
+	enum: LeafHandler,
+	object: ObjectHandler,
+	primitive: LeafHandler,
+	union: UnionHandler,
+};
+
 export function AutoFormField({
 	fieldMeta,
 	adapter,
@@ -43,7 +40,6 @@ export function AutoFormField({
 	unionFieldRenderer: UnionRenderer,
 }: AutoFormFieldProps) {
 	const layout = useFormLayout();
-	const [selectedIndex, setSelectedIndex] = useState(0);
 	const { uiHidden } = fieldMeta;
 
 	if (uiHidden) {
@@ -61,107 +57,21 @@ export function AutoFormField({
 		/>
 	);
 
-	if (fieldMeta.kind === "object" && fieldMeta.children) {
+	const Handler = fieldMeta.kind ? handlerMap[fieldMeta.kind] : undefined;
+
+	if (Handler) {
 		return (
-			<layout.ObjectField fieldMeta={fieldMeta}>
-				{fieldMeta.children.map((child) => renderField(child))}
-			</layout.ObjectField>
-		);
-	}
-
-	if (fieldMeta.kind === "array" && fieldMeta.itemMeta) {
-		const { path } = fieldMeta;
-		const itemMeta = fieldMeta.itemMeta;
-		const values = (form.values[path] as unknown[]) ?? [];
-
-		const items = values.map((_val, index) => {
-			const indexedMeta: FieldMeta = {
-				...itemMeta,
-				path: `${path}[${index}]`,
-			};
-			return renderField(indexedMeta);
-		});
-
-		return (
-			<adapter.Field name={path}>
-				{(field) => (
-					<layout.ArrayField
-						error={field.error}
-						fieldMeta={fieldMeta}
-						onAdd={() =>
-							form.appendFieldValue(path, getDefaultForType(itemMeta.type))
-						}
-						onRemove={(index) => form.removeFieldValue(path, index)}
-					>
-						{items}
-					</layout.ArrayField>
-				)}
-			</adapter.Field>
-		);
-	}
-
-	if (fieldMeta.kind === "union" && fieldMeta.variants) {
-		if (UnionRenderer) {
-			return (
-				<UnionRenderer
-					adapter={adapter}
-					fieldMeta={fieldMeta}
-					form={form}
-					key={fieldMeta.path}
-					registry={registry}
-					renderChild={renderField}
-					unionFieldRenderer={UnionRenderer}
-				/>
-			);
-		}
-
-		const variants = fieldMeta.variants;
-
-		if (!variants || variants.length === 0) {
-			return null;
-		}
-
-		const safeIndex =
-			selectedIndex >= variants.length
-				? Math.max(0, variants.length - 1)
-				: selectedIndex;
-		const variant = variants[safeIndex];
-
-		if (!variant) {
-			return null;
-		}
-
-		return (
-			<layout.CompositionsField
+			<Handler
+				adapter={adapter}
 				fieldMeta={fieldMeta}
-				onSelect={(index) => setSelectedIndex(index)}
-				options={variants.map((v) => ({ label: v.label }))}
-				selectedIndex={safeIndex}
-			>
-				{variant.children.map((child) => renderField(child))}
-			</layout.CompositionsField>
+				form={form}
+				layout={layout}
+				registry={registry}
+				renderChild={renderField}
+				unionFieldRenderer={UnionRenderer as HandlerProps["unionFieldRenderer"]}
+			/>
 		);
 	}
 
-	const { path, label, placeholder } = fieldMeta;
-	const Component = registry.resolve(fieldMeta);
-
-	return (
-		<adapter.Field name={path}>
-			{(field) => (
-				<Component
-					className={fieldMeta.uiReadonly ? "opacity-50" : ""}
-					disabled={fieldMeta.uiReadonly}
-					error={field.error}
-					field={fieldMeta}
-					id={path}
-					key={path}
-					label={label}
-					onChange={(val: unknown) => field.onChange(val)}
-					placeholder={placeholder}
-					value={field.value}
-				/>
-			)}
-		</adapter.Field>
-	);
+	return null;
 }

@@ -296,16 +296,14 @@ describe("createSchemaValidator", () => {
 				tags: [],
 				agree: undefined,
 			});
-			expect(toObj(errors.name)?.message).toBe("name is required");
-			expect(toObj(errors.email)?.message).toBe("email must be a valid email");
-			expect(toObj(errors.age)?.message).toBe("age must be at least 18");
-			expect(toObj(errors.role)?.message).toBe(
-				"role must be one of: admin, user"
+			expect(toObj(errors.name)?.message).toBe("This field is required");
+			expect(toObj(errors.email)?.message).toBe("Invalid format: email");
+			expect(toObj(errors.age)?.message).toBe(
+				"Must be greater than or equal to 18"
 			);
-			expect(toObj(errors.tags)?.message).toBe(
-				"tags must have at least 1 item(s)"
-			);
-			expect(toObj(errors.agree)?.message).toBe("agree is required");
+			expect(toObj(errors.role)?.message).toBe("Must be one of: admin, user");
+			expect(toObj(errors.tags)?.message).toBe("Must have at least 1 item(s)");
+			expect(toObj(errors.agree)?.message).toBe("This field is required");
 		});
 
 		it("passes when all fields are valid", () => {

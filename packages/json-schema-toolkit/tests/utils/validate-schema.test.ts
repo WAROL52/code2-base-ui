@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 import type { JsonSchema } from "../../src/types";
-import { validateSchema } from "../../src/utils/validate-schema";
+import { validateJsonSchema } from "../../src/utils/validate-schema";
 
-describe("validateSchema", () => {
+describe("validateJsonSchema", () => {
 	it("validates a correct object", () => {
 		const schema: JsonSchema = {
 			type: "object",
@@ -10,7 +10,7 @@ describe("validateSchema", () => {
 				name: { type: "string" },
 			},
 		};
-		const result = validateSchema(schema, { name: "Alice" });
+		const result = validateJsonSchema(schema, { name: "Alice" });
 		expect(result.success).toBe(true);
 	});
 
@@ -21,7 +21,7 @@ describe("validateSchema", () => {
 				age: { type: "number" },
 			},
 		};
-		const result = validateSchema(schema, { age: "not-a-number" });
+		const result = validateJsonSchema(schema, { age: "not-a-number" });
 		expect(result.success).toBe(false);
 	});
 });

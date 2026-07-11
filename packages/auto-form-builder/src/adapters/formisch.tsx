@@ -1,5 +1,7 @@
 "use client";
 
+import type { FieldConstraints } from "@code2-base-ui/json-schema-toolkit";
+import { getConstraints } from "@code2-base-ui/json-schema-toolkit";
 import {
 	Form,
 	Field as FormischField,
@@ -92,27 +94,24 @@ function isRequired(schema: Record<string, unknown>, field: string): boolean {
 }
 
 function buildStringSchema(
-	fieldSchema: Record<string, unknown>,
+	constraints: FieldConstraints | undefined,
 	fieldRequired: boolean
 ): GenericSchema {
 	const pipes: never[] = [];
 	if (fieldRequired) {
 		pipes.push(vNonEmpty("Required") as never);
 	}
-	const minL = fieldSchema.minLength as number | undefined;
-	if (minL !== undefined) {
-		pipes.push(vMinLength(minL) as never);
+	if (constraints?.minLength !== undefined) {
+		pipes.push(vMinLength(constraints.minLength) as never);
 	}
-	const maxL = fieldSchema.maxLength as number | undefined;
-	if (maxL !== undefined) {
-		pipes.push(vMaxLength(maxL) as never);
+	if (constraints?.maxLength !== undefined) {
+		pipes.push(vMaxLength(constraints.maxLength) as never);
 	}
-	if (fieldSchema.format === "email") {
+	if (constraints?.format === "email") {
 		pipes.push(vEmail() as never);
 	}
-	const pat = fieldSchema.pattern as string | undefined;
-	if (pat !== undefined) {
-		pipes.push(vRegex(new RegExp(pat)) as never);
+	if (constraints?.pattern !== undefined) {
+		pipes.push(vRegex(new RegExp(constraints.pattern)) as never);
 	}
 	return pipes.length > 0
 		? (pipe(vString(), ...pipes) as never as GenericSchema)
@@ -120,41 +119,39 @@ function buildStringSchema(
 }
 
 function buildNumberSchema(
-	fieldSchema: Record<string, unknown>,
+	constraints: FieldConstraints | undefined,
 	asInteger: boolean
 ): GenericSchema {
 	const pipes: never[] = [];
 	if (asInteger) {
 		pipes.push(vInteger() as never);
 	}
-	const min = fieldSchema.minimum as number | undefined;
-	if (min !== undefined) {
-		pipes.push(vMinValue(min) as never);
+	if (constraints?.minimum !== undefined) {
+		pipes.push(vMinValue(constraints.minimum) as never);
 	}
-	const max = fieldSchema.maximum as number | undefined;
-	if (max !== undefined) {
-		pipes.push(vMaxValue(max) as never);
+	if (constraints?.maximum !== undefined) {
+		pipes.push(vMaxValue(constraints.maximum) as never);
 	}
-	const mult = fieldSchema.multipleOf as number | undefined;
-	if (mult !== undefined) {
-		pipes.push(vMultipleOf(mult) as never);
+	if (constraints?.multipleOf !== undefined) {
+		pipes.push(vMultipleOf(constraints.multipleOf) as never);
 	}
 	return pipes.length > 0
 		? (pipe(vNumber(), ...pipes) as never as GenericSchema)
 		: (vNumber() as GenericSchema);
 }
 
-function buildArraySchema(fieldSchema: Record<string, unknown>): GenericSchema {
+function buildArraySchema(
+	constraints: FieldConstraints | undefined,
+	fieldSchema: Record<string, unknown>
+): GenericSchema {
 	const items = (fieldSchema.items as Record<string, unknown>) ?? {};
 	const itemSchema = buildFieldValibotSchema(items, false);
 	const pipes: never[] = [];
-	const minItems = fieldSchema.minItems as number | undefined;
-	if (minItems !== undefined) {
-		pipes.push(vMinLength(minItems) as never);
+	if (constraints?.minItems !== undefined) {
+		pipes.push(vMinLength(constraints.minItems) as never);
 	}
-	const maxItems = fieldSchema.maxItems as number | undefined;
-	if (maxItems !== undefined) {
-		pipes.push(vMaxLength(maxItems) as never);
+	if (constraints?.maxItems !== undefined) {
+		pipes.push(vMaxLength(constraints.maxItems) as never);
 	}
 	const base = vArray(itemSchema);
 	return pipes.length > 0
@@ -180,23 +177,25 @@ function buildFieldValibotSchema(
 	fieldSchema: Record<string, unknown>,
 	fieldRequired: boolean
 ): GenericSchema {
+	const constraints = getConstraints(fieldSchema);
+
 	if (fieldSchema.enum !== undefined) {
 		const options = fieldSchema.enum as [string, ...string[]];
 		return vPicklist(options) as never as GenericSchema;
 	}
 
-	const type = (fieldSchema.type as string) ?? "string";
+	const type = constraints?.type ?? "string";
 
 	switch (type) {
 		case "string":
-			return buildStringSchema(fieldSchema, fieldRequired);
+			return buildStringSchema(constraints, fieldRequired);
 		case "number":
 		case "integer":
-			return buildNumberSchema(fieldSchema, type === "integer");
+			return buildNumberSchema(constraints, type === "integer");
 		case "boolean":
 			return vBoolean() as GenericSchema;
 		case "array":
-			return buildArraySchema(fieldSchema);
+			return buildArraySchema(constraints, fieldSchema);
 		case "object":
 			return buildObjectSchema(fieldSchema);
 		default:

@@ -1,3 +1,4 @@
+import { isUnionSchema } from "./normalizer";
 import type {
 	FieldConstraints,
 	FieldKind,
@@ -28,9 +29,7 @@ export function getType(schema: JsonSchema): JsonSchemaType {
 }
 
 export function getKind(schema: JsonSchema): FieldKind {
-	const hasOneOf = Array.isArray(schema.oneOf) && schema.oneOf.length > 1;
-	const hasAnyOf = Array.isArray(schema.anyOf) && schema.anyOf.length > 1;
-	if (hasOneOf || hasAnyOf) {
+	if (isUnionSchema(schema)) {
 		return "union";
 	}
 
@@ -139,6 +138,21 @@ export function getConstraints(
 	}
 	if (schema.uniqueItems !== undefined) {
 		constraints.uniqueItems = schema.uniqueItems;
+		hasConstraint = true;
+	}
+
+	if (schema.enum !== undefined) {
+		constraints.enum = schema.enum;
+		hasConstraint = true;
+	}
+	if (schema.format !== undefined) {
+		constraints.format = schema.format;
+		hasConstraint = true;
+	}
+	if (schema.type !== undefined) {
+		constraints.type = Array.isArray(schema.type)
+			? schema.type[0]
+			: schema.type;
 		hasConstraint = true;
 	}
 

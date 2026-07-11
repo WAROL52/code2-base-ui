@@ -183,7 +183,7 @@ describe("getConstraints", () => {
 	});
 
 	it("returns undefined when no constraints", () => {
-		expect(getConstraints({ type: "string" })).toBeUndefined();
+		expect(getConstraints({})).toBeUndefined();
 	});
 });
 
