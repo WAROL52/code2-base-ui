@@ -756,7 +756,28 @@ describe("error display", () => {
 			});
 		});
 
-		it("shows type error when price is an integer", async () => {
+		it("shows type error when price is a string", async () => {
+			const onSubmit = vi.fn();
+			const { container } = render(
+				<Form
+					defaultValues={{
+						age: 25,
+						price: "abc" as unknown as number,
+						score: 3.5,
+						quantity: 1,
+					}}
+					onSubmit={onSubmit}
+					schema={numberConstraintsSchema}
+				/>
+			);
+			fireEvent.submit(getForm(container));
+			await waitFor(() => {
+				expect(screen.getByText("price must be a number")).toBeTruthy();
+				expect(onSubmit).not.toHaveBeenCalled();
+			});
+		});
+
+		it("shows exclusiveMinimum error when price is 0", async () => {
 			const onSubmit = vi.fn();
 			const { container } = render(
 				<Form
@@ -767,7 +788,7 @@ describe("error display", () => {
 			);
 			fireEvent.submit(getForm(container));
 			await waitFor(() => {
-				expect(screen.getByText("price must be a number")).toBeTruthy();
+				expect(screen.getByText("price must be greater than 0")).toBeTruthy();
 				expect(onSubmit).not.toHaveBeenCalled();
 			});
 		});

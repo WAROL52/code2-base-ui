@@ -9,6 +9,7 @@ import {
 } from "@code2-base-ui/json-schema-toolkit";
 import { useMemo, useRef } from "react";
 import type { FormAdapter, FormAPI } from "./adapters/types";
+import { createSchemaValidator } from "./validate";
 
 const PATH_SEPARATOR_RE = /[.[\]]+/;
 
@@ -70,8 +71,15 @@ export function AutoFormBuilder({
 		return result;
 	}, [defaultValues, fields]);
 
+	const validate = useMemo(() => createSchemaValidator(schema), [schema]);
+
 	return (
-		<adapter.FormProvider defaultValues={completeDefaults} onSubmit={onSubmit}>
+		<adapter.FormProvider
+			defaultValues={completeDefaults}
+			onSubmit={onSubmit}
+			schema={schema}
+			validate={validate}
+		>
 			{(formAPI) => children({ form: formAPI, fields, resolvedSchema })}
 		</adapter.FormProvider>
 	);

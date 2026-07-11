@@ -1,22 +1,61 @@
 "use client";
 
-import { createContext, useContext } from "react";
-import { Controller, type UseFormReturn, useForm } from "react-hook-form";
+import { createContext, useContext, useMemo } from "react";
+import {
+	Controller,
+	type Resolver,
+	type UseFormReturn,
+	useForm,
+} from "react-hook-form";
 import type {
+	FieldError,
 	FieldProps,
 	FormAdapter,
 	FormAPI,
 	FormProviderProps,
 } from "./types";
 
+function toResolver(
+	validate?: (
+		values: Record<string, unknown>
+	) => Record<string, FieldError | undefined>
+): Resolver<Record<string, unknown>> | undefined {
+	if (!validate) {
+		return;
+	}
+	return (values) => {
+		const errors = validate(values as Record<string, unknown>);
+		const rhfErrors: Record<string, { type: string; message?: string }> = {};
+		for (const [key, err] of Object.entries(errors)) {
+			if (err) {
+				rhfErrors[key] = {
+					type: "validation",
+					message: typeof err === "string" ? err : err.message,
+				};
+			}
+		}
+		return {
+			values: values as Record<string, never>,
+			errors: rhfErrors,
+		} as never;
+	};
+}
+
 const RHFContext = createContext<UseFormReturn | null>(null);
 
 export const rhfAdapter: FormAdapter = {
 	name: "rhf",
 
-	FormProvider({ defaultValues, onSubmit, children }: FormProviderProps) {
+	FormProvider({
+		defaultValues,
+		onSubmit,
+		children,
+		validate,
+	}: FormProviderProps) {
+		const resolver = useMemo(() => toResolver(validate), [validate]);
 		const form = useForm({
 			defaultValues: defaultValues ?? {},
+			resolver: resolver as Resolver<Record<string, unknown>> | undefined,
 		});
 
 		const formAPI: FormAPI = {

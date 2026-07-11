@@ -11,7 +11,8 @@
     "./adapters/formisch": "./src/adapters/formisch.tsx",
     "./layout": "./src/layout/index.ts",
     "./fields": "./src/fields/index.ts",
-    "./testing": "./src/testing.tsx"
+    "./testing": "./src/testing.tsx",
+    "./validate": "./src/validate.ts"
   },
   "scripts": {
     "test": "vitest run",

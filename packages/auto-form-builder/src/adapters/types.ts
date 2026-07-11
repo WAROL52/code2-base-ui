@@ -25,6 +25,10 @@ export interface FormProviderProps {
 	children: (form: FormAPI) => React.ReactNode;
 	defaultValues?: Record<string, unknown>;
 	onSubmit?: (data: unknown) => void | Promise<void>;
+	schema?: Record<string, unknown>;
+	validate?: (
+		values: Record<string, unknown>
+	) => Record<string, FieldError | undefined>;
 }
 
 export interface FieldProps {

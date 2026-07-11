@@ -41,10 +41,31 @@ const TanStackCtx = createContext<TanStackFormValue | null>(null);
 export const tanstackAdapter: FormAdapter = {
 	name: "tanstack",
 
-	FormProvider({ defaultValues, onSubmit, children }: FormProviderProps) {
+	FormProvider({
+		defaultValues,
+		onSubmit,
+		children,
+		validate,
+	}: FormProviderProps) {
 		const form = useForm({
 			defaultValues: defaultValues ?? {},
-			validators: undefined,
+			validators: {
+				onSubmit: ({ value }) => {
+					if (!validate) {
+						return;
+					}
+					const errors = validate(value as Record<string, unknown>);
+					const fields: Record<string, string> = {};
+					for (const [key, err] of Object.entries(errors)) {
+						if (err) {
+							fields[key] = typeof err === "string" ? err : err.message;
+						}
+					}
+					return Object.keys(fields).length > 0
+						? ({ fields } as never)
+						: undefined;
+				},
+			},
 			onSubmit: ({ value }) => onSubmit?.(value),
 		});
 
