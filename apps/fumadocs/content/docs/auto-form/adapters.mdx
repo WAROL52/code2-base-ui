@@ -1,0 +1,70 @@
+---
+title: Form Adapters
+description: Comparatif et guide des 3 adaptateurs de formulaire
+---
+
+auto-form-builder supporte 3 form managers via le **FormAdapter pattern**.
+Changez d'adaptateur en un seul import.
+
+## Comparatif
+
+| Critère | TanStack Form | React Hook Form | Formisch |
+|---|---|---|---|
+| **Package** | `@tanstack/react-form` | `react-hook-form` | `@formisch/react` |
+| **Bundle** | ~10 kB gzip | ~8 kB gzip | ~5 kB gzip |
+| **API** | Fonctionnelle + hook | Hook-based | Minimaliste |
+| **TypeScript** | Excellent | Bon | Excellent |
+| **Validation externe** | Toute lib | Toute lib | Toute lib |
+| **Performances** | Très bonnes | Excellentes | Très bonnes |
+
+## tanstackAdapter (recommandé)
+
+```tsx
+import { tanstackAdapter } from "@code2-base-ui/auto-form-builder/adapters/tanstack"
+```
+
+Basé sur `@tanstack/react-form` — API moderne et fonctionnelle.
+
+**Quand l'utiliser :**
+- Vous voulez une API TypeScript robuste
+- Vous utilisez déjà TanStack Query ou d'autres libs TanStack
+- Vous avez besoin de champs contrôlés complexes
+
+## rhfAdapter
+
+```tsx
+import { rhfAdapter } from "@code2-base-ui/auto-form-builder/adapters/rhf"
+```
+
+Basé sur `react-hook-form` — l'un des form managers les plus populaires.
+
+**Quand l'utiliser :**
+- Vous utilisez déjà react-hook-form dans votre projet
+- Vous voulez la communauté et l'écosystème les plus larges
+- Vous avez besoin d'intégrations tierces (UI libraries)
+
+## formischAdapter
+
+```tsx
+import { formischAdapter } from "@code2-base-ui/auto-form-builder/adapters/formisch"
+```
+
+Basé sur `@formisch/react` — API minimaliste et typesafe.
+
+**Quand l'utiliser :**
+- Vous voulez un form manager minimaliste
+- Vous privilégiez la simplicité d'API
+- Vous débutez avec auto-form-builder
+
+## Usage
+
+```tsx
+// Un seul import à changer
+import { createAutoForm } from "@code2-base-ui/auto-form-builder"
+import { tanstackAdapter } from "@code2-base-ui/auto-form-builder/adapters/tanstack"
+
+const AutoForm = createAutoForm({
+  adapter: tanstackAdapter, // ← changez ici
+  registry: createShadcnRegistry(),
+})
+```

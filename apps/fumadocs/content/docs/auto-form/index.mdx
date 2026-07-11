@@ -1,51 +1,104 @@
 ---
-title: auto-form
-description: Framework de génération automatique de formulaires à partir de schémas
+title: auto-form-builder
+description: Générateur de formulaires automatiques à partir de JSON Schema — multi-adaptateur (TanStack Form, React Hook Form, Formisch)
 ---
 
-**auto-form** est un framework modulaire de génération automatique de
-formulaires à partir de schémas de données (Zod, JSON Schema).
+**auto-form-builder** génère des formulaires React complets à partir d'un
+JSON Schema. Il utilise le **FormAdapter pattern** pour s'interfacer avec
+n'importe quel form manager.
 
-Il suit la même philosophie copy-paste que json-schema-toolkit, organisé en
-5 packages indépendants et composables :
+```tsx
+import { AutoForm, tanstackAdapter, createShadcnRegistry } from "@code2-base-ui/auto-form-builder"
 
-| Package | Rôle |
-|---|---|
-| `@code2-base-ui/auto-form` | Cœur : factory, types, contextes React |
-| `@code2-base-ui/auto-form-provider-zod` | SchemaProvider pour Zod |
-| `@code2-base-ui/auto-form-adapter-tanstack` | FormStateAdapter pour TanStack Form |
-| `@code2-base-ui/auto-form-render-shadcn` | FieldRegistry prêt-à-l'emploi pour shadcn/ui |
-| *(preset)* `auto-form-tanstack-shadcn` | Combinaison prête à l'emploi des 4 packages |
+const schema = {
+  type: "object",
+  properties: {
+    name: { type: "string", title: "Nom" },
+    email: { type: "string", format: "email", title: "Email" },
+    role: { type: "string", enum: ["admin", "user"], title: "Rôle" },
+  },
+  required: ["name", "email"],
+}
+
+<AutoForm
+  adapter={tanstackAdapter}
+  registry={createShadcnRegistry()}
+  schema={schema}
+  onSubmit={(data) => console.log(data)}
+/>
+```
 
 ## Architecture
 
-Le framework repose sur trois abstractions fondamentales :
+Le package s'articule autour de 4 concepts :
 
-1. **SchemaProvider** — Traduit un schéma (Zod, JSON Schema) en métadonnées de champs
-2. **FormStateAdapter** — Gère l'état du formulaire (valeurs, erreurs, soumission)
-3. **FieldRegistry** — Résout chaque champ en composant React (`InputField`, `SelectField`, etc.)
+| Concept | Rôle |
+|---|---|
+| **FormAdapter** | Interface entre le form manager et le rendu |
+| **FieldRegistry** | Résout chaque champ en composant React |
+| **FormLayout** | Stratégie de rendu (groupes, tableaux, unions) |
+| **AutoForm** / **AutoFormBuilder** | Point d'entrée assembleur |
 
-Le point d'entrée est `createAutoForm(config)` qui assemble les trois
-couches et retourne un système complet (`AutoForm`, `AutoField`, `useForm`,
-`useField`).
+### FormAdapter
+
+L'interface `FormAdapter` (2 composants) standardise la communication avec
+n'importe quel form manager :
+
+```ts
+interface FormAdapter {
+  name: string
+  FormProvider: (props: FormProviderProps) => ReactNode
+  Field: (props: FieldProps) => ReactNode
+}
+```
+
+Trois adaptateurs sont fournis :
+- `tanstackAdapter` — basé sur `@tanstack/react-form`
+- `rhfAdapter` — basé sur `react-hook-form`
+- `formischAdapter` — basé sur `@formisch/react`
+
+### FieldRegistry
+
+Enregistre les composants de champ par sélecteur (type / format / widget) :
+
+```ts
+const registry = createShadcnRegistry()
+// Équivalent à :
+const registry = new FieldRegistry()
+registry.register({ type: "string", kind: "primitive" }, ShadcnTextField)
+registry.register({ type: "string", kind: "enum" }, ShadcnEnumField)
+registry.register({ type: "string", widget: "textarea" }, ShadcnTextareaField)
+// ...
+```
+
+### FormLayout
+
+Injecte la stratégie de rendu des conteneurs (groupes, tableaux, unions) :
+
+```ts
+const layout: FormLayout = { ...shadcnLayout, SubmitButton: MyButton }
+```
+
+### Sous-chemins d'import
+
+```ts
+import { tanstackAdapter } from "@code2-base-ui/auto-form-builder"
+import { tanstackAdapter } from "@code2-base-ui/auto-form-builder/adapters/tanstack"
+import { rhfAdapter }     from "@code2-base-ui/auto-form-builder/adapters/rhf"
+import { formischAdapter } from "@code2-base-ui/auto-form-builder/adapters/formisch"
+import { shadcnLayout }   from "@code2-base-ui/auto-form-builder/layout"
+import { createShadcnRegistry } from "@code2-base-ui/auto-form-builder/fields"
+import { mockAdapter }    from "@code2-base-ui/auto-form-builder/testing"
+```
 
 ## Fonctionnalités
 
-- **Génération automatique** — Les champs sont déduits du schéma
-- **Contextes React** — `AutoFormProvider`, `useFormContext`, `useFieldContext`
-- **Layouts personnalisables** — Stratégie de rendu injectable via `LayoutStrategy`
-- **Validation intégrée** — Délégue au SchemaProvider
-- **Composants shadcn/ui** — 11 composants de champ prêts à l'emploi
-- **GitHub Registry** — Distribution via `npx shadcn@latest add`
-
-## Exports du package cœur
-
-```ts
-import { createAutoForm } from "@code2-base-ui/auto-form";
-import { AutoFormProvider, useFormContext, useFieldContext } from "@code2-base-ui/auto-form";
-
-// Types
-import type { SchemaProvider, SchemaProviderFactory } from "@code2-base-ui/auto-form";
-import type { FormStateAdapter, FormAPI, FieldController } from "@code2-base-ui/auto-form";
-import type { AutoFormProps, LayoutStrategy } from "@code2-base-ui/auto-form";
-```
+- Génération automatique des champs depuis JSON Schema
+- 3 form managers supportés (TanStack Form, RHF, Formisch)
+- Layout personnalisable (groupes, tableaux, unions)
+- Composants shadcn/ui prêts à l'emploi
+- Mode composé : contrôle manuel du rendu
+- Validation intégrée via JSON Schema
+- Champs conditionnels (unions)
+- Wysiwyg `createAutoForm` pour usage simple
+- Render-prop `AutoFormBuilder` pour usage avancé

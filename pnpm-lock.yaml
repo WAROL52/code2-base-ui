@@ -108,6 +108,9 @@ importers:
 
   apps/fumadocs:
     dependencies:
+      '@code2-base-ui/auto-form-builder':
+        specifier: workspace:*
+        version: link:../../packages/auto-form-builder
       '@code2-base-ui/json-schema-toolkit':
         specifier: workspace:*
         version: link:../../packages/json-schema-toolkit
@@ -148,6 +151,9 @@ importers:
       '@tailwindcss/postcss':
         specifier: ^4.3.1
         version: 4.3.1
+      '@tanstack/react-form':
+        specifier: 'catalog:'
+        version: 1.33.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@types/mdx':
         specifier: ^2.0.14
         version: 2.0.14

@@ -1,78 +1,52 @@
 ---
 title: Installation
-description: Installer auto-form dans votre projet
+description: Installer auto-form-builder dans votre projet
 ---
 
-Deux méthodes d'installation sont disponibles.
-
-## Via GitHub Registry (shadcn) — recommandé
-
-Depuis n'importe quel projet, sans dépendre du monorepo :
+## npm
 
 ```bash
-npx shadcn@latest add WAROL52/code2-base-ui/auto-form-tanstack-shadcn
-```
-
-Cette méthode copie les fichiers source directement dans votre projet
-et installe les dépendances nécessaires.
-
-### Items disponibles
-
-```bash
-npx shadcn@latest list WAROL52/code2-base-ui
-```
-
-| Item | Description |
-|---|---|
-| `auto-form-tanstack-shadcn` | Preset complet (core + zod + tanstack + shadcn) |
-| `auto-form-core` | Package cœur uniquement |
-| `auto-form-provider-zod` | Provider Zod uniquement |
-
-### Aperçu avant installation
-
-```bash
-npx shadcn@latest view WAROL52/code2-base-ui/auto-form-tanstack-shadcn
-npx shadcn@latest add WAROL52/code2-base-ui/auto-form-tanstack-shadcn --dry-run
-```
-
-## Via npm (monorepo)
-
-Dans un projet qui a déjà accès au workspace :
-
-```bash
-pnpm add @code2-base-ui/auto-form
-pnpm add @code2-base-ui/auto-form-provider-zod
-pnpm add @code2-base-ui/auto-form-adapter-tanstack
-pnpm add @code2-base-ui/auto-form-render-shadcn
+pnpm add @code2-base-ui/auto-form-builder
 ```
 
 ## Dépendances
 
-- `react` / `react-dom` ^19 — Requis par le package cœur et le renderer
-- `zod` ^4 — Requis par `@code2-base-ui/auto-form-provider-zod`
-- `@tanstack/react-form` ^1 — Requis par `@code2-base-ui/auto-form-adapter-tanstack`
-- `@code2-base-ui/json-schema-toolkit` — Requis par tous les packages auto-form
+Le package a des `peerDependencies` optionnelles — installez seulement
+celles dont vous avez besoin :
+
+```bash
+# Au moins un form manager (tous optionnels) :
+pnpm add @tanstack/react-form   # pour tanstackAdapter
+pnpm add react-hook-form        # pour rhfAdapter
+pnpm add @formisch/react        # pour formischAdapter
+```
+
+## Sous-chemins d'import
+
+```ts
+// Principal
+import { AutoFormBuilder, createAutoForm, shadcnLayout } from "@code2-base-ui/auto-form-builder"
+import { createShadcnRegistry, ShadcnTextField }           from "@code2-base-ui/auto-form-builder/fields"
+import { shadcnLayout }                                    from "@code2-base-ui/auto-form-builder/layout"
+
+// Adaptateurs (import direct)
+import { tanstackAdapter }  from "@code2-base-ui/auto-form-builder/adapters/tanstack"
+import { rhfAdapter }       from "@code2-base-ui/auto-form-builder/adapters/rhf"
+import { formischAdapter }  from "@code2-base-ui/auto-form-builder/adapters/formisch"
+
+// Utilitaires
+import { mockAdapter }      from "@code2-base-ui/auto-form-builder/testing"
+import { createSchemaValidator } from "@code2-base-ui/auto-form-builder/validate"
+```
 
 ## Configuration TypeScript
 
-Le package utilise `verbatimModuleSyntax`. Assurez-vous que votre
-`tsconfig.json` inclut :
-
 ```json
 {
-	"compilerOptions": {
-		"verbatimModuleSyntax": true,
-		"moduleResolution": "bundler",
-		"module": "preserve"
-	}
+  "compilerOptions": {
+    "verbatimModuleSyntax": true,
+    "moduleResolution": "bundler",
+    "module": "preserve"
+  }
 }
-```
-
-## Import
-
-```ts
-import { createAutoForm } from "@code2-base-ui/auto-form";
-import { zodProvider } from "@code2-base-ui/auto-form-provider-zod";
-import { tanstackFormAdapter } from "@code2-base-ui/auto-form-adapter-tanstack";
-import { createShadcnRegistry } from "@code2-base-ui/auto-form-render-shadcn";
 ```

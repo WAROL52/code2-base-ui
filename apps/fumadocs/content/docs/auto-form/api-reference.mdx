@@ -1,245 +1,294 @@
 ---
 title: API Reference
-description: API complète de auto-form
+description: API complète de auto-form-builder
 ---
 
 ## createAutoForm
 
-```ts
-function createAutoForm(config: CreateAutoFormConfig): AutoFormSystem
-```
+Assemble un adaptateur, un registre et un layout en un composant `AutoForm`.
 
-Assemble les trois couches (provider, form, registry) en un système complet
-de formulaire automatique.
+```ts
+function createAutoForm(config: CreateAutoFormConfig): React.ComponentType<CreatedAutoFormProps>
+```
 
 ### CreateAutoFormConfig
 
 ```ts
 interface CreateAutoFormConfig {
-  provider: SchemaProviderFactory;
-  form: FormStateAdapter;
-  registry: FieldRegistry;
-  layout?: LayoutStrategy;
+  adapter: FormAdapter
+  layout?: Partial<FormLayout>
+  registry: FieldRegistry
+  resolveSchema?: (rawSchema: unknown, draftHint?: JsonSchemaDraft) => ResolvedSchema
+  traverseSchema?: (resolved: ResolvedSchema) => FieldMeta[]
+  unionFieldRenderer?: ComponentType<AutoFormFieldProps>
 }
 ```
 
-### AutoFormSystem
+### CreatedAutoFormProps
 
 ```ts
-interface AutoFormSystem {
-  AutoForm: <TSchema>(props: AutoFormProps<TSchema> & { children?: ReactNode }) => ReactNode;
-  AutoField: (props: { name: string }) => ReactNode;
-  useForm: () => FormAPI;
-  useField: (name: string) => FieldController;
-  AutoFormProvider: typeof AutoFormProvider;
+interface CreatedAutoFormProps {
+  children?: ReactNode
+  className?: string
+  defaultValues?: Record<string, unknown>
+  onSubmit?: (data: unknown) => void | Promise<void>
+  schema: Record<string, unknown>
 }
 ```
-
-**AutoForm** — Composant racine qui génère un formulaire complet à partir
-d'un schéma.
-
-**AutoField** — Composant qui rend un champ individuel identifié par son nom.
-
-**useForm** — Hook retournant l'API du formulaire (`values`, `errors`,
-`submit`, `reset`, `dirty`, `isSubmitting`).
-
-**useField** — Hook retournant le contrôleur d'un champ (`value`, `onChange`,
-`onBlur`, `error`, `touched`).
 
 ---
 
-## AutoFormProvider
+## AutoFormBuilder
 
-```ts
-function AutoFormProvider(props: {
-  children: ReactNode;
-  form: FormAPI;
-  fields?: Record<string, FieldController>;
-}): ReactNode
+Render-prop builder pour un contrôle total du rendu.
+
+```tsx
+<AutoFormBuilder
+  adapter={tanstackAdapter}
+  registry={createShadcnRegistry()}
+  schema={mySchema}
+  onSubmit={(data) => console.log(data)}
+>
+  {({ fields, form, resolvedSchema }) => (
+    <form onSubmit={(e) => { e.preventDefault(); form.handleSubmit() }}>
+      {fields.map((field) => (/* ... */))}
+    </form>
+  )}
+</AutoFormBuilder>
 ```
 
-Contexte React qui rend les hooks `useFormContext` et `useFieldContext`
-accessibles dans l'arborescence.
+### Props
+
+```ts
+interface AutoFormBuilderProps {
+  adapter: FormAdapter
+  children: (props: AutoFormBuilderChildrenProps) => ReactNode
+  defaultValues?: Record<string, unknown>
+  onSubmit?: (data: unknown) => void | Promise<void>
+  resolveSchema?: (rawSchema: unknown, draftHint?: JsonSchemaDraft) => ResolvedSchema
+  schema: Record<string, unknown>
+  traverseSchema?: (resolved: ResolvedSchema) => FieldMeta[]
+}
+```
+
+### Children props
+
+```ts
+interface AutoFormBuilderChildrenProps {
+  fields: FieldMeta[]
+  form: FormAPI
+  resolvedSchema: ResolvedSchema
+}
+```
 
 ---
 
-## useFormContext / useFieldContext
+## AutoFormField
 
-```ts
-function useFormContext(): FormAPI | null
-function useFieldContext(): FieldController | null
+Composant récursif qui résout un `FieldMeta` en composant de champ.
+
+```tsx
+<AutoFormField
+  adapter={tanstackAdapter}
+  fieldMeta={field}
+  form={form}
+  registry={createShadcnRegistry()}
+  unionFieldRenderer={UnionRenderer}
+/>
 ```
 
-Hooks de contexte pour accéder à l'API du formulaire ou au contrôleur
-d'un champ depuis n'importe quel descendant de `AutoFormProvider`.
+Gère les cas suivants :
+- **Primitive** → résout via `registry.resolve(fieldMeta)` et rend le composant
+- **Object** → wrapper `layout.ObjectField` avec rendu récursif des enfants
+- **Array** → wrapper `layout.ArrayField` avec boutons ajouter/supprimer
+- **Union (oneOf/anyOf)** → sélecteur de variante avec rendu conditionnel
 
 ---
 
-## FieldProvider
+## FormAdapter
+
+Interface standardisée pour connecter un form manager.
 
 ```ts
-function FieldProvider(props: {
-  children: ReactNode;
-  field: FieldController;
-}): ReactNode
+interface FormAdapter {
+  readonly name: string
+  readonly FormProvider: React.ComponentType<FormProviderProps>
+  readonly Field: React.ComponentType<FieldProps>
+}
 ```
 
-Wrapper contextuel pour exposer un `FieldController` via `FieldContext`.
-
----
-
-## Types du package cœur
+### FormProviderProps
 
 ```ts
-interface SchemaProvider<TSchema = unknown> {
-  readonly fields: FieldMeta[];
-  readonly jsonSchema: JsonSchema;
-  validate: (data: unknown) => ValidationResult;
-  getFieldMeta: (path: string) => FieldMeta | undefined;
+interface FormProviderProps {
+  children: (form: FormAPI) => React.ReactNode
+  defaultValues?: Record<string, unknown>
+  onSubmit?: (data: unknown) => void | Promise<void>
+  schema?: Record<string, unknown>
+  validate?: (values: Record<string, unknown>) => Record<string, FieldError | undefined>
 }
+```
 
-interface SchemaProviderFactory {
-  readonly name: string;
-  create: <T>(schema: T) => SchemaProvider<T>;
+### FieldProps
+
+```ts
+interface FieldProps {
+  children: (field: FieldAPI) => React.ReactNode
+  name: string
 }
+```
 
-interface FormStateAdapter {
-  readonly name: string;
-  useForm: (config: {
-    defaultValues?: Record<string, unknown>;
-    validate: (data: unknown) => ValidationResult;
-  }) => FormAPI;
-  useField: (name: string) => FieldController;
+### FieldAPI
+
+```ts
+interface FieldAPI {
+  error?: FieldError
+  isTouched: boolean
+  onBlur: () => void
+  onChange: (value: unknown) => void
+  value: unknown
 }
+```
 
+### FormAPI
+
+```ts
 interface FormAPI {
-  values: Record<string, unknown>;
-  errors: Record<string, string | undefined>;
-  submit: (e: { preventDefault: () => void }) => void;
-  reset: () => void;
-  dirty: boolean;
-  isSubmitting: boolean;
-}
-
-interface FieldController {
-  value: unknown;
-  onChange: (value: unknown) => void;
-  onBlur: () => void;
-  error?: string;
-  touched: boolean;
-}
-
-interface AutoFormProps<TSchema = unknown> {
-  schema: TSchema;
-  onSubmit?: (data: unknown) => void | Promise<void>;
-  defaultValues?: Record<string, unknown>;
-  children?: ReactNode;
-  className?: string;
-}
-
-interface LayoutStrategy {
-  readonly name: string;
-  render: (
-    fields: FieldMeta[],
-    renderField: (field: FieldMeta) => ReactNode,
-  ) => ReactNode;
+  appendFieldValue: (name: string, value: unknown) => void
+  handleSubmit: () => void
+  isSubmitting: boolean
+  removeFieldValue: (name: string, index: number) => void
+  reset: () => void
+  values: Record<string, unknown>
 }
 ```
 
 ---
 
-## zodProvider
+## Adaptateurs fournis
+
+### tanstackAdapter
 
 ```ts
-import { zodProvider } from "@code2-base-ui/auto-form-provider-zod";
-
-const provider: SchemaProviderFactory = {
-  name: "zod",
-  create: <T>(schema: T) => SchemaProvider<T>;
-};
+import { tanstackAdapter } from "@code2-base-ui/auto-form-builder/adapters/tanstack"
 ```
 
-SchemaProviderFactory pour Zod. Traduit un schéma Zod (`z.object({...})`)
-en métadonnées `FieldMeta[]` via `flatfields` et assure la validation
-avec `safeParse`.
+Basé sur `@tanstack/react-form`. Adaptateur par défaut recommandé.
 
-### ZodProvider
+### rhfAdapter
 
 ```ts
-class ZodProvider<TSchema extends z.ZodType> implements SchemaProvider<TSchema> {
-  readonly fields: FieldMeta[];
-  readonly jsonSchema: JsonSchema;
-  constructor(schema: TSchema);
-  validate(data: unknown): ValidationResult;
-  getFieldMeta(path: string): FieldMeta | undefined;
-}
+import { rhfAdapter } from "@code2-base-ui/auto-form-builder/adapters/rhf"
 ```
 
----
+Basé sur `react-hook-form`.
 
-## tanstackFormAdapter
+### formischAdapter
 
 ```ts
-import { tanstackFormAdapter } from "@code2-base-ui/auto-form-adapter-tanstack";
-
-const adapter: FormStateAdapter = {
-  name: "tanstack-form",
-  useForm: (config) => FormAPI;
-  useField: (name: string) => FieldController;
-};
+import { formischAdapter } from "@code2-base-ui/auto-form-builder/adapters/formisch"
 ```
 
-FormStateAdapter basé sur TanStack Form. Gère l'état du formulaire
-(valeurs, erreurs, soumission, reset).
+Basé sur `@formisch/react`.
 
 ---
 
 ## createShadcnRegistry
 
-```ts
-import { createShadcnRegistry } from "@code2-base-ui/auto-form-render-shadcn";
+Crée un `FieldRegistry` préconfiguré avec les composants shadcn/ui.
 
+```ts
 function createShadcnRegistry(): FieldRegistry
 ```
 
-Crée un `FieldRegistry` préconfiguré avec les composants shadcn/ui :
+Sélecteurs enregistrés :
 
-| Type / Format | Composant |
-|---|---|
-| `string` | InputField |
-| `string.format = email \| url \| tel \| password` | InputField |
-| `string.widget = textarea` | TextareaField |
-| `string.widget = select` | SelectField |
-| `string.widget = radio` | RadioGroupField |
-| `string.widget = otp` | OtpField |
-| `string.format = date \| date-time` | DatePickerField |
-| `number` | InputField |
-| `number.widget = select` | SelectField |
-| `number.widget = slider` | SliderField |
-| `boolean` | CheckboxField |
-| `boolean.widget = switch` | SwitchField |
-| `object.widget = collapse` | FieldGroup |
-| `array` | ArrayField |
+| Type | Sélecteur | Composant |
+|---|---|---|
+| `string` enum | `{ type: "string", kind: "enum" }` | ShadcnEnumField |
+| `string` textarea | `{ type: "string", widget: "textarea" }` | ShadcnTextareaField |
+| `string` password | `{ type: "string", widget: "password" }` | ShadcnPasswordField |
+| `string` date | `{ type: "string", format: "date" }` | ShadcnDateField |
+| `string` default | `{ type: "string", kind: "primitive" }` | ShadcnTextField |
+| `number` | `{ type: "number" }` | ShadcnNumberField |
+| `integer` | `{ type: "integer" }` | ShadcnNumberField |
+| `boolean` switch | `{ type: "boolean", widget: "switch" }` | ShadcnSwitchField |
+| `boolean` default | `{ type: "boolean", kind: "primitive" }` | ShadcnBooleanField |
+| fallback | — | ShadcnTextField |
+
+---
+
+## FormLayout
+
+Interface pour la stratégie de rendu des conteneurs.
+
+```ts
+interface FormLayout {
+  ArrayField: ComponentType<ArrayFieldProps>
+  CompositionsField: ComponentType<CompositionsFieldProps>
+  FieldDescription: ComponentType<{ children: ReactNode }>
+  FieldGroup: ComponentType<{ children: ReactNode }>
+  FieldLegend: ComponentType<{ children: ReactNode; className?: string }>
+  FieldSet: ComponentType<{ children: ReactNode; className?: string }>
+  ObjectField: ComponentType<ObjectFieldProps>
+  SubmitButton: ComponentType<{ children?: ReactNode; disabled?: boolean; isSubmitting?: boolean }>
+}
+```
+
+Layout par défaut : `shadcnLayout` (basé sur les composants `Field` de shadcn/ui).
 
 ---
 
 ## Composants de champ
 
-Tous les composants sont exportés depuis
-`@code2-base-ui/auto-form-render-shadcn` :
+Tous les composants sont exportés depuis `@code2-base-ui/auto-form-builder/fields` :
 
 ```ts
 import {
-  InputField,
-  CheckboxField,
-  SelectField,
-  TextareaField,
-  SwitchField,
-  RadioGroupField,
-  SliderField,
-  DatePickerField,
-  OtpField,
-  FieldGroup,
-  ArrayField,
-} from "@code2-base-ui/auto-form-render-shadcn";
+  ShadcnBooleanField,
+  ShadcnDateField,
+  ShadcnEnumField,
+  ShadcnNumberField,
+  ShadcnPasswordField,
+  ShadcnSwitchField,
+  ShadcnTextareaField,
+  ShadcnTextField,
+} from "@code2-base-ui/auto-form-builder/fields"
 ```
+
+Ils acceptent tous les props `FieldComponentProps` :
+
+```ts
+interface FieldComponentProps {
+  className?: string
+  disabled?: boolean
+  error?: string | { message: string; type?: string; path?: string[] }
+  field?: FieldMeta
+  id?: string
+  label?: string
+  onChange?: (value: unknown) => void
+  placeholder?: string
+  value?: unknown
+}
+```
+
+---
+
+## Utilitaires
+
+### validate
+
+```ts
+import { createSchemaValidator } from "@code2-base-ui/auto-form-builder/validate"
+
+const validate = createSchemaValidator(schema)
+const errors = validate({ name: "" }) // Record<string, FieldError | undefined>
+```
+
+### testing
+
+```ts
+import { mockAdapter } from "@code2-base-ui/auto-form-builder/testing"
+```
+
+Adaptateur factice pour les tests unitaires (utilisé en interne).

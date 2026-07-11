@@ -1,207 +1,121 @@
 ---
 title: Getting Started
-description: Premiers pas avec auto-form — installation et exemples d'utilisation
+description: Premiers pas avec auto-form-builder
 ---
 
-## Installation
+## Définir un schéma
 
-```bash
-npx shadcn@latest add WAROL52/code2-base-ui/auto-form-tanstack-shadcn
-```
-
-<Callout type="info">
-Le preset `auto-form-tanstack-shadcn` assemble automatiquement le package
-cœur, le provider Zod, l'adaptateur TanStack Form et les composants shadcn.
-</Callout>
-
-## Quick Start
-
-### 1. Définir un schéma Zod
+Les formulaires sont générés à partir de JSON Schema :
 
 ```ts
-import { z } from "zod";
-
-const userSchema = z.object({
-  name: z.string().min(2, "Le nom doit faire au moins 2 caractères"),
-  email: z.string().email("Email invalide"),
-  age: z.number().min(18, "Âge minimum : 18 ans").optional(),
-  role: z.enum(["admin", "user", "guest"]),
-  active: z.boolean().default(true),
-});
+const userSchema = {
+  type: "object",
+  properties: {
+    name: { type: "string", title: "Nom", minLength: 2 },
+    email: { type: "string", format: "email", title: "Email" },
+    age: { type: "integer", title: "Âge", minimum: 18 },
+    role: {
+      type: "string",
+      title: "Rôle",
+      enum: ["admin", "user", "guest"],
+    },
+    bio: { type: "string", title: "Bio", uiWidget: "textarea" },
+    active: { type: "boolean", title: "Actif" },
+  },
+  required: ["name", "email", "role"],
+}
 ```
 
-### 2. Créer le formulaire automatique
+## Mode simple — `createAutoForm`
+
+Assemble la configuration une fois pour toutes :
 
 ```tsx
-import { createAutoForm } from "@code2-base-ui/auto-form";
-import { zodProvider } from "@code2-base-ui/auto-form-provider-zod";
-import { tanstackFormAdapter } from "@code2-base-ui/auto-form-adapter-tanstack";
-import { createShadcnRegistry } from "@code2-base-ui/auto-form-render-shadcn";
+import { createAutoForm, tanstackAdapter } from "@code2-base-ui/auto-form-builder"
+import { createShadcnRegistry } from "@code2-base-ui/auto-form-builder/fields"
 
-const { AutoForm, AutoField, useForm, useField } = createAutoForm({
-  provider: zodProvider,
-  form: tanstackFormAdapter,
+const AutoForm = createAutoForm({
+  adapter: tanstackAdapter,
   registry: createShadcnRegistry(),
-});
-```
+})
 
-### 3. Utiliser le preset (encore plus simple)
-
-```ts
-// Le preset fait l'assemblage pour vous
-import { AutoForm, AutoField } from "~/src/lib/auto-form/preset";
-```
-
-### 4. Rendre le formulaire
-
-```tsx
 function UserForm() {
   return (
     <AutoForm
       schema={userSchema}
       onSubmit={(data) => console.log("Submitted:", data)}
-      className="space-y-4 max-w-md"
+      className="max-w-md space-y-4"
     />
-  );
+  )
 }
 ```
 
-Le formulaire généré automatiquement :
-- `name` → `<InputField>` (string)
-- `email` → `<InputField type="email">`
-- `age` → `<InputField type="number">`
-- `role` → `<SelectField>` (enum → options)
-- `active` → `<CheckboxField>` (boolean)
+## Mode render-prop — `AutoFormBuilder`
 
----
-
-## Exemples
-
-### Formulaire simple
+Pour un contrôle total (layout custom, champs manuels, etc.) :
 
 ```tsx
-const schema = z.object({
-  title: z.string().min(1, "Requis"),
-  description: z.string().max(500).optional(),
-  published: z.boolean().default(false),
-});
+import { AutoFormBuilder, tanstackAdapter } from "@code2-base-ui/auto-form-builder"
+import { createShadcnRegistry } from "@code2-base-ui/auto-form-builder/fields"
 
-function ArticleForm() {
-  return (
-    <AutoForm
-      schema={schema}
-      onSubmit={(data) => fetch("/api/articles", { method: "POST", body: JSON.stringify(data) })}
-    />
-  );
-}
-```
-
-### Avec layout personnalisé
-
-```tsx
-function TwoColumnLayout() {
-  return (
-    <AutoForm
-      schema={schema}
-      className="grid grid-cols-2 gap-4"
-    />
-  );
-}
-```
-
-### Mode composé (champs manuels)
-
-Quand vous passez des `children`, `AutoForm` ne génère plus les champs
-automatiquement et laisse le contrôle à votre JSX :
-
-```tsx
 function CustomForm() {
   return (
-    <AutoForm schema={schema} onSubmit={handleSubmit}>
-      <div className="grid grid-cols-2 gap-4">
-        <AutoField name="name" />
-        <AutoField name="email" />
-      </div>
-      <div className="col-span-2">
-        <AutoField name="bio" />
-      </div>
-      <button type="submit">Envoyer</button>
-    </AutoForm>
-  );
-}
-```
-
-### Utilisation directe des composants de champ
-
-```tsx
-import { InputField, SelectField, TextareaField } from "@code2-base-ui/auto-form-render-shadcn";
-
-function ContactForm() {
-  return (
-    <form onSubmit={handleSubmit}>
-      <InputField name="name" label="Nom" required />
-      <InputField name="email" label="Email" type="email" />
-      <SelectField
-        name="subject"
-        label="Sujet"
-        options={[
-          { value: "support", label: "Support" },
-          { value: "sales", label: "Commercial" },
-        ]}
-      />
-      <TextareaField name="message" label="Message" />
-    </form>
-  );
-}
-```
-
-### Validation personnalisée
-
-```tsx
-const schema = z.object({
-  password: z.string().min(8, "8 caractères minimum"),
-  confirm: z.string(),
-}).refine((data) => data.password === data.confirm, {
-  message: "Les mots de passe ne correspondent pas",
-  path: ["confirm"],
-});
-
-function SignupForm() {
-  return <AutoForm schema={schema} onSubmit={handleSignup} />;
-}
-```
-
-### Champs conditionnels
-
-```tsx
-function DynamicForm() {
-  const [showExtra, setShowExtra] = useState(false);
-
-  return (
-    <AutoForm schema={baseSchema} onSubmit={handleSubmit}>
-      <AutoField name="name" />
-      <AutoField name="email" />
-      <button type="button" onClick={() => setShowExtra(!showExtra)}>
-        {showExtra ? "Masquer" : "Afficher"} les options avancées
-      </button>
-      {showExtra && (
-        <>
-          <AutoField name="newsletter" />
-          <AutoField name="theme" />
-        </>
+    <AutoFormBuilder
+      adapter={tanstackAdapter}
+      registry={createShadcnRegistry()}
+      schema={userSchema}
+      onSubmit={(data) => console.log(data)}
+    >
+      {({ fields, form }) => (
+        <form onSubmit={(e) => { e.preventDefault(); form.handleSubmit() }}>
+          <div className="grid grid-cols-2 gap-4">
+            {fields.map((field) => (
+              <AutoFormField
+                adapter={tanstackAdapter}
+                fieldMeta={field}
+                form={form}
+                key={field.path}
+                registry={createShadcnRegistry()}
+              />
+            ))}
+          </div>
+          <button type="submit" className="mt-4 rounded bg-primary px-4 py-2 text-white">
+            Envoyer
+          </button>
+        </form>
       )}
-      <button type="submit">S'inscrire</button>
-    </AutoForm>
-  );
+    </AutoFormBuilder>
+  )
 }
 ```
 
----
+## Changer d'adaptateur
 
-## Démos interactives
+Un seul import à changer :
 
-Essayez les composants de champ en direct avec les contrôles interactifs :
+```tsx
+import { tanstackAdapter } from "@code2-base-ui/auto-form-builder/adapters/tanstack"
+import { rhfAdapter }      from "@code2-base-ui/auto-form-builder/adapters/rhf"
+import { formischAdapter } from "@code2-base-ui/auto-form-builder/adapters/formisch"
+```
 
-import { StoryDemos } from "@/components/auto-form/story-demo";
+## Layout personnalisé
 
-<StoryDemos />
+Surchargez seulement ce dont vous avez besoin :
+
+```tsx
+import { createAutoForm, tanstackAdapter, shadcnLayout } from "@code2-base-ui/auto-form-builder"
+
+const AutoForm = createAutoForm({
+  adapter: tanstackAdapter,
+  registry: createShadcnRegistry(),
+  layout: {
+    ...shadcnLayout,
+    SubmitButton: ({ children }) => (
+      <button className="..." type="submit">
+        {children ?? "Go!"}
+      </button>
+    ),
+  },
+})
+```
