@@ -26,3 +26,13 @@ export function getPageMarkdownUrl(page: { slugs: string[] }) {
 		url: `${docsContentRoute}/${segments.join("/")}`,
 	};
 }
+
+export function getPageFromImageSlug(slug: string[]): string[] {
+	return slug.slice(0, -1);
+}
+
+export function getPageFromMarkdownSlug(
+	slug: string[] | undefined
+): string[] | undefined {
+	return slug?.slice(0, -1);
+}

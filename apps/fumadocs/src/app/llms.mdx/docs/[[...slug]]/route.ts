@@ -1,4 +1,4 @@
-import { getPageMarkdownUrl } from "@/lib/shared";
+import { getPageFromMarkdownSlug, getPageMarkdownUrl } from "@/lib/shared";
 import { getLLMText, getPageOr404, source } from "@/lib/source";
 
 export const revalidate = false;
@@ -8,7 +8,7 @@ export async function GET(
 	{ params }: RouteContext<"/llms.mdx/docs/[[...slug]]">
 ) {
 	const { slug } = await params;
-	const page = getPageOr404(slug?.slice(0, -1));
+	const page = getPageOr404(getPageFromMarkdownSlug(slug));
 
 	return new Response(await getLLMText(page), {
 		headers: {

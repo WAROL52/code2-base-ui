@@ -1,7 +1,7 @@
 import { generate as DefaultImage } from "fumadocs-ui/og";
 import { ImageResponse } from "next/og";
 
-import { appName, getPageImage } from "@/lib/shared";
+import { appName, getPageFromImageSlug, getPageImage } from "@/lib/shared";
 import { getPageOr404, source } from "@/lib/source";
 
 export const revalidate = false;
@@ -11,7 +11,7 @@ export async function GET(
 	{ params }: RouteContext<"/og/docs/[...slug]">
 ) {
 	const { slug } = await params;
-	const page = getPageOr404(slug.slice(0, -1));
+	const page = getPageOr404(getPageFromImageSlug(slug));
 
 	return new ImageResponse(
 		<DefaultImage
