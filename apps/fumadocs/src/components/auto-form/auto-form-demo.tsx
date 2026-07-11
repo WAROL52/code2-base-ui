@@ -23,21 +23,29 @@ import {
 import { CodeBlock, Pre } from "fumadocs-ui/components/codeblock";
 import type { ReactNode } from "react";
 
-function createRegistry(): FieldRegistry {
-	const r = new FieldRegistry();
-	r.register({ type: "string", kind: "enum" }, ShadcnEnumField, 20);
-	r.register({ type: "string", widget: "password" }, ShadcnPasswordField, 10);
-	r.register({ type: "string", kind: "primitive" }, ShadcnTextField, 0);
-	r.register({ type: "number" }, ShadcnNumberField, 0);
-	r.register({ type: "integer" }, ShadcnNumberField, 0);
-	r.register({ type: "boolean", kind: "primitive" }, ShadcnBooleanField, 0);
-	r.setFallback(ShadcnTextField);
-	return r;
-}
+const demoRegistry = new FieldRegistry();
+demoRegistry.register({ type: "string", kind: "enum" }, ShadcnEnumField, 20);
+demoRegistry.register(
+	{ type: "string", widget: "password" },
+	ShadcnPasswordField,
+	10
+);
+demoRegistry.register(
+	{ type: "string", kind: "primitive" },
+	ShadcnTextField,
+	0
+);
+demoRegistry.register({ type: "number" }, ShadcnNumberField, 0);
+demoRegistry.register({ type: "integer" }, ShadcnNumberField, 0);
+demoRegistry.register(
+	{ type: "boolean", kind: "primitive" },
+	ShadcnBooleanField,
+	0
+);
+demoRegistry.setFallback(ShadcnTextField);
 
 function renderField(field: FieldMeta, fieldAPI: FieldAPI): ReactNode {
-	const r = createRegistry();
-	const Component = r.resolve(field);
+	const Component = demoRegistry.resolve(field);
 	return (
 		<Component
 			error={fieldAPI.error}
@@ -191,8 +199,7 @@ function FieldWrapper({
 	fieldAPI: FieldAPI;
 	colSpan?: boolean;
 }): ReactNode {
-	const r = createRegistry();
-	const Component = r.resolve(field);
+	const Component = demoRegistry.resolve(field);
 	return (
 		<Field
 			className={colSpan ? "col-span-2" : ""}
