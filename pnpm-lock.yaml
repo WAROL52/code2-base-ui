@@ -114,6 +114,9 @@ importers:
       '@code2-base-ui/auto-form-builder':
         specifier: workspace:*
         version: link:../../packages/auto-form-builder
+      '@code2-base-ui/auto-table-builder':
+        specifier: workspace:*
+        version: link:../../packages/auto-table-builder
       '@code2-base-ui/json-schema-toolkit':
         specifier: workspace:*
         version: link:../../packages/json-schema-toolkit

@@ -16,18 +16,20 @@ interface RegistryEntry {
 
 export interface ColumnRegistry {
 	register: (selector: RegistrySelector, component: CellComponent) => void;
-	resolve: (meta: RegistrySelector) => CellComponent | undefined;
+	resolve: (meta: RegistrySelector) => CellComponent;
+	setFallback: (component: CellComponent) => void;
 }
 
 export function createColumnRegistry(): ColumnRegistry {
 	const entries: RegistryEntry[] = [];
+	let fallback: CellComponent | undefined;
 
 	return {
 		register(selector: RegistrySelector, component: CellComponent) {
 			entries.push({ selector, component });
 		},
 
-		resolve(meta: RegistrySelector): CellComponent | undefined {
+		resolve(meta: RegistrySelector): CellComponent {
 			for (const entry of entries) {
 				if (entry.selector.type !== meta.type) {
 					continue;
@@ -40,7 +42,16 @@ export function createColumnRegistry(): ColumnRegistry {
 				}
 				return entry.component;
 			}
-			return;
+			if (fallback) {
+				return fallback;
+			}
+			throw new Error(
+				`Aucun composant enregistré pour le champ de type "${meta.type}"`
+			);
+		},
+
+		setFallback(component: CellComponent) {
+			fallback = component;
 		},
 	};
 }

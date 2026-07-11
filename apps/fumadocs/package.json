@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@code2-base-ui/auto-form-builder": "workspace:*",
+    "@code2-base-ui/auto-table-builder": "workspace:*",
     "@code2-base-ui/json-schema-toolkit": "workspace:*",
     "@code2-base-ui/ui": "workspace:*",
 

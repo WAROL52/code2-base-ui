@@ -6,6 +6,7 @@
     "features",
     "column-registry",
     "cell-components",
+    "demo",
     "api-reference"
   ]
 }
