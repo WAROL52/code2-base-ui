@@ -12,39 +12,8 @@ auto-table-builder utilisant `@tanstack/react-table`.
 
 Tri activé par défaut — cliquez sur un en-tête de colonne.
 
-import { BasicTableDemo } from "@/components/auto-table-builder/auto-table-demo"
+import { BasicAutoTableDemo } from "@/components/demo/examples/basic-auto-table-demo"
 
-<BasicTableDemo />
-
----
-
-## Tous les types de cellules
-
-Les 9 composants de cellule (Text, Email, Url, Date, Number, Boolean,
-Badge, Array, Object) avec valeurs simples, null et cas particuliers.
-
-import { CellComponentsDemo } from "@/components/auto-table-builder/auto-table-demo"
-
-<CellComponentsDemo />
-
----
-
-## Tri + pagination + sélection + visibilité
-
-25 produits avec pagination (5 par page), sélection de lignes et menu
-de masquage des colonnes.
-
-import { FullFeatureTableDemo } from "@/components/auto-table-builder/auto-table-demo"
-
-<FullFeatureTableDemo />
-
----
-
-## Colonnes personnalisées
-
-Surcharge de colonnes via `columnOverrides` pour personnaliser
-l'affichage (cellule colorée, header custom).
-
-import { CustomColumnDemo } from "@/components/auto-table-builder/auto-table-demo"
-
-<CustomColumnDemo />
+<ComponentPreview name="basic-auto-table-demo">
+  <BasicAutoTableDemo />
+</ComponentPreview>

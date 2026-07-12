@@ -8,49 +8,13 @@ auto-form-builder utilisant l'adaptateur TanStack Form.
 
 ---
 
-## Champs disponibles
-
-import { FieldComponentsDemo } from "@/components/auto-form/story-demo";
-
-<FieldComponentsDemo />
-
----
-
 ## Formulaire simple
 
 Le schéma définit les champs, le type et les contraintes — le formulaire
 est généré automatiquement.
 
-import { SimpleForm } from "@/components/auto-form/auto-form-demo";
+import { BasicAutoFormDemo } from "@/components/demo/examples/basic-auto-form-demo"
 
-<SimpleForm />
-
----
-
-## Profil utilisateur
-
-Mélange de types (string, integer, enum) avec widget textarea pour la bio.
-
-import { UserForm } from "@/components/auto-form/auto-form-demo";
-
-<UserForm />
-
----
-
-## Inscription avec mot de passe
-
-Utilisation du widget `password` pour le champ mot de passe.
-
-import { SignupForm } from "@/components/auto-form/auto-form-demo";
-
-<SignupForm />
-
----
-
-## Mode composé — grille personnalisée
-
-Contrôle total du layout en utilisant `AutoFormBuilder` en render-prop.
-
-import { CustomLayoutForm } from "@/components/auto-form/auto-form-demo";
-
-<CustomLayoutForm />
+<ComponentPreview name="basic-auto-form-demo">
+  <BasicAutoFormDemo />
+</ComponentPreview>
